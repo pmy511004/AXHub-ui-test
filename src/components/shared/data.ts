@@ -31,9 +31,11 @@ export const makeNavItems = [
 
 export const adminNavItems = [
   { label: "전체 앱 관리", active: true },
-  { label: "서비스 관리", active: false },
-  { label: "구성원 관리", active: false },
-  { label: "앱별 권한 관리", active: false },
-  { label: "감사 로그", active: false },
+  { label: "API 관리", active: false },
+  { label: "멤버 관리", active: false },
+  { label: "역할 관리", active: false },
+  { label: "권한 관리", active: false },
+  { label: "게이트웨이 로그", active: false },
+  { label: "카테고리 관리", active: false },
   { label: "기업 정보 관리", active: false },
 ];
