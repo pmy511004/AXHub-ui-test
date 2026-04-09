@@ -47,19 +47,8 @@ export default function ProfileMenu({ onClose, onAction, isExpanded }: ProfileMe
         {/* Menu Items */}
         <div className="py-1">
           <button
-            onClick={() => onAction?.("expand")}
             className="flex w-full items-center gap-2 px-4 py-3 text-sm font-medium text-gray-500 tracking-[-0.14px] leading-6 hover:bg-[rgba(24,24,27,0.03)] transition-colors"
           >
-            <Image
-              src={isExpanded ? "/icons/sidemenu-fold.png" : "/icons/sidemenu-expand.png"}
-              alt={isExpanded ? "접기" : "펼치기"}
-              width={20}
-              height={20}
-            />
-            {isExpanded ? "기업 프로필 접기" : "기업 프로필 펼치기"}
-          </button>
-
-          <button className="flex w-full items-center gap-2 px-4 py-3 text-sm font-medium text-gray-500 tracking-[-0.14px] leading-6 hover:bg-[rgba(24,24,27,0.03)] transition-colors">
             <IconMoon />
             다크모드
           </button>

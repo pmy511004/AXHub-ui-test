@@ -6,7 +6,7 @@ interface HeaderProps {
 
 export default function Header({ borderColor = "border-gray-200" }: HeaderProps) {
   return (
-    <header className={`flex h-[72px] shrink-0 items-center justify-between border-b ${borderColor} bg-white px-5 py-4 shadow-[0px_2px_2px_0px_rgba(0,0,0,0.04)]`}>
+    <header className={`flex h-[72px] shrink-0 items-center justify-between bg-white px-5 py-4`}>
       <h1 className="text-[22px] font-bold text-black leading-[1.3] tracking-[-0.22px]">
         내가 이용중인 앱
       </h1>

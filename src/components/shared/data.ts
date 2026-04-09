@@ -18,9 +18,9 @@ export const navItems = [
 ];
 
 export const sidebarNavItems = [
-  { label: "만들기", icon: "/icons/make.svg", activeIcon: "/icons/make.png", activeIconSize: 28, href: "/make" },
-  { label: "둘러보기", icon: "/icons/store.svg", activeIcon: "/icons/store.png", href: "/" },
-  { label: "관리자", icon: "/icons/admin.svg", activeIcon: "/icons/admin-select.png", href: "/admin" },
+  { label: "만들기", icon: "/icons/side-unmake.svg", activeIcon: "/icons/side-make.png", activeIconSize: 28, href: "/make" },
+  { label: "둘러보기", icon: "/icons/side-unstore.svg", activeIcon: "/icons/side-store.png", href: "/" },
+  { label: "관리자", icon: "/icons/side-unadmin.svg", activeIcon: "/icons/side-admin.png", href: "/admin" },
 ];
 
 export const makeNavItems = [

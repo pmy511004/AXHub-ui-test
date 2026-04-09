@@ -49,33 +49,20 @@ export default function AdminPage() {
               </button>
             ))}
           </nav>
-
-          {/* Collapse Button */}
-          <button
-            onClick={() => setSidebarOpen(false)}
-            className="absolute right-[-13px] top-1/2 -translate-y-1/2 flex h-10 w-6 items-center justify-center rounded-full border border-gray-100 bg-white shadow-[0px_3px_3px_0px_rgba(0,0,0,0.15)]"
-          >
-            <Image
-              src="/icons/caret-left.svg"
-              alt="닫기"
-              width={6}
-              height={10}
-            />
-          </button>
         </aside>
       )}
 
       {/* Main Content */}
       <main className="flex flex-1 flex-col h-full min-w-0">
         {/* Header */}
-        <header className="flex h-[72px] shrink-0 items-center border-b border-gray-100 bg-white px-5 py-4 shadow-[0px_2px_2px_0px_rgba(0,0,0,0.04)]">
+        <header className="flex h-[72px] shrink-0 items-center bg-white px-5 py-4">
           <h1 className="text-[22px] font-bold text-black leading-[1.3] tracking-[-0.22px]">
             전체 앱 관리
           </h1>
         </header>
 
         {/* Content Area */}
-        <div className="flex-1 bg-gray-50" />
+        <div className="flex-1 bg-white" />
       </main>
     </div>
   );
