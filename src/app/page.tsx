@@ -17,7 +17,7 @@ export default function Home() {
           if (label === "둘러보기") {
             setSidebarOpen((prev) => !prev);
           } else {
-            window.location.href = label === "만들기" ? "/make" : label === "관리자" ? "/admin" : "#";
+            window.location.href = label === "만들기" ? "/make" : label === "관리하기" ? "/admin" : "#";
           }
         }}
       />

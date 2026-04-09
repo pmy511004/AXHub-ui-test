@@ -11,9 +11,9 @@ export default function AdminPage() {
   return (
     <div className="flex h-screen w-full overflow-hidden bg-white">
       <GlobalSidebar
-        activePage="관리자"
+        activePage="관리하기"
         onNavClick={(label) => {
-          if (label === "관리자") {
+          if (label === "관리하기") {
             setSidebarOpen((prev) => !prev);
           } else {
             window.location.href = label === "둘러보기" ? "/" : label === "만들기" ? "/make" : "#";
@@ -27,7 +27,7 @@ export default function AdminPage() {
           {/* Header */}
           <div className="flex h-[68px] flex-col items-start justify-center gap-1 p-3">
             <h2 className="text-base font-semibold text-gray-900 leading-6 tracking-[-0.16px]">
-              관리자
+              관리하기
             </h2>
             <p className="text-xs font-normal text-gray-500 leading-[1.3] tracking-[-0.12px]">
               모든 기업데이터를 관리하세요
