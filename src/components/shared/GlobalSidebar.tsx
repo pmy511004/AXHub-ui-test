@@ -27,18 +27,18 @@ export default function GlobalSidebar({ activePage = "둘러보기", onNavClick 
       <div className="relative flex shrink-0">
         {/* 좌측: 팀 목록 */}
         <div className="flex h-full w-[76px] flex-col items-center justify-between bg-gray-900">
-          <div className="flex flex-col items-center gap-5 px-5 py-4">
+          <div className="flex flex-col items-center gap-5 px-5 py-5">
             {/* Team JO */}
             <div className="relative flex size-9 items-center justify-center rounded-lg border border-gray-900/90 shadow-[0px_0px_0px_1px_rgba(255,255,255,0.8)] overflow-hidden bg-cover bg-center" style={{ backgroundImage: "url('/icons/side-team-profile.png')" }}>
               <span className="relative text-base font-bold text-white leading-6 tracking-[-0.16px]">JO</span>
             </div>
             {/* Team DE */}
-            <div className="relative flex size-9 items-center justify-center rounded-lg border border-gray-900/90 overflow-hidden bg-cover bg-center" style={{ backgroundImage: "url('/icons/side-team-profile.png')" }}>
-              <div className="absolute inset-0 bg-black/40" />
-              <span className="relative text-base font-bold text-white leading-6 tracking-[-0.16px]">DE</span>
+            <div className="group relative flex size-9 items-center justify-center rounded-lg border border-gray-900/90 overflow-hidden bg-cover bg-center cursor-pointer" style={{ backgroundImage: "url('/icons/side-team-profile.png')" }}>
+              <span className="text-base font-bold text-white leading-6 tracking-[-0.16px]">DE</span>
+              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/0 transition-colors" />
             </div>
             {/* Add button */}
-            <button className="flex size-9 items-center justify-center rounded-lg">
+            <button className="flex size-9 items-center justify-center rounded-lg hover:bg-white/[0.16] transition-colors">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.48)" strokeWidth="1.5" strokeLinecap="round">
                 <path d="M12 5v14M5 12h14" />
               </svg>
@@ -62,9 +62,9 @@ export default function GlobalSidebar({ activePage = "둘러보기", onNavClick 
                         onNavClick(item.label);
                       }
                     }}
-                    className="flex w-[42px] cursor-pointer flex-col items-center"
+                    className="flex w-[42px] cursor-pointer flex-col items-center gap-0.5"
                   >
-                    <div className={`flex size-9 items-center justify-center overflow-hidden rounded-lg ${isActive && item.activeIcon?.endsWith(".png") ? "" : "p-1"}`}>
+                    <div className={`flex size-9 items-center justify-center overflow-hidden rounded-lg transition-colors ${isActive && item.activeIcon?.endsWith(".png") ? "" : "p-1 hover:bg-white/[0.16]"}`}>
                       <Image
                         src={isActive && item.activeIcon ? item.activeIcon : item.icon}
                         alt={item.label}
@@ -88,14 +88,22 @@ export default function GlobalSidebar({ activePage = "둘러보기", onNavClick 
           <div className="flex flex-col items-center gap-3 px-5 py-4">
             <button
               onClick={() => { setExpanded(!expanded); }}
-              className="flex size-9 items-center justify-center overflow-hidden rounded-lg p-1"
+              className="flex size-9 items-center justify-center overflow-hidden rounded-lg p-1 hover:bg-white/[0.16] transition-colors"
             >
-              <Image src={expanded ? "/icons/side-fold.png" : "/icons/side-expand.png"} alt={expanded ? "접기" : "펼치기"} width={24} height={24} className="opacity-100" />
+              {expanded ? (
+              <svg width="24" height="24" viewBox="0 0 256 256" fill="white" fillOpacity="0.48" xmlns="http://www.w3.org/2000/svg">
+                <path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,160H88V56H216V200Z" />
+              </svg>
+            ) : (
+              <svg width="24" height="24" viewBox="0 0 256 256" fill="white" fillOpacity="0.48" xmlns="http://www.w3.org/2000/svg">
+                <path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM40,56H80V200H40ZM216,200H96V56H216V200Z" />
+              </svg>
+            )}
             </button>
-            <button className="flex size-9 items-center justify-center overflow-hidden rounded-lg p-1">
+            <button className="flex size-9 items-center justify-center overflow-hidden rounded-lg p-1 hover:bg-white/[0.16] transition-colors">
               <Image src="/icons/side-search.svg" alt="검색" width={20} height={20} />
             </button>
-            <button className="flex size-9 items-center justify-center overflow-hidden rounded-lg p-1">
+            <button className="flex size-9 items-center justify-center overflow-hidden rounded-lg p-1 hover:bg-white/[0.16] transition-colors">
               <Image src="/icons/side-bell.svg" alt="알림" width={20} height={20} />
             </button>
             <button
@@ -140,9 +148,9 @@ export default function GlobalSidebar({ activePage = "둘러보기", onNavClick 
                     onNavClick(item.label);
                   }
                 }}
-                className="flex w-[42px] cursor-pointer flex-col items-center"
+                className="flex w-[42px] cursor-pointer flex-col items-center gap-0.5"
               >
-                <div className={`flex size-9 items-center justify-center overflow-hidden rounded-lg ${isActive && item.activeIcon?.endsWith(".png") ? "" : "p-1"}`}>
+                <div className={`flex size-9 items-center justify-center overflow-hidden rounded-lg transition-colors ${isActive && item.activeIcon?.endsWith(".png") ? "" : "p-1 hover:bg-white/[0.16]"}`}>
                   <Image
                     src={isActive && item.activeIcon ? item.activeIcon : item.icon}
                     alt={item.label}
@@ -166,14 +174,22 @@ export default function GlobalSidebar({ activePage = "둘러보기", onNavClick 
       <div className="flex flex-col items-center gap-3 px-5 py-4">
         <button
           onClick={() => { setExpanded(!expanded); }}
-          className="flex size-9 items-center justify-center overflow-hidden rounded-lg p-1"
+          className="flex size-9 items-center justify-center overflow-hidden rounded-lg p-1 hover:bg-white/[0.16] transition-colors"
         >
-          <Image src={expanded ? "/icons/side-fold.png" : "/icons/side-expand.png"} alt={expanded ? "접기" : "펼치기"} width={24} height={24} className="opacity-100" />
+          {expanded ? (
+              <svg width="24" height="24" viewBox="0 0 256 256" fill="white" fillOpacity="0.48" xmlns="http://www.w3.org/2000/svg">
+                <path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,160H88V56H216V200Z" />
+              </svg>
+            ) : (
+              <svg width="24" height="24" viewBox="0 0 256 256" fill="white" fillOpacity="0.48" xmlns="http://www.w3.org/2000/svg">
+                <path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM40,56H80V200H40ZM216,200H96V56H216V200Z" />
+              </svg>
+            )}
         </button>
-        <button className="flex size-9 items-center justify-center overflow-hidden rounded-lg p-1">
+        <button className="flex size-9 items-center justify-center overflow-hidden rounded-lg p-1 hover:bg-white/[0.16] transition-colors">
           <Image src="/icons/side-search.svg" alt="검색" width={20} height={20} />
         </button>
-        <button className="flex size-9 items-center justify-center overflow-hidden rounded-lg p-1">
+        <button className="flex size-9 items-center justify-center overflow-hidden rounded-lg p-1 hover:bg-white/[0.16] transition-colors">
           <Image src="/icons/side-bell.svg" alt="알림" width={20} height={20} />
         </button>
         <button
