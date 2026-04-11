@@ -19,8 +19,132 @@
   --font-pretendard: "Pretendard Variable", sans-serif;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: "Pretendard Variable", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+@layer base {
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: "Pretendard Variable", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  }
+
+  /* 모든 버튼/링크 디졸브 트랜지션 */
+  button, a {
+    transition: background-color 0.2s ease, opacity 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  }
+
+  /* 사이드바 확장/축소 애니메이션 */
+  aside {
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* 네비 아이콘 hover 스케일 */
+  nav a:hover img,
+  nav button:hover img {
+    transition: transform 0.2s ease;
+    transform: scale(1.05);
+  }
+
+  /* 활성 메뉴 인디케이터 바 */
+  .menu-active {
+    position: relative;
+  }
+
+  .menu-active::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 16px;
+    background-color: var(--page-primary, #6d319d);
+    border-radius: 0 3px 3px 0;
+  }
+
+  /* 콘텐츠 카드 hover 효과 */
+  .content-card {
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+  }
+
+  .content-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    transform: translateY(-1px);
+  }
+
+  /* 팀 컬럼 슬라이드 인 */
+  .team-column-enter {
+    animation: slideInLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* 페이지 전환 애니메이션 */
+  .page-enter {
+    animation: pageFadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* 사이드바 스크롤바: 스크롤 시에만 표시, 트랙 없이 컨트롤러만 */
+  .sidebar-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    -ms-overflow-style: none;
+  }
+
+  .sidebar-scroll:hover,
+  .sidebar-scroll:active {
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+  }
+
+  .sidebar-scroll::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .sidebar-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .sidebar-scroll::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+  }
+
+  .sidebar-scroll:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+
+  @keyframes pageFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* 사이드바 서브메뉴 진입 애니메이션 */
+  .sidebar-enter {
+    animation: sidebarSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @keyframes sidebarSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
