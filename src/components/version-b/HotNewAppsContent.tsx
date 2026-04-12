@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import Image from "next/image";
 
 // 인기 앱 순위 색상 (1~3위 골드 계열, 4위 이후 회색)
@@ -84,6 +84,39 @@ function RankChange({ change }: { change: number }) {
 export default function HotNewAppsContent() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const bannerRef = useRef<HTMLDivElement>(null);
+  const [bannerSlide, setBannerSlide] = useState(0);
+  const [bannerTransition, setBannerTransition] = useState(true);
+  const bannerTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const bannerCount = 2;
+
+  // 3번째 슬라이드(복제 배너1)에 도달하면 트랜지션 없이 0으로 리셋
+  useEffect(() => {
+    if (bannerSlide === bannerCount) {
+      const timer = setTimeout(() => {
+        setBannerTransition(false);
+        setBannerSlide(0);
+        // 리셋 후 다음 프레임에서 트랜지션 복원
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            setBannerTransition(true);
+          });
+        });
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [bannerSlide]);
+
+  useEffect(() => {
+    bannerTimerRef.current = setInterval(() => {
+      setBannerSlide((prev) => prev + 1);
+    }, 10000);
+    return () => {
+      if (bannerTimerRef.current) clearInterval(bannerTimerRef.current);
+    };
+  }, []);
+
+  const bannerIndex = bannerSlide % bannerCount;
+
   const [tooltip, setTooltip] = useState<{ text: string; x: number; y: number; visible: boolean } | null>(null);
   const tooltipTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -163,48 +196,100 @@ export default function HotNewAppsContent() {
           onScroll={handleScroll}
           className="flex h-full min-w-0 flex-1 flex-col gap-8 overflow-y-auto rounded-2xl border-r border-gray-100 bg-white p-8"
         >
-          {/* Banner ─ 2587:1493 (패럴랙스) */}
-          <div className="relative w-full shrink-0 overflow-visible" style={{ height: 180 }}>
+          {/* Banner 캐러셀 (슬라이드) */}
+          <div className="relative w-full shrink-0" style={{ height: 180 }}>
             <div
               ref={bannerRef}
-              className="relative flex w-full items-center gap-2.5 rounded-2xl p-10"
-              style={{ height: 180, willChange: "transform" }}
-              data-node-id="2587:1493"
+              className="relative w-full rounded-2xl"
+              style={{ height: 180, willChange: "transform", overflowX: "clip", overflowY: "visible" } as React.CSSProperties}
             >
-              {/* 배경 클리핑 래퍼 */}
-              <div className="absolute inset-0 overflow-hidden rounded-2xl">
-                <Image
-                  src="/icons/version-b/banner-bg.png"
-                  alt=""
-                  fill
-                  sizes="900px"
-                  className="pointer-events-none object-cover"
-                />
-              </div>
-              {/* 텍스트 영역 */}
-              <div className="relative z-10 flex flex-1 flex-col gap-2 items-start justify-center" data-node-id="2620:402">
-                <div className="text-[28px] font-bold leading-[1.35] text-white" data-node-id="2572:1776">
-                  <p>회계팀 김사원이</p>
-                  <p>커피 한 잔 할 여유를 만들었대요!</p>
+              {/* 슬라이드 트랙 (3장: 배너1, 배너2, 배너1 복제) */}
+              <div
+                className={`flex h-full ${bannerTransition ? "transition-transform duration-500 ease-in-out" : ""}`}
+                style={{ width: "300%", transform: `translateX(-${bannerSlide * (100 / 3)}%)` }}
+              >
+                {/* 배너 1 */}
+                <div className="relative flex h-full w-1/3 shrink-0 items-center gap-2.5 p-10" data-node-id="2587:1493">
+                  <div className="absolute inset-0 overflow-hidden rounded-2xl">
+                    <Image src="/icons/version-b/banner-bg.png" alt="" fill sizes="900px" className="pointer-events-none object-cover" />
+                  </div>
+                  <div className="relative z-10 flex flex-1 flex-col gap-2 items-start justify-center">
+                    <div className="text-[28px] font-bold leading-[1.35] text-white">
+                      <p>회계팀 김사원이</p>
+                      <p>커피 한 잔 할 여유를 만들었대요!</p>
+                    </div>
+                    <p className="text-[18px] font-normal leading-[1.4] tracking-[-0.18px] whitespace-nowrap" style={{ color: "rgba(255,255,255,0.7)" }}>
+                      동료들이 만든 앱을 구경해보세요
+                    </p>
+                  </div>
+                  <div className="absolute bottom-0 right-[40px] z-10 h-[234px] w-[351.5px]">
+                    <Image src="/icons/version-b/banner-illust.png" alt="" fill sizes="352px" className="pointer-events-none object-cover" />
+                  </div>
                 </div>
-                <p
-                  className="text-[18px] font-normal leading-[1.4] tracking-[-0.18px] whitespace-nowrap"
-                  style={{ color: "rgba(255,255,255,0.7)" }}
-                  data-node-id="2614:2028"
-                >
-                  동료들이 만든 앱을 구경해보세요
-                </p>
+
+                {/* 배너 2 */}
+                <div className="relative flex h-full w-1/3 shrink-0 items-center gap-2.5 p-10" data-node-id="2632:394">
+                  <div className="absolute inset-0 overflow-hidden rounded-2xl">
+                    <Image src="/icons/version-b/banner2-bg.png" alt="" fill sizes="900px" className="pointer-events-none object-cover" />
+                  </div>
+                  <div className="relative z-10 flex flex-1 flex-col gap-2 items-start justify-center">
+                    <div className="text-[28px] font-bold leading-[1.35] text-white">
+                      <p>디자이너 최OO님이</p>
+                      <p>야근없는 저녁을 만들었대요!</p>
+                    </div>
+                    <p className="text-[18px] font-normal leading-[1.4] tracking-[-0.18px] whitespace-nowrap" style={{ color: "rgba(255,255,255,0.7)" }}>
+                      동료들이 만든 앱을 구경해보세요
+                    </p>
+                  </div>
+                  <div className="absolute bottom-0 right-[40px] z-10 h-[220px] w-[328.5px]">
+                    <Image src="/icons/version-b/banner2-illust.png" alt="" fill sizes="329px" className="pointer-events-none object-cover" />
+                  </div>
+                </div>
+
+                {/* 배너 1 복제 (무한 루프용) */}
+                <div className="relative flex h-full w-1/3 shrink-0 items-center gap-2.5 p-10">
+                  <div className="absolute inset-0 overflow-hidden rounded-2xl">
+                    <Image src="/icons/version-b/banner-bg.png" alt="" fill sizes="900px" className="pointer-events-none object-cover" />
+                  </div>
+                  <div className="relative z-10 flex flex-1 flex-col gap-2 items-start justify-center">
+                    <div className="text-[28px] font-bold leading-[1.35] text-white">
+                      <p>회계팀 김사원이</p>
+                      <p>커피 한 잔 할 여유를 만들었대요!</p>
+                    </div>
+                    <p className="text-[18px] font-normal leading-[1.4] tracking-[-0.18px] whitespace-nowrap" style={{ color: "rgba(255,255,255,0.7)" }}>
+                      동료들이 만든 앱을 구경해보세요
+                    </p>
+                  </div>
+                  <div className="absolute bottom-0 right-[40px] z-10 h-[234px] w-[351.5px]">
+                    <Image src="/icons/version-b/banner-illust.png" alt="" fill sizes="352px" className="pointer-events-none object-cover" />
+                  </div>
+                </div>
               </div>
-              {/* 일러스트 */}
-              <div className="absolute bottom-0 right-[40px] z-10 h-[234px] w-[351.5px]" data-node-id="2620:400">
-                <Image
-                  src="/icons/version-b/banner-illust.png"
-                  alt=""
-                  fill
-                  sizes="352px"
-                  className="pointer-events-none object-cover"
+            </div>
+
+            {/* Dot indicator (overflow 밖에 배치) */}
+            <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 gap-1.5">
+              {[0, 1].map((i) => (
+                <button
+                  key={i}
+                  type="button"
+                  aria-label={`배너 ${i + 1}`}
+                  onClick={() => {
+                    setBannerTransition(true);
+                    setBannerSlide(i);
+                    if (bannerTimerRef.current) clearInterval(bannerTimerRef.current);
+                    bannerTimerRef.current = setInterval(() => {
+                      setBannerSlide((prev) => prev + 1);
+                    }, 10000);
+                  }}
+                  className="rounded-full transition-all duration-300"
+                  style={{
+                    width: bannerIndex === i ? 20 : 6,
+                    height: 6,
+                    backgroundColor: bannerIndex === i ? "white" : "rgba(255,255,255,0.4)",
+                  }}
                 />
-              </div>
+              ))}
             </div>
           </div>
 
@@ -230,7 +315,10 @@ export default function HotNewAppsContent() {
                 </button>
               </div>
 
-              <div className="sidebar-scroll flex min-h-0 flex-1 flex-col overflow-y-auto">
+              <div className="relative min-h-0 flex-1">
+                <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-6" style={{ background: "linear-gradient(to bottom, white 0%, transparent 100%)" }} />
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-6" style={{ background: "linear-gradient(to top, white 0%, transparent 100%)" }} />
+              <div className="sidebar-scroll flex h-full flex-col overflow-y-auto">
                 {popularApps.map((app, i) => (
                   <div
                     key={i}
@@ -276,6 +364,7 @@ export default function HotNewAppsContent() {
                   </div>
                 ))}
               </div>
+              </div>
             </div>
 
             {/* 세로 구분선 (그라데이션) */}
@@ -306,7 +395,10 @@ export default function HotNewAppsContent() {
                 </button>
               </div>
 
-              <div className="sidebar-scroll flex min-h-0 flex-1 flex-col overflow-y-auto">
+              <div className="relative min-h-0 flex-1">
+                <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-6" style={{ background: "linear-gradient(to bottom, white 0%, transparent 100%)" }} />
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-6" style={{ background: "linear-gradient(to top, white 0%, transparent 100%)" }} />
+              <div className="sidebar-scroll flex h-full flex-col overflow-y-auto">
                 {newApps.map((app, i) => (
                   <div
                     key={i}
@@ -343,6 +435,7 @@ export default function HotNewAppsContent() {
                     </button>
                   </div>
                 ))}
+              </div>
               </div>
             </div>
           </div>
