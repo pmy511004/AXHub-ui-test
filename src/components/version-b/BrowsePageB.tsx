@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import TeamColumn from "./TeamColumn";
+import HotNewAppsContent from "./HotNewAppsContent";
 
 // 피그마 versionB-2 (node 2504:1034) — / (둘러보기) 페이지 Version B 전체 레이아웃
 //
@@ -16,6 +17,7 @@ import TeamColumn from "./TeamColumn";
 //      └ Content card (2504:1092)
 export default function BrowsePageB() {
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  const [activeMenu, setActiveMenu] = useState<string>("내가 이용중인 앱");
 
   return (
     <div
@@ -229,19 +231,22 @@ export default function BrowsePageB() {
               className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 pb-5"
               data-node-id="2504:1070"
             >
-              {/* 내가 이용중인 앱 (active) ─ 2530:1517 */}
+              {/* 내가 이용중인 앱 ─ 2530:1517 */}
               <button
                 type="button"
-                className="menu-active flex w-full items-center gap-2 rounded-lg px-3 py-2"
+                onClick={() => setActiveMenu("내가 이용중인 앱")}
+                className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "내가 이용중인 앱" ? "menu-active" : "hover:bg-gray-100"}`}
                 data-node-id="2530:1517"
               >
-                <Image
-                  src="/icons/version-b/menu-my-apps.svg"
-                  alt=""
-                  width={18}
-                  height={18}
+                <span
+                  className="menu-icon"
+                  style={{
+                    maskImage: "url(/icons/version-b/menu-my-apps.svg)",
+                    WebkitMaskImage: "url(/icons/version-b/menu-my-apps.svg)",
+                    color: activeMenu === "내가 이용중인 앱" ? "#FBB03B" : "rgba(24,24,27,0.16)",
+                  }}
                 />
-                <span className="whitespace-nowrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#FBB03B]">
+                <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "내가 이용중인 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>
                   내가 이용중인 앱
                 </span>
               </button>
@@ -249,16 +254,19 @@ export default function BrowsePageB() {
               {/* 인기 • 신규 앱 ─ 2530:1521 */}
               <button
                 type="button"
-                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100"
+                onClick={() => setActiveMenu("인기 • 신규 앱")}
+                className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "인기 • 신규 앱" ? "menu-active" : "hover:bg-gray-100"}`}
                 data-node-id="2530:1521"
               >
-                <Image
-                  src="/icons/version-b/menu-hot-apps.svg"
-                  alt=""
-                  width={18}
-                  height={18}
+                <span
+                  className="menu-icon"
+                  style={{
+                    maskImage: "url(/icons/version-b/menu-hot-apps.svg)",
+                    WebkitMaskImage: "url(/icons/version-b/menu-hot-apps.svg)",
+                    color: activeMenu === "인기 • 신규 앱" ? "#FBB03B" : "rgba(24,24,27,0.16)",
+                  }}
                 />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
+                <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>
                   인기 • 신규 앱
                 </span>
               </button>
@@ -279,11 +287,13 @@ export default function BrowsePageB() {
                 className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100"
                 data-node-id="2530:1527"
               >
-                <Image
-                  src="/icons/version-b/menu-store-app.svg"
-                  alt=""
-                  width={18}
-                  height={18}
+                <span
+                  className="menu-icon"
+                  style={{
+                    maskImage: "url(/icons/version-b/menu-store-app.svg)",
+                    WebkitMaskImage: "url(/icons/version-b/menu-store-app.svg)",
+                    color: "rgba(24,24,27,0.16)",
+                  }}
                 />
                 <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
                   앱
@@ -296,11 +306,13 @@ export default function BrowsePageB() {
                 className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100"
                 data-node-id="2530:1531"
               >
-                <Image
-                  src="/icons/version-b/menu-store-api.svg"
-                  alt=""
-                  width={18}
-                  height={18}
+                <span
+                  className="menu-icon"
+                  style={{
+                    maskImage: "url(/icons/version-b/menu-store-api.svg)",
+                    WebkitMaskImage: "url(/icons/version-b/menu-store-api.svg)",
+                    color: "rgba(24,24,27,0.16)",
+                  }}
                 />
                 <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
                   API
@@ -313,11 +325,13 @@ export default function BrowsePageB() {
                 className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100"
                 data-node-id="2530:1535"
               >
-                <Image
-                  src="/icons/version-b/menu-shared-data.svg"
-                  alt=""
-                  width={18}
-                  height={18}
+                <span
+                  className="menu-icon"
+                  style={{
+                    maskImage: "url(/icons/version-b/menu-shared-data.svg)",
+                    WebkitMaskImage: "url(/icons/version-b/menu-shared-data.svg)",
+                    color: "rgba(24,24,27,0.16)",
+                  }}
                 />
                 <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
                   공유 데이터
@@ -340,11 +354,13 @@ export default function BrowsePageB() {
                 className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100"
                 data-node-id="2530:1541"
               >
-                <Image
-                  src="/icons/version-b/menu-req-app.svg"
-                  alt=""
-                  width={18}
-                  height={18}
+                <span
+                  className="menu-icon"
+                  style={{
+                    maskImage: "url(/icons/version-b/menu-req-app.svg)",
+                    WebkitMaskImage: "url(/icons/version-b/menu-req-app.svg)",
+                    color: "rgba(24,24,27,0.16)",
+                  }}
                 />
                 <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
                   앱 사용
@@ -357,11 +373,13 @@ export default function BrowsePageB() {
                 className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100"
                 data-node-id="2530:1545"
               >
-                <Image
-                  src="/icons/version-b/menu-req-shared.svg"
-                  alt=""
-                  width={18}
-                  height={18}
+                <span
+                  className="menu-icon"
+                  style={{
+                    maskImage: "url(/icons/version-b/menu-req-shared.svg)",
+                    WebkitMaskImage: "url(/icons/version-b/menu-req-shared.svg)",
+                    color: "rgba(24,24,27,0.16)",
+                  }}
                 />
                 <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
                   공유데이터 사용
@@ -376,54 +394,58 @@ export default function BrowsePageB() {
       </div>
 
       {/* R. Main area ─ 2504:1086 */}
-      <div className="flex h-full flex-1 min-w-0 flex-col" data-node-id="2504:1086">
-        {/* Header ─ 2504:1087 */}
-        <header
-          className="flex h-[76px] w-full shrink-0 items-center justify-between px-5 py-4"
-          data-node-id="2504:1087"
-        >
-          <h1
-            className="font-bold tracking-[-0.22px] text-black"
-            style={{ fontSize: "22px", lineHeight: "1.3" }}
-            data-node-id="2504:1089"
+      {activeMenu === "인기 • 신규 앱" ? (
+        <HotNewAppsContent />
+      ) : (
+        <div className="flex h-full flex-1 min-w-0 flex-col" data-node-id="2504:1086">
+          {/* Header ─ 2504:1087 */}
+          <header
+            className="flex h-[76px] w-full shrink-0 items-center justify-between px-5 py-4"
+            data-node-id="2504:1087"
           >
-            내가 이용중인 앱
-          </h1>
+            <h1
+              className="font-bold tracking-[-0.22px] text-black"
+              style={{ fontSize: "22px", lineHeight: "1.3" }}
+              data-node-id="2504:1089"
+            >
+              내가 이용중인 앱
+            </h1>
 
-          {/* 검색 인풋 ─ 2504:1141 */}
-          <div
-            className="flex h-10 w-[240px] items-center gap-1.5 overflow-hidden rounded-xl bg-white px-4 py-3"
-            data-node-id="2504:1141"
-          >
-            <div className="flex items-center" data-node-id="2504:1142">
-              <div className="relative size-5 overflow-hidden" data-node-id="2504:1143">
-                <Image
-                  src="/icons/version-b/search.svg"
-                  alt=""
-                  fill
-                  sizes="20px"
-                />
+            {/* 검색 인풋 ─ 2504:1141 */}
+            <div
+              className="flex h-10 w-[240px] items-center gap-1.5 overflow-hidden rounded-xl bg-white px-4 py-3"
+              data-node-id="2504:1141"
+            >
+              <div className="flex items-center" data-node-id="2504:1142">
+                <div className="relative size-5 overflow-hidden" data-node-id="2504:1143">
+                  <Image
+                    src="/icons/version-b/search.svg"
+                    alt=""
+                    fill
+                    sizes="20px"
+                  />
+                </div>
+              </div>
+              <div className="flex flex-1 items-center overflow-hidden">
+                <p className="whitespace-nowrap text-base font-normal leading-[1.5] tracking-[-0.16px] text-gray-300">
+                  앱 찾기
+                </p>
               </div>
             </div>
-            <div className="flex flex-1 items-center overflow-hidden">
-              <p className="whitespace-nowrap text-base font-normal leading-[1.5] tracking-[-0.16px] text-gray-300">
-                앱 찾기
-              </p>
-            </div>
-          </div>
-        </header>
+          </header>
 
-        {/* Content area ─ 2504:1091 */}
-        <div
-          className="flex flex-1 items-start overflow-hidden px-5 py-4"
-          data-node-id="2504:1091"
-        >
+          {/* Content area ─ 2504:1091 */}
           <div
-            className="content-card h-full min-w-0 flex-1 rounded-xl border-r border-gray-100 bg-white"
-            data-node-id="2504:1092"
-          />
+            className="flex flex-1 items-start overflow-hidden px-5 py-4"
+            data-node-id="2504:1091"
+          >
+            <div
+              className="content-card h-full min-w-0 flex-1 rounded-xl border-r border-gray-100 bg-white"
+              data-node-id="2504:1092"
+            />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

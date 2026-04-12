@@ -60,6 +60,21 @@
     border-radius: 0 3px 3px 0;
   }
 
+  /* 사이드바 메뉴 아이콘: mask-image로 색상 제어 */
+  .menu-icon {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    background-color: currentColor;
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+  }
+
   /* 콘텐츠 카드 hover 효과 */
   .content-card {
     transition: box-shadow 0.25s ease, transform 0.25s ease;
@@ -146,5 +161,79 @@
       opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  /* 순위 번호 staggered 진입 애니메이션 */
+  .rank-enter {
+    animation: rankFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+
+  @keyframes rankFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(12px) scale(0.8);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* NEW 뱃지 펄스 애니메이션 */
+  .new-badge-pulse {
+    animation: badgePulse 2s ease-in-out infinite;
+  }
+
+  @keyframes badgePulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(245, 71, 92, 0.5);
+    }
+    70% {
+      box-shadow: 0 0 0 6px rgba(245, 71, 92, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 6px rgba(245, 71, 92, 0);
+    }
+  }
+
+  /* 앱 리스트 행 호버 효과 */
+  .app-row {
+    transition: background-color 0.2s ease;
+    border-radius: 12px;
+  }
+
+  .app-row:hover {
+  }
+
+  .app-row:hover .app-icon {
+    transform: scale(1.08);
+  }
+
+  .app-icon {
+    transition: transform 0.2s ease;
+  }
+
+  /* 앱 미리보기 툴팁 (JS 기반 fixed positioning) */
+  .app-tooltip-box {
+    position: fixed;
+    background: rgba(24, 24, 27, 0.6);
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: -0.12px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 50;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .app-tooltip-box.visible {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
