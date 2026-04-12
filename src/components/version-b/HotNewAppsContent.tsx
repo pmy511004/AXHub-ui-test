@@ -298,7 +298,7 @@ export default function HotNewAppsContent() {
             {/* 왼쪽: 지금 인기있는 앱 */}
             <div className="flex min-h-0 flex-1 flex-col gap-5">
               <div className="flex items-center justify-between">
-                <h2 className="text-[22px] font-bold leading-[1.3] tracking-[-0.22px] text-black">
+                <h2 className="text-[20px] font-medium leading-[1.3] tracking-[-0.2px] text-black">
                   지금 인기있는 앱
                 </h2>
                 <button
@@ -378,7 +378,7 @@ export default function HotNewAppsContent() {
             {/* 오른쪽: 새로 나온 앱 */}
             <div className="flex min-h-0 flex-1 flex-col gap-5">
               <div className="flex items-center justify-between">
-                <h2 className="text-[22px] font-bold leading-[1.3] tracking-[-0.22px] text-black">
+                <h2 className="text-[20px] font-medium leading-[1.3] tracking-[-0.2px] text-black">
                   새로 나온 앱
                 </h2>
                 <button
