@@ -234,7 +234,7 @@ export default function HotNewAppsContent() {
                   </div>
                   <div className="relative z-10 flex flex-1 flex-col gap-2 items-start justify-center">
                     <div className="text-[28px] font-bold leading-[1.35] text-white">
-                      <p>디자이너 최OO님이</p>
+                      <p>디자이너 최허브님이</p>
                       <p>야근없는 저녁을 만들었대요!</p>
                     </div>
                     <p className="text-[18px] font-normal leading-[1.4] tracking-[-0.18px] whitespace-nowrap" style={{ color: "rgba(255,255,255,0.7)" }}>
