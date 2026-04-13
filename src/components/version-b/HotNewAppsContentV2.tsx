@@ -166,11 +166,11 @@ export default function HotNewAppsContentV2() {
   };
 
   return (
-    <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden px-5 py-4">
+    <>
       <div
         ref={scrollContainerRef}
         onScroll={handleScroll}
-        className="flex h-full min-w-0 flex-1 flex-col gap-10 overflow-y-auto rounded-2xl border-r border-gray-100 bg-white p-8"
+        className="flex h-full min-w-0 flex-1 flex-col gap-6 overflow-y-auto rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6"
       >
         {/* Header */}
         <div className="flex shrink-0 items-center justify-between">
@@ -194,11 +194,11 @@ export default function HotNewAppsContentV2() {
           </div>
         </div>
           {/* Banner 캐러셀 (슬라이드) */}
-          <div className="relative w-full shrink-0" style={{ height: 180 }}>
+          <div className="relative w-full shrink-0" style={{ height: 212 }}>
             <div
               ref={bannerRef}
               className="relative w-full rounded-2xl"
-              style={{ height: 180, willChange: "transform", overflowX: "clip", overflowY: "visible" } as React.CSSProperties}
+              style={{ height: 212, willChange: "transform", overflowX: "clip", overflowY: "visible", paddingTop: 16, paddingBottom: 16 } as React.CSSProperties}
             >
               {/* 슬라이드 트랙 (3장: 배너1, 배너2, 배너1 복제) */}
               <div
@@ -265,7 +265,7 @@ export default function HotNewAppsContentV2() {
             </div>
 
             {/* Dot indicator (overflow 밖에 배치) */}
-            <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 gap-1.5">
+            <div className="absolute bottom-7 left-1/2 z-20 flex -translate-x-1/2 gap-1.5">
               {[0, 1].map((i) => (
                 <button
                   key={i}
@@ -486,6 +486,6 @@ export default function HotNewAppsContentV2() {
           {tooltip.text}
         </div>
       )}
-    </div>
+    </>
   );
 }

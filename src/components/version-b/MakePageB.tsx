@@ -19,11 +19,11 @@ export default function MakePageB() {
   return (
     <div
       className="flex h-screen w-full items-start overflow-hidden"
-      style={{ backgroundColor: "#f4f4f5", "--page-primary": "#6d319d" } as React.CSSProperties}
+      style={{ backgroundColor: "#3F1C5C", "--page-primary": "#6d319d" } as React.CSSProperties}
       data-node-id="2471:1262"
     >
       {/* Team Column */}
-      <TeamColumn expanded={sidebarExpanded} />
+      <TeamColumn expanded={sidebarExpanded} bgColor="#2f1546" />
 
       {/* L. Global Nav ─ 2471:1278 */}
       <div
@@ -67,7 +67,7 @@ export default function MakePageB() {
                   sizes="44px"
                 />
               </div>
-              <p className="text-center text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-gray-900">
+              <p className="text-center text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white">
                 만들기
               </p>
             </Link>
@@ -88,7 +88,7 @@ export default function MakePageB() {
               </div>
               <p
                 className="whitespace-nowrap text-center text-xs font-normal leading-[1.3] tracking-[-0.12px]"
-                style={{ color: "rgba(24,24,27,0.48)" }}
+                style={{ color: "rgba(255,255,255,0.7)" }}
               >
                 둘러보기
               </p>
@@ -110,7 +110,7 @@ export default function MakePageB() {
               </div>
               <p
                 className="whitespace-nowrap text-center text-xs font-normal leading-[1.3] tracking-[-0.12px]"
-                style={{ color: "rgba(24,24,27,0.48)" }}
+                style={{ color: "rgba(255,255,255,0.7)" }}
               >
                 관리하기
               </p>
@@ -181,81 +181,44 @@ export default function MakePageB() {
         </div>
       </div>
 
-      {/* M. Middle column */}
-      <div className="flex h-full flex-col gap-4 items-start py-4 shrink-0 w-[200px]">
-        {/* Team name header card */}
-        <div className="flex h-[44px] w-full shrink-0 items-center overflow-hidden rounded-xl border-r border-gray-100 bg-white px-3">
-          <p className="overflow-hidden text-ellipsis whitespace-nowrap text-base font-bold leading-[1.5] tracking-[-0.16px] text-black">
-            조코딩AX파트너스
-          </p>
+      {/* M + R. Sidebar + Main area (통합) */}
+      <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden pr-2 py-2">
+        {/* Left sidebar */}
+        <div className="flex h-full w-[200px] shrink-0 flex-col">
+          <div className="flex h-[44px] items-center overflow-hidden rounded-tl-xl border-r px-3" style={{ backgroundColor: "#f6f6f6", borderColor: "#f6f6f6" }}>
+            <p className="overflow-hidden text-ellipsis whitespace-nowrap text-base font-bold leading-[1.5] tracking-[-0.16px] text-black">
+              조코딩AX파트너스
+            </p>
+          </div>
+          <div className="flex flex-1 min-h-0 flex-col overflow-hidden rounded-bl-xl border-r" style={{ backgroundColor: "#f6f6f6", borderColor: "#f6f6f6" }}>
+            <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 py-2">
+              <div className="flex w-full items-center px-3 rounded-lg">
+                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px]" style={{ color: "#a1a1aa" }}>내 앱</span>
+              </div>
+              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
+                <Image src="/icons/version-b/make-menu-my-apps.svg" alt="" width={18} height={18} />
+                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">내가 만든 앱</span>
+              </button>
+              <button type="button" className="menu-active flex w-full items-center gap-2 rounded-lg px-3 py-2">
+                <Image src="/icons/version-b/make-menu-insight.svg" alt="" width={18} height={18} />
+                <span className="whitespace-nowrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-primary-500">인사이트</span>
+              </button>
+              <div className="flex w-full items-center px-3 pt-4 rounded-lg">
+                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px]" style={{ color: "#a1a1aa" }}>앱 만들기</span>
+              </div>
+              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
+                <Image src="/icons/version-b/make-menu-create.svg" alt="" width={18} height={18} />
+                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">만들기</span>
+              </button>
+              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
+                <Image src="/icons/version-b/make-menu-template.svg" alt="" width={18} height={18} />
+                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">템플릿</span>
+              </button>
+            </nav>
+          </div>
         </div>
-        {/* Menu card */}
-        <div className="flex flex-1 min-h-0 w-full flex-col overflow-hidden rounded-xl border-r border-gray-100 bg-white">
-          <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 py-2">
-            {/* 섹션 헤더: 내 앱 */}
-            <div className="flex w-full items-center px-3 pt-4 rounded-lg">
-              <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px]" style={{ color: "#a1a1aa" }}>
-                내 앱
-              </span>
-            </div>
-
-            {/* 내가 만든 앱 */}
-            <button
-              type="button"
-              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100"
-            >
-              <Image src="/icons/version-b/make-menu-my-apps.svg" alt="" width={18} height={18} />
-              <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
-                내가 만든 앱
-              </span>
-            </button>
-
-            {/* 인사이트 (active) */}
-            <button
-              type="button"
-              className="menu-active flex w-full items-center gap-2 rounded-lg px-3 py-2"
-            >
-              <Image src="/icons/version-b/make-menu-insight.svg" alt="" width={18} height={18} />
-              <span className="whitespace-nowrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-primary-500">
-                인사이트
-              </span>
-            </button>
-
-            {/* 섹션 헤더: 앱 만들기 */}
-            <div className="flex w-full items-center px-3 pt-4 rounded-lg">
-              <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px]" style={{ color: "#a1a1aa" }}>
-                앱 만들기
-              </span>
-            </div>
-
-            {/* 만들기 */}
-            <button
-              type="button"
-              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100"
-            >
-              <Image src="/icons/version-b/make-menu-create.svg" alt="" width={18} height={18} />
-              <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
-                만들기
-              </span>
-            </button>
-
-            {/* 템플릿 */}
-            <button
-              type="button"
-              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100"
-            >
-              <Image src="/icons/version-b/make-menu-template.svg" alt="" width={18} height={18} />
-              <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
-                템플릿
-              </span>
-            </button>
-          </nav>
-        </div>
-      </div>
-
-      {/* R. Main area */}
-      <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden px-5 py-4">
-        <div className="flex h-full min-w-0 flex-1 flex-col overflow-hidden rounded-xl border-r border-gray-100 bg-white p-8 gap-10">
+        {/* Right: Main content */}
+        <div className="flex h-full min-w-0 flex-1 flex-col overflow-hidden rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6 gap-6">
           {/* Header */}
           <div className="flex shrink-0 items-center justify-between">
             <h1

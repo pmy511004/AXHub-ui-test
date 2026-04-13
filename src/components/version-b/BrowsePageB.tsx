@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import TeamColumn from "./TeamColumn";
 import HotNewAppsContentV2 from "./HotNewAppsContentV2";
-import AppStoreContent from "./AppStoreContent";
 import AppStoreContentV2 from "./AppStoreContentV2";
 
 // 피그마 versionB-2 (node 2504:1034) — / (둘러보기) 페이지 Version B 전체 레이아웃
@@ -20,17 +19,17 @@ import AppStoreContentV2 from "./AppStoreContentV2";
 export default function BrowsePageB() {
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string>("내가 이용중인 앱");
-  const [storeVersion, setStoreVersion] = useState<1 | 2>(1);
-  const isStoreV2 = activeMenu === "앱" && storeVersion === 2;
+
+
 
   return (
     <div
       className="flex h-screen w-full items-start overflow-hidden"
-      style={{ backgroundColor: activeMenu === "앱" && storeVersion === 2 ? "#3F1C5C" : "#f4f4f5", "--page-primary": "#FBB03B" } as React.CSSProperties}
+      style={{ backgroundColor: "#3F1C5C", "--page-primary": "#FBB03B" } as React.CSSProperties}
       data-node-id="2504:1034"
     >
       {/* Team Column */}
-      <TeamColumn expanded={sidebarExpanded} color={isStoreV2 ? "#6d319d" : "#6d319d"} bgColor={isStoreV2 ? "#2f1546" : undefined} />
+      <TeamColumn expanded={sidebarExpanded} bgColor="#2f1546" />
 
       {/* L. Global Nav ─ 2504:1035 */}
       <div
@@ -78,7 +77,7 @@ export default function BrowsePageB() {
               </div>
               <p
                 className="whitespace-nowrap text-center text-xs font-normal leading-[1.3] tracking-[-0.12px]"
-                style={{ color: isStoreV2 ? "rgba(255,255,255,0.7)" : "rgba(24,24,27,0.48)" }}
+                style={{ color: "rgba(255,255,255,0.7)" }}
               >
                 만들기
               </p>
@@ -100,7 +99,7 @@ export default function BrowsePageB() {
               </div>
               <p
                 className="text-center text-xs font-semibold leading-[1.3] tracking-[-0.12px]"
-                style={{ color: isStoreV2 ? "#ffffff" : "#18181b" }}
+                style={{ color: "#ffffff" }}
               >
                 둘러보기
               </p>
@@ -122,7 +121,7 @@ export default function BrowsePageB() {
               </div>
               <p
                 className="whitespace-nowrap text-center text-xs font-normal leading-[1.3] tracking-[-0.12px]"
-                style={{ color: isStoreV2 ? "rgba(255,255,255,0.7)" : "rgba(24,24,27,0.48)" }}
+                style={{ color: "rgba(255,255,255,0.7)" }}
               >
                 관리하기
               </p>
@@ -193,8 +192,8 @@ export default function BrowsePageB() {
         </div>
       </div>
 
-      {/* M. Middle column — V2 앱스토어에서는 사이드바가 콘텐츠에 통합되므로 숨김 */}
-      <div className={`flex h-full flex-col gap-4 items-start py-4 shrink-0 w-[200px] ${activeMenu === "앱" && storeVersion === 2 ? "hidden" : ""}`}>
+      {/* M. Middle column — 사이드바가 각 콘텐츠에 통합되므로 숨김 */}
+      <div className="hidden flex h-full flex-col gap-4 items-start py-4 shrink-0 w-[200px]">
         {/* Team name header card */}
         <div className="flex h-[44px] w-full shrink-0 items-center overflow-hidden rounded-xl border-r border-gray-100 bg-white px-3">
           <p className="overflow-hidden text-ellipsis whitespace-nowrap text-base font-bold leading-[1.5] tracking-[-0.16px] text-black">
@@ -363,65 +362,80 @@ export default function BrowsePageB() {
         </div>
       </div>
 
-      {/* R. Main area ─ 2504:1086 */}
-      {activeMenu === "인기 • 신규 앱" ? (
-        <HotNewAppsContentV2 />
-      ) : activeMenu === "앱" ? (
-        <>
-          {storeVersion === 1 ? <AppStoreContent /> : <AppStoreContentV2 activeMenu={activeMenu} setActiveMenu={setActiveMenu} />}
-          {/* 플로팅 버전 토글 */}
-          <div className="fixed top-4 right-6 z-50 flex items-center gap-1 rounded-full bg-white p-1 shadow-lg">
-            <button
-              type="button"
-              onClick={() => setStoreVersion(1)}
-              className="rounded-full px-3 py-1.5 text-xs font-semibold transition-colors"
-              style={{
-                backgroundColor: storeVersion === 1 ? "#fbb03b" : "transparent",
-                color: storeVersion === 1 ? "white" : "#a1a1aa",
-              }}
-            >
-              V1
-            </button>
-            <button
-              type="button"
-              onClick={() => setStoreVersion(2)}
-              className="rounded-full px-3 py-1.5 text-xs font-semibold transition-colors"
-              style={{
-                backgroundColor: storeVersion === 2 ? "#fbb03b" : "transparent",
-                color: storeVersion === 2 ? "white" : "#a1a1aa",
-              }}
-            >
-              V2
-            </button>
-          </div>
-        </>
+      {/* R. Main area ─ 통합 사이드바 + 콘텐츠 */}
+      {activeMenu === "앱" ? (
+        <AppStoreContentV2 activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
       ) : (
-        <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden px-5 py-4">
-          <div className="flex h-full min-w-0 flex-1 flex-col overflow-hidden rounded-xl border-r border-gray-100 bg-white p-8 gap-10">
-            {/* Header */}
-            <div className="flex shrink-0 items-center justify-between">
-              <h1
-                className="font-bold tracking-[-0.22px] text-black"
-                style={{ fontSize: "22px", lineHeight: "1.3" }}
-              >
-                내가 이용중인 앱
-              </h1>
-              <div className="flex h-10 w-[240px] items-center gap-1.5 overflow-hidden rounded-xl bg-gray-100 px-4 py-3">
-                <div className="flex items-center">
-                  <div className="relative size-5 overflow-hidden">
-                    <Image src="/icons/version-b/search.svg" alt="" fill sizes="20px" />
+        <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden pr-2 py-2">
+          {/* Left sidebar */}
+          <div className="flex h-full w-[200px] shrink-0 flex-col">
+            <div className="flex h-[44px] items-center overflow-hidden rounded-tl-xl border-r px-3" style={{ backgroundColor: "#f6f6f6", borderColor: "#f6f6f6" }}>
+              <p className="overflow-hidden text-ellipsis whitespace-nowrap text-base font-bold leading-[1.5] tracking-[-0.16px] text-black">
+                조코딩AX파트너스
+              </p>
+            </div>
+            <div className="flex flex-1 min-h-0 flex-col overflow-hidden rounded-bl-xl border-r" style={{ backgroundColor: "#f6f6f6", borderColor: "#f6f6f6" }}>
+              <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 py-2">
+                <button type="button" onClick={() => setActiveMenu("내가 이용중인 앱")} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "내가 이용중인 앱" ? "menu-active" : "hover:bg-gray-200"}`}>
+                  <span className="menu-icon" style={{ maskImage: "url(/icons/version-b/menu-my-apps.svg)", WebkitMaskImage: "url(/icons/version-b/menu-my-apps.svg)", color: activeMenu === "내가 이용중인 앱" ? "#FBB03B" : "rgba(24,24,27,0.48)" }} />
+                  <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "내가 이용중인 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>내가 이용중인 앱</span>
+                </button>
+                <button type="button" onClick={() => setActiveMenu("인기 • 신규 앱")} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "인기 • 신규 앱" ? "menu-active" : "hover:bg-gray-200"}`}>
+                  <span className="menu-icon" style={{ maskImage: "url(/icons/version-b/menu-hot-apps.svg)", WebkitMaskImage: "url(/icons/version-b/menu-hot-apps.svg)", color: activeMenu === "인기 • 신규 앱" ? "#FBB03B" : "rgba(24,24,27,0.48)" }} />
+                  <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>인기 • 신규 앱</span>
+                </button>
+                <div className="flex w-full items-center px-3 pt-4 rounded-lg">
+                  <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px]" style={{ color: "#a1a1aa" }}>스토어</span>
+                </div>
+                <button type="button" onClick={() => setActiveMenu("앱")} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "앱" ? "menu-active" : "hover:bg-gray-200"}`}>
+                  <span className="menu-icon" style={{ maskImage: "url(/icons/version-b/menu-store-app.svg)", WebkitMaskImage: "url(/icons/version-b/menu-store-app.svg)", color: activeMenu === "앱" ? "#FBB03B" : "rgba(24,24,27,0.48)" }} />
+                  <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>앱</span>
+                </button>
+                <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
+                  <span className="menu-icon" style={{ maskImage: "url(/icons/version-b/menu-store-api.svg)", WebkitMaskImage: "url(/icons/version-b/menu-store-api.svg)", color: "rgba(24,24,27,0.48)" }} />
+                  <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">API</span>
+                </button>
+                <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
+                  <span className="menu-icon" style={{ maskImage: "url(/icons/version-b/menu-shared-data.svg)", WebkitMaskImage: "url(/icons/version-b/menu-shared-data.svg)", color: "rgba(24,24,27,0.48)" }} />
+                  <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">공유 데이터</span>
+                </button>
+                <div className="flex w-full items-center px-3 pt-4 rounded-lg">
+                  <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px]" style={{ color: "#a1a1aa" }}>요청내역</span>
+                </div>
+                <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
+                  <span className="menu-icon" style={{ maskImage: "url(/icons/version-b/menu-req-app.svg)", WebkitMaskImage: "url(/icons/version-b/menu-req-app.svg)", color: "rgba(24,24,27,0.48)" }} />
+                  <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">앱 사용</span>
+                </button>
+                <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
+                  <span className="menu-icon" style={{ maskImage: "url(/icons/version-b/menu-req-shared.svg)", WebkitMaskImage: "url(/icons/version-b/menu-req-shared.svg)", color: "rgba(24,24,27,0.48)" }} />
+                  <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">공유데이터 사용</span>
+                </button>
+              </nav>
+            </div>
+          </div>
+          {/* Right: Main content */}
+          {activeMenu === "인기 • 신규 앱" ? (
+            <HotNewAppsContentV2 />
+          ) : (
+            <div className="flex h-full min-w-0 flex-1 flex-col overflow-hidden rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6 gap-6">
+              <div className="flex shrink-0 items-center justify-between">
+                <h1 className="font-bold tracking-[-0.22px] text-black" style={{ fontSize: "22px", lineHeight: "1.3" }}>
+                  내가 이용중인 앱
+                </h1>
+                <div className="flex h-10 w-[240px] items-center gap-1.5 overflow-hidden rounded-xl px-4 py-3" style={{ backgroundColor: "#f4f4f5" }}>
+                  <div className="flex items-center">
+                    <div className="relative size-5 overflow-hidden">
+                      <Image src="/icons/version-b/search.svg" alt="" fill sizes="20px" />
+                    </div>
+                  </div>
+                  <div className="flex flex-1 items-center overflow-hidden">
+                    <p className="whitespace-nowrap text-base font-normal leading-[1.5] tracking-[-0.16px] text-gray-300">앱 찾기</p>
                   </div>
                 </div>
-                <div className="flex flex-1 items-center overflow-hidden">
-                  <p className="whitespace-nowrap text-base font-normal leading-[1.5] tracking-[-0.16px] text-gray-300">
-                    앱 찾기
-                  </p>
-                </div>
               </div>
+              <div className="flex-1" />
             </div>
-            {/* Content */}
-            <div className="flex-1" />
-          </div>
+          )}
         </div>
       )}
     </div>
