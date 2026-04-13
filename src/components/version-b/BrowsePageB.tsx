@@ -6,6 +6,7 @@ import Link from "next/link";
 import TeamColumn from "./TeamColumn";
 import HotNewAppsContentV2 from "./HotNewAppsContentV2";
 import AppStoreContent from "./AppStoreContent";
+import AppStoreContentV2 from "./AppStoreContentV2";
 
 // 피그마 versionB-2 (node 2504:1034) — / (둘러보기) 페이지 Version B 전체 레이아웃
 //
@@ -19,15 +20,17 @@ import AppStoreContent from "./AppStoreContent";
 export default function BrowsePageB() {
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string>("내가 이용중인 앱");
+  const [storeVersion, setStoreVersion] = useState<1 | 2>(1);
+  const isStoreV2 = activeMenu === "앱" && storeVersion === 2;
 
   return (
     <div
       className="flex h-screen w-full items-start overflow-hidden"
-      style={{ backgroundColor: "#f4f4f5", "--page-primary": "#FBB03B" } as React.CSSProperties}
+      style={{ backgroundColor: activeMenu === "앱" && storeVersion === 2 ? "#3F1C5C" : "#f4f4f5", "--page-primary": "#FBB03B" } as React.CSSProperties}
       data-node-id="2504:1034"
     >
       {/* Team Column */}
-      <TeamColumn expanded={sidebarExpanded} />
+      <TeamColumn expanded={sidebarExpanded} color={isStoreV2 ? "#6d319d" : "#6d319d"} bgColor={isStoreV2 ? "#2f1546" : undefined} />
 
       {/* L. Global Nav ─ 2504:1035 */}
       <div
@@ -43,7 +46,8 @@ export default function BrowsePageB() {
               data-node-id="2504:1037"
             >
               <div
-                className="flex size-11 items-center justify-center overflow-hidden rounded-xl border border-white bg-primary-500 p-1 shadow-[0px_0px_0px_1px_#6d319d]"
+                className="flex size-11 items-center justify-center overflow-hidden rounded-xl border border-white p-1"
+                style={{ backgroundColor: "#6d319d", boxShadow: "0px 0px 0px 1px #6d319d" }}
                 data-node-id="2504:1038"
               >
                 <p className="text-base font-bold leading-[1.5] tracking-[-0.16px] text-white">
@@ -74,7 +78,7 @@ export default function BrowsePageB() {
               </div>
               <p
                 className="whitespace-nowrap text-center text-xs font-normal leading-[1.3] tracking-[-0.12px]"
-                style={{ color: "rgba(24,24,27,0.48)" }}
+                style={{ color: isStoreV2 ? "rgba(255,255,255,0.7)" : "rgba(24,24,27,0.48)" }}
               >
                 만들기
               </p>
@@ -94,7 +98,10 @@ export default function BrowsePageB() {
                   sizes="44px"
                 />
               </div>
-              <p className="text-center text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-gray-900">
+              <p
+                className="text-center text-xs font-semibold leading-[1.3] tracking-[-0.12px]"
+                style={{ color: isStoreV2 ? "#ffffff" : "#18181b" }}
+              >
                 둘러보기
               </p>
             </Link>
@@ -115,7 +122,7 @@ export default function BrowsePageB() {
               </div>
               <p
                 className="whitespace-nowrap text-center text-xs font-normal leading-[1.3] tracking-[-0.12px]"
-                style={{ color: "rgba(24,24,27,0.48)" }}
+                style={{ color: isStoreV2 ? "rgba(255,255,255,0.7)" : "rgba(24,24,27,0.48)" }}
               >
                 관리하기
               </p>
@@ -186,8 +193,8 @@ export default function BrowsePageB() {
         </div>
       </div>
 
-      {/* M. Middle column */}
-      <div className="flex h-full flex-col gap-4 items-start py-4 shrink-0 w-[200px]">
+      {/* M. Middle column — V2 앱스토어에서는 사이드바가 콘텐츠에 통합되므로 숨김 */}
+      <div className={`flex h-full flex-col gap-4 items-start py-4 shrink-0 w-[200px] ${activeMenu === "앱" && storeVersion === 2 ? "hidden" : ""}`}>
         {/* Team name header card */}
         <div className="flex h-[44px] w-full shrink-0 items-center overflow-hidden rounded-xl border-r border-gray-100 bg-white px-3">
           <p className="overflow-hidden text-ellipsis whitespace-nowrap text-base font-bold leading-[1.5] tracking-[-0.16px] text-black">
@@ -209,7 +216,7 @@ export default function BrowsePageB() {
                   style={{
                     maskImage: "url(/icons/version-b/menu-my-apps.svg)",
                     WebkitMaskImage: "url(/icons/version-b/menu-my-apps.svg)",
-                    color: activeMenu === "내가 이용중인 앱" ? "#FBB03B" : "rgba(24,24,27,0.16)",
+                    color: activeMenu === "내가 이용중인 앱" ? "#FBB03B" : "rgba(24,24,27,0.48)",
                   }}
                 />
                 <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "내가 이용중인 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>
@@ -229,7 +236,7 @@ export default function BrowsePageB() {
                   style={{
                     maskImage: "url(/icons/version-b/menu-hot-apps.svg)",
                     WebkitMaskImage: "url(/icons/version-b/menu-hot-apps.svg)",
-                    color: activeMenu === "인기 • 신규 앱" ? "#FBB03B" : "rgba(24,24,27,0.16)",
+                    color: activeMenu === "인기 • 신규 앱" ? "#FBB03B" : "rgba(24,24,27,0.48)",
                   }}
                 />
                 <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>
@@ -259,7 +266,7 @@ export default function BrowsePageB() {
                   style={{
                     maskImage: "url(/icons/version-b/menu-store-app.svg)",
                     WebkitMaskImage: "url(/icons/version-b/menu-store-app.svg)",
-                    color: activeMenu === "앱" ? "#FBB03B" : "rgba(24,24,27,0.16)",
+                    color: activeMenu === "앱" ? "#FBB03B" : "rgba(24,24,27,0.48)",
                   }}
                 />
                 <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>
@@ -278,7 +285,7 @@ export default function BrowsePageB() {
                   style={{
                     maskImage: "url(/icons/version-b/menu-store-api.svg)",
                     WebkitMaskImage: "url(/icons/version-b/menu-store-api.svg)",
-                    color: "rgba(24,24,27,0.16)",
+                    color: "rgba(24,24,27,0.48)",
                   }}
                 />
                 <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
@@ -297,7 +304,7 @@ export default function BrowsePageB() {
                   style={{
                     maskImage: "url(/icons/version-b/menu-shared-data.svg)",
                     WebkitMaskImage: "url(/icons/version-b/menu-shared-data.svg)",
-                    color: "rgba(24,24,27,0.16)",
+                    color: "rgba(24,24,27,0.48)",
                   }}
                 />
                 <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
@@ -326,7 +333,7 @@ export default function BrowsePageB() {
                   style={{
                     maskImage: "url(/icons/version-b/menu-req-app.svg)",
                     WebkitMaskImage: "url(/icons/version-b/menu-req-app.svg)",
-                    color: "rgba(24,24,27,0.16)",
+                    color: "rgba(24,24,27,0.48)",
                   }}
                 />
                 <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
@@ -345,7 +352,7 @@ export default function BrowsePageB() {
                   style={{
                     maskImage: "url(/icons/version-b/menu-req-shared.svg)",
                     WebkitMaskImage: "url(/icons/version-b/menu-req-shared.svg)",
-                    color: "rgba(24,24,27,0.16)",
+                    color: "rgba(24,24,27,0.48)",
                   }}
                 />
                 <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
@@ -360,7 +367,34 @@ export default function BrowsePageB() {
       {activeMenu === "인기 • 신규 앱" ? (
         <HotNewAppsContentV2 />
       ) : activeMenu === "앱" ? (
-        <AppStoreContent />
+        <>
+          {storeVersion === 1 ? <AppStoreContent /> : <AppStoreContentV2 activeMenu={activeMenu} setActiveMenu={setActiveMenu} />}
+          {/* 플로팅 버전 토글 */}
+          <div className="fixed top-4 right-6 z-50 flex items-center gap-1 rounded-full bg-white p-1 shadow-lg">
+            <button
+              type="button"
+              onClick={() => setStoreVersion(1)}
+              className="rounded-full px-3 py-1.5 text-xs font-semibold transition-colors"
+              style={{
+                backgroundColor: storeVersion === 1 ? "#fbb03b" : "transparent",
+                color: storeVersion === 1 ? "white" : "#a1a1aa",
+              }}
+            >
+              V1
+            </button>
+            <button
+              type="button"
+              onClick={() => setStoreVersion(2)}
+              className="rounded-full px-3 py-1.5 text-xs font-semibold transition-colors"
+              style={{
+                backgroundColor: storeVersion === 2 ? "#fbb03b" : "transparent",
+                color: storeVersion === 2 ? "white" : "#a1a1aa",
+              }}
+            >
+              V2
+            </button>
+          </div>
+        </>
       ) : (
         <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden px-5 py-4">
           <div className="flex h-full min-w-0 flex-1 flex-col overflow-hidden rounded-xl border-r border-gray-100 bg-white p-8 gap-10">

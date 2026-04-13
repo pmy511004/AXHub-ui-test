@@ -213,7 +213,7 @@ export default function MakePageB() {
             {/* 인사이트 (active) */}
             <button
               type="button"
-              className="flex w-full items-center gap-2 rounded-lg px-3 py-2"
+              className="menu-active flex w-full items-center gap-2 rounded-lg px-3 py-2"
             >
               <Image src="/icons/version-b/make-menu-insight.svg" alt="" width={18} height={18} />
               <span className="whitespace-nowrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-primary-500">

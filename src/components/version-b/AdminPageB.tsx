@@ -111,7 +111,7 @@ export default function AdminPageB() {
         <div className="flex flex-1 min-h-0 w-full flex-col overflow-hidden rounded-xl border-r border-gray-100 bg-white">
           <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 py-2">
 {/* 전체 앱 현황 (active) */}
-            <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2">
+            <button type="button" className="menu-active flex w-full items-center gap-2 rounded-lg px-3 py-2">
               <Image src="/icons/version-b/admin-menu-apps.svg" alt="" width={18} height={18} />
               <span className="whitespace-nowrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181B]">
                 전체 앱 현황

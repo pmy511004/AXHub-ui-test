@@ -5,11 +5,12 @@ import Image from "next/image";
 interface TeamColumnProps {
   expanded: boolean;
   color?: string;
+  bgColor?: string;
 }
 
 // 피그마 sidebar-expand (2544:1996) 좌측 팀 목록 열
 // CSS 트랜지션으로 확장/축소 애니메이션
-export default function TeamColumn({ expanded, color = "#6d319d" }: TeamColumnProps) {
+export default function TeamColumn({ expanded, color = "#6d319d", bgColor }: TeamColumnProps) {
   return (
     <div
       className="flex h-full shrink-0 flex-col items-center gap-5 overflow-hidden py-4 transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
@@ -18,6 +19,7 @@ export default function TeamColumn({ expanded, color = "#6d319d" }: TeamColumnPr
         opacity: expanded ? 1 : 0,
         paddingLeft: expanded ? 20 : 0,
         paddingRight: expanded ? 20 : 0,
+        backgroundColor: bgColor,
       }}
     >
       {/* Team JO (active) */}
