@@ -12,7 +12,7 @@ export default function AdminPageB() {
   return (
     <div
       className="flex h-screen w-full items-start overflow-hidden"
-      style={{ backgroundColor: "#3F1C5C", "--page-primary": "#18181B" } as React.CSSProperties}
+      style={{ backgroundColor: "#3F1C5C", "--page-primary": "#348AE5" } as React.CSSProperties}
       data-node-id="2530:1480"
     >
       {/* Team Column */}
@@ -69,7 +69,7 @@ export default function AdminPageB() {
 
         {/* 하단: 검색/알림/프로필 카드 */}
         <div className="flex w-full items-center justify-center px-3 py-4">
-          <div className="flex flex-col items-center gap-1 overflow-hidden rounded-2xl bg-white p-1">
+          <div className="flex flex-col items-center gap-1 overflow-hidden rounded-2xl bg-white/20 p-1">
             {/* 사이드바 토글 */}
             <button
               type="button"
@@ -112,7 +112,7 @@ export default function AdminPageB() {
             <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 py-2">
               <button type="button" className="menu-active flex w-full items-center gap-2 rounded-lg px-3 py-2">
                 <Image src="/icons/version-b/admin-menu-apps.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181B]">전체 앱 현황</span>
+                <span className="whitespace-nowrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#348AE5]">전체 앱 현황</span>
               </button>
               <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
                 <Image src="/icons/version-b/admin-menu-api.svg" alt="" width={18} height={18} />

@@ -37,15 +37,15 @@ export default function TeamColumn({ expanded, color = "#6d319d", bgColor }: Tea
         className="group flex size-11 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-xl p-1 transition-all"
         style={{
           backgroundImage:
-            `linear-gradient(90deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.8) 100%), linear-gradient(90deg, ${color} 0%, ${color} 100%)`,
+            `linear-gradient(90deg, rgba(24,24,27,0.3) 0%, rgba(24,24,27,0.3) 100%), linear-gradient(90deg, ${color} 0%, ${color} 100%)`,
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.backgroundImage =
-            `linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 100%), linear-gradient(90deg, ${color} 0%, ${color} 100%)`;
+            `linear-gradient(90deg, rgba(24,24,27,0) 0%, rgba(24,24,27,0) 100%), linear-gradient(90deg, ${color} 0%, ${color} 100%)`;
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.backgroundImage =
-            `linear-gradient(90deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.8) 100%), linear-gradient(90deg, ${color} 0%, ${color} 100%)`;
+            `linear-gradient(90deg, rgba(24,24,27,0.3) 0%, rgba(24,24,27,0.3) 100%), linear-gradient(90deg, ${color} 0%, ${color} 100%)`;
         }}
       >
         <p className="text-base font-bold leading-[1.5] tracking-[-0.16px] text-white">

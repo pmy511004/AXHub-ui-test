@@ -124,7 +124,7 @@ export default function MakePageB() {
           data-node-id="2471:1532"
         >
           <div
-            className="flex flex-col items-center gap-1 overflow-hidden rounded-2xl bg-white p-1"
+            className="flex flex-col items-center gap-1 overflow-hidden rounded-2xl bg-white/20 p-1"
             data-node-id="2471:1283"
           >
             {/* 사이드바 토글 */}
