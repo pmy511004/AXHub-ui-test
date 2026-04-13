@@ -166,36 +166,33 @@ export default function HotNewAppsContentV2() {
   };
 
   return (
-    <div className="flex h-full flex-1 min-w-0 flex-col">
-      {/* Header */}
-      <header className="flex h-[76px] w-full shrink-0 items-center justify-between px-5 py-4">
-        <h1
-          className="font-bold tracking-[-0.22px] text-black"
-          style={{ fontSize: "22px", lineHeight: "1.3" }}
-        >
-          인기 • 신규 앱
-        </h1>
-        <div className="flex h-10 w-[240px] items-center gap-1.5 overflow-hidden rounded-xl bg-white px-4 py-3">
-          <div className="flex items-center">
-            <div className="relative size-5 overflow-hidden">
-              <Image src="/icons/version-b/search.svg" alt="" fill sizes="20px" />
+    <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden px-5 py-4">
+      <div
+        ref={scrollContainerRef}
+        onScroll={handleScroll}
+        className="flex h-full min-w-0 flex-1 flex-col gap-10 overflow-y-auto rounded-2xl border-r border-gray-100 bg-white p-8"
+      >
+        {/* Header */}
+        <div className="flex shrink-0 items-center justify-between">
+          <h1
+            className="font-bold tracking-[-0.22px] text-black"
+            style={{ fontSize: "22px", lineHeight: "1.3" }}
+          >
+            인기 • 신규 앱
+          </h1>
+          <div className="flex h-10 w-[240px] items-center gap-1.5 overflow-hidden rounded-xl bg-gray-100 px-4 py-3">
+            <div className="flex items-center">
+              <div className="relative size-5 overflow-hidden">
+                <Image src="/icons/version-b/search.svg" alt="" fill sizes="20px" />
+              </div>
+            </div>
+            <div className="flex flex-1 items-center overflow-hidden">
+              <p className="whitespace-nowrap text-base font-normal leading-[1.5] tracking-[-0.16px] text-gray-300">
+                앱 찾기
+              </p>
             </div>
           </div>
-          <div className="flex flex-1 items-center overflow-hidden">
-            <p className="whitespace-nowrap text-base font-normal leading-[1.5] tracking-[-0.16px] text-gray-300">
-              앱 찾기
-            </p>
-          </div>
         </div>
-      </header>
-
-      {/* Content area */}
-      <div className="flex flex-1 items-start overflow-hidden px-5 py-4">
-        <div
-          ref={scrollContainerRef}
-          onScroll={handleScroll}
-          className="flex h-full min-w-0 flex-1 flex-col gap-8 overflow-y-auto rounded-2xl border-r border-gray-100 bg-white p-8"
-        >
           {/* Banner 캐러셀 (슬라이드) */}
           <div className="relative w-full shrink-0" style={{ height: 180 }}>
             <div
@@ -297,10 +294,13 @@ export default function HotNewAppsContentV2() {
           <div className="flex min-h-0 flex-1 gap-10">
             {/* 왼쪽: 오늘의 인기 앱 */}
             <div className="flex min-h-0 flex-1 flex-col gap-3">
-              <div className="flex items-center justify-between">
-                <h2 className="text-[20px] font-bold leading-[1.4] tracking-[-0.2px] text-black">
-                  오늘의 인기 앱
-                </h2>
+              <div className="flex items-end justify-between">
+                <div className="flex flex-col gap-1">
+                  <span className="text-sm font-bold leading-[1.5] tracking-[-0.14px]" style={{ color: "#fbb03b" }}>BEST</span>
+                  <h2 className="text-[24px] font-bold leading-[1.2] text-black">
+                    오늘의 인기 앱
+                  </h2>
+                </div>
                 <button
                   type="button"
                   className="flex items-center gap-1 text-base font-medium leading-[1.5] tracking-[-0.16px]"
@@ -320,26 +320,30 @@ export default function HotNewAppsContentV2() {
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-6" style={{ background: "linear-gradient(to top, white 0%, transparent 100%)" }} />
                 <div className="sidebar-scroll flex h-full flex-col overflow-y-auto">
                   {/* Top 3: 가로 카드 그리드 */}
-                  <div className="flex items-stretch gap-3 py-5">
+                  <div className="flex max-w-[600px] items-stretch gap-3 py-5">
                     {popularApps.slice(0, 3).map((app, i) => {
-                      const cardBg = ["#fbb03b", "#fccb5f", "#fddc8a"][i];
+                      const cardGradient = [
+                        "linear-gradient(to top, #fbb03b, #fbbb45)",
+                        "linear-gradient(to bottom, #fccb5f, #fddc8a)",
+                        "linear-gradient(to bottom, #fddc8a, #feecc2)",
+                      ][i];
                       return (
                         <div
                           key={i}
-                          className="flex flex-1 flex-col gap-3 rounded-xl p-3"
-                          style={{ backgroundColor: cardBg }}
+                          className="rank-card flex flex-1 flex-col gap-3 rounded-xl p-3 shadow-[0px_4px_10px_0px_rgba(0,0,0,0.1)]"
+                          style={{ background: cardGradient }}
                           onMouseEnter={(e) => showTooltip(e, popularDescriptions[i])}
                           onMouseLeave={hideTooltip}
                         >
                           <div className="flex w-full items-start gap-2">
                             <span
-                              className="rank-enter text-[32px] font-bold leading-[1.2] text-white"
+                              className="rank-enter w-6 shrink-0 text-[32px] font-bold leading-[1.2] text-white"
                               style={{ animationDelay: `${i * 80}ms` }}
                             >
                               {i + 1}
                             </span>
                             <div
-                              className="relative flex-1 rounded-xl bg-[#d8d8d8] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.1)]"
+                              className="relative flex-1 rounded-xl bg-[#d8d8d8]"
                               style={{ aspectRatio: "1/1" }}
                             />
                           </div>
@@ -377,7 +381,7 @@ export default function HotNewAppsContentV2() {
                           </span>
                           <RankChange change={rankChanges[i + 3]} />
                         </div>
-                        <div className="app-icon relative size-[52px] shrink-0 rounded-xl bg-[#d8d8d8]" />
+                        <div className="app-icon relative size-16 shrink-0 rounded-xl bg-[#d8d8d8]" />
                         <div className="flex h-[52px] flex-col gap-2">
                           <p className="text-[18px] font-semibold leading-[1.4] tracking-[-0.18px] text-black">
                             {app.name}
@@ -391,12 +395,12 @@ export default function HotNewAppsContentV2() {
                       </div>
                       <button
                         type="button"
-                        className="relative shrink-0 overflow-hidden rounded-lg px-3.5 text-sm font-medium leading-[1.5] tracking-[-0.14px] transition-colors"
-                        style={{ backgroundColor: "#fff8e6", color: "#fbb03b", height: 32 }}
-                        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#fdefc5"; }}
-                        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "#fff8e6"; }}
+                        className="relative shrink-0 overflow-hidden rounded-xl px-3 text-[12px] font-semibold leading-[1.3] tracking-[-0.12px] transition-colors"
+                        style={{ backgroundColor: "#f6f6f6", color: "#fbb03b", height: 32 }}
+                        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#ececec"; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "#f6f6f6"; }}
                       >
-                        사용신청
+                        사용 신청
                       </button>
                     </div>
                   ))}
@@ -406,10 +410,13 @@ export default function HotNewAppsContentV2() {
 
             {/* 오른쪽: 따끈따끈 신규 앱 */}
             <div className="flex min-h-0 flex-1 flex-col gap-3">
-              <div className="flex items-center justify-between">
-                <h2 className="text-[20px] font-bold leading-[1.4] tracking-[-0.2px] text-black">
-                  따끈따끈 신규 앱
-                </h2>
+              <div className="flex items-end justify-between">
+                <div className="flex flex-col gap-1">
+                  <span className="text-sm font-bold leading-[1.5] tracking-[-0.14px]" style={{ color: "#fbb03b" }}>NEW</span>
+                  <h2 className="text-[24px] font-bold leading-[1.2] text-black">
+                    따끈따끈 신규 앱
+                  </h2>
+                </div>
                 <button
                   type="button"
                   className="flex items-center gap-1 text-base font-medium leading-[1.5] tracking-[-0.16px]"
@@ -428,53 +435,16 @@ export default function HotNewAppsContentV2() {
                 <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-6" style={{ background: "linear-gradient(to bottom, white 0%, transparent 100%)" }} />
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-6" style={{ background: "linear-gradient(to top, white 0%, transparent 100%)" }} />
                 <div className="sidebar-scroll flex h-full flex-col overflow-y-auto px-1">
-                  {/* 피처드 카드: NEW 배지 포함 */}
-                  <div
-                    className="app-row flex items-end gap-5 py-5"
-                    onMouseEnter={(e) => showTooltip(e, newDescriptions[0])}
-                    onMouseLeave={hideTooltip}
-                  >
-                    <div className="flex flex-1 items-end gap-3">
-                      <div className="app-icon relative size-[104px] shrink-0 rounded-xl bg-[#d8d8d8]" />
-                      <div className="flex flex-col justify-end self-stretch">
-                        <div className="flex flex-col gap-2">
-                          <div className="flex items-center gap-1.5">
-                            <span className="new-badge-pulse flex h-5 items-center justify-center rounded-lg bg-[#f5475c] px-1.5 text-[10px] font-semibold leading-[1.4] tracking-[-0.1px] text-white">
-                              NEW
-                            </span>
-                            <p className="text-[18px] font-semibold leading-[1.4] tracking-[-0.18px] text-black">
-                              {newApps[0].name}
-                            </p>
-                          </div>
-                          <div className="flex items-center gap-2 text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-500">
-                            <span>{newApps[0].category}</span>
-                            <span className="inline-block size-1 rounded-full bg-gray-500" />
-                            <span>{newApps[0].users}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      className="shrink-0 rounded-lg px-3.5 text-sm font-medium leading-[1.5] tracking-[-0.14px] transition-colors"
-                      style={{ backgroundColor: "#fff8e6", color: "#fbb03b", height: 32 }}
-                      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#fdefc5"; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "#fff8e6"; }}
-                    >
-                      사용신청
-                    </button>
-                  </div>
-
-                  {/* 2번째~6번째 리스트 (NEW 배지 포함) */}
-                  {newApps.slice(1, 6).map((app, i) => (
+                  {/* 신규 앱 리스트 (NEW 배지 포함) */}
+                  {newApps.slice(0, 6).map((app, i) => (
                     <div
                       key={i}
                       className="app-row flex items-center gap-5 border-b border-gray-100 py-5"
-                      onMouseEnter={(e) => showTooltip(e, newDescriptions[i + 1])}
+                      onMouseEnter={(e) => showTooltip(e, newDescriptions[i])}
                       onMouseLeave={hideTooltip}
                     >
                       <div className="flex flex-1 items-center gap-3">
-                        <div className="app-icon relative size-[52px] shrink-0 rounded-xl bg-[#d8d8d8]" />
+                        <div className="app-icon relative size-16 shrink-0 rounded-xl bg-[#d8d8d8]" />
                         <div className="flex flex-col gap-2">
                           <div className="flex items-center gap-1.5">
                             <span className="new-badge-pulse flex h-5 items-center justify-center rounded-lg bg-[#f5475c] px-1.5 text-[10px] font-semibold leading-[1.4] tracking-[-0.1px] text-white">
@@ -493,12 +463,12 @@ export default function HotNewAppsContentV2() {
                       </div>
                       <button
                         type="button"
-                        className="shrink-0 rounded-lg px-3.5 text-sm font-medium leading-[1.5] tracking-[-0.14px] transition-colors"
-                        style={{ backgroundColor: "#fff8e6", color: "#fbb03b", height: 32 }}
-                        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#fdefc5"; }}
-                        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "#fff8e6"; }}
+                        className="shrink-0 rounded-xl px-3 text-[12px] font-semibold leading-[1.3] tracking-[-0.12px] transition-colors"
+                        style={{ backgroundColor: "#f6f6f6", color: "#fbb03b", height: 32 }}
+                        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#ececec"; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "#f6f6f6"; }}
                       >
-                        사용신청
+                        사용 신청
                       </button>
                     </div>
                   ))}
@@ -507,7 +477,6 @@ export default function HotNewAppsContentV2() {
             </div>
           </div>
         </div>
-      </div>
       {/* Fixed 툴팁 */}
       {tooltip && (
         <div

@@ -4,7 +4,6 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import TeamColumn from "./TeamColumn";
-import HotNewAppsContent from "./HotNewAppsContent";
 import HotNewAppsContentV2 from "./HotNewAppsContentV2";
 import AppStoreContent from "./AppStoreContent";
 
@@ -20,7 +19,6 @@ import AppStoreContent from "./AppStoreContent";
 export default function BrowsePageB() {
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string>("내가 이용중인 앱");
-  const [contentVersion, setContentVersion] = useState<1 | 2>(1);
 
   return (
     <div
@@ -360,34 +358,7 @@ export default function BrowsePageB() {
 
       {/* R. Main area ─ 2504:1086 */}
       {activeMenu === "인기 • 신규 앱" ? (
-        <>
-          {contentVersion === 1 ? <HotNewAppsContent /> : <HotNewAppsContentV2 />}
-          {/* 플로팅 버전 토글 (임시) */}
-          <div className="fixed bottom-6 right-6 z-50 flex items-center gap-1 rounded-full bg-white p-1 shadow-lg">
-            <button
-              type="button"
-              onClick={() => setContentVersion(1)}
-              className="rounded-full px-3 py-1.5 text-xs font-semibold transition-colors"
-              style={{
-                backgroundColor: contentVersion === 1 ? "#fbb03b" : "transparent",
-                color: contentVersion === 1 ? "white" : "#a1a1aa",
-              }}
-            >
-              V1
-            </button>
-            <button
-              type="button"
-              onClick={() => setContentVersion(2)}
-              className="rounded-full px-3 py-1.5 text-xs font-semibold transition-colors"
-              style={{
-                backgroundColor: contentVersion === 2 ? "#fbb03b" : "transparent",
-                color: contentVersion === 2 ? "white" : "#a1a1aa",
-              }}
-            >
-              V2
-            </button>
-          </div>
-        </>
+        <HotNewAppsContentV2 />
       ) : activeMenu === "앱" ? (
         <AppStoreContent />
       ) : (

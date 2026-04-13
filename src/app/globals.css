@@ -75,6 +75,16 @@
     -webkit-mask-position: center;
   }
 
+  /* 인기앱 피처드 카드 hover */
+  .rank-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .rank-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.15);
+  }
+
   /* 콘텐츠 카드 hover 효과 */
   .content-card {
     transition: box-shadow 0.25s ease, transform 0.25s ease;
@@ -199,7 +209,6 @@
   /* 앱 리스트 행 호버 효과 */
   .app-row {
     transition: background-color 0.2s ease;
-    border-radius: 12px;
   }
 
   .app-row:hover {
