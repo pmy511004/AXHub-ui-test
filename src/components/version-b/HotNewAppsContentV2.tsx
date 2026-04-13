@@ -320,7 +320,7 @@ export default function HotNewAppsContentV2() {
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-6" style={{ background: "linear-gradient(to top, white 0%, transparent 100%)" }} />
                 <div className="sidebar-scroll flex h-full flex-col overflow-y-auto">
                   {/* Top 3: 가로 카드 그리드 */}
-                  <div className="flex max-w-[600px] items-stretch gap-3 py-5">
+                  <div className="flex max-w-[600px] items-stretch gap-5 py-5">
                     {popularApps.slice(0, 3).map((app, i) => {
                       const cardGradient = [
                         "linear-gradient(to top, #fbb03b, #fbbb45)",
