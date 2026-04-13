@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import TeamColumn from "./TeamColumn";
 import HotNewAppsContent from "./HotNewAppsContent";
+import HotNewAppsContentV2 from "./HotNewAppsContentV2";
+import AppStoreContent from "./AppStoreContent";
 
 // 피그마 versionB-2 (node 2504:1034) — / (둘러보기) 페이지 Version B 전체 레이아웃
 //
@@ -18,6 +20,7 @@ import HotNewAppsContent from "./HotNewAppsContent";
 export default function BrowsePageB() {
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string>("내가 이용중인 앱");
+  const [contentVersion, setContentVersion] = useState<1 | 2>(1);
 
   return (
     <div
@@ -54,7 +57,7 @@ export default function BrowsePageB() {
 
           {/* Nav items ─ 2504:1040 */}
           <nav
-            className="flex w-full flex-col items-center gap-4 px-5 py-4"
+            className={`flex w-full flex-col items-center gap-4 px-5 ${sidebarExpanded ? "py-4" : ""}`}
             data-node-id="2504:1040"
           >
             {/* 만들기 (inactive) ─ 2504:1045 */}
@@ -185,52 +188,17 @@ export default function BrowsePageB() {
         </div>
       </div>
 
-      {/* M. Middle column ─ 2504:1060 */}
-      <div className="flex h-full min-h-0 flex-col items-start" data-node-id="2504:1060">
-        {/* Search icon */}
-        <div className="flex w-full flex-col items-start justify-center py-4">
-          <button
-            type="button"
-            className="flex size-11 items-center justify-center overflow-hidden rounded-xl bg-white p-1"
-            aria-label="검색"
-          >
-            <Image src="/icons/version-b/search.svg" alt="" width={20} height={20} />
-          </button>
+      {/* M. Middle column */}
+      <div className="flex h-full flex-col gap-4 items-start py-4 shrink-0 w-[200px]">
+        {/* Team name header card */}
+        <div className="flex h-[44px] w-full shrink-0 items-center overflow-hidden rounded-xl border-r border-gray-100 bg-white px-3">
+          <p className="overflow-hidden text-ellipsis whitespace-nowrap text-base font-bold leading-[1.5] tracking-[-0.16px] text-black">
+            조코딩AX파트너스
+          </p>
         </div>
-
-        {/* Aside wrapper ─ 2504:1065 */}
-        <div className="flex min-h-0 flex-1 items-center py-4" data-node-id="2504:1065">
-          {/* Aside SideNavBar ─ 2504:1066 */}
-          <aside
-            className="sidebar-enter relative flex h-full w-[200px] shrink-0 flex-col overflow-hidden rounded-xl border-r border-gray-100 bg-white"
-            data-node-id="2504:1066"
-          >
-            {/* Header ─ 2504:1067 */}
-            <div
-              className="flex w-full flex-col items-start gap-1 px-3 py-4 shrink-0"
-              data-node-id="2504:1067"
-            >
-              <h2
-                className="font-semibold tracking-[-0.18px] text-black"
-                style={{ fontSize: "18px", lineHeight: "1.4" }}
-                data-node-id="2504:1068"
-              >
-                둘러보기
-              </h2>
-              <p
-                className="font-normal tracking-[-0.14px] text-gray-500"
-                style={{ fontSize: "14px", lineHeight: "1.5" }}
-                data-node-id="2504:1069"
-              >
-                사내 앱과 API를 구경하세요
-              </p>
-            </div>
-
-            {/* Nav ─ 2504:1070 */}
-            <nav
-              className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 pb-5"
-              data-node-id="2504:1070"
-            >
+        {/* Menu card */}
+        <div className="flex flex-1 min-h-0 w-full flex-col overflow-hidden rounded-xl border-r border-gray-100 bg-white">
+          <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 py-2">
               {/* 내가 이용중인 앱 ─ 2530:1517 */}
               <button
                 type="button"
@@ -284,7 +252,8 @@ export default function BrowsePageB() {
               {/* 앱 ─ 2530:1527 */}
               <button
                 type="button"
-                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100"
+                onClick={() => setActiveMenu("앱")}
+                className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "앱" ? "menu-active" : "hover:bg-gray-100"}`}
                 data-node-id="2530:1527"
               >
                 <span
@@ -292,10 +261,10 @@ export default function BrowsePageB() {
                   style={{
                     maskImage: "url(/icons/version-b/menu-store-app.svg)",
                     WebkitMaskImage: "url(/icons/version-b/menu-store-app.svg)",
-                    color: "rgba(24,24,27,0.16)",
+                    color: activeMenu === "앱" ? "#FBB03B" : "rgba(24,24,27,0.16)",
                   }}
                 />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
+                <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>
                   앱
                 </span>
               </button>
@@ -386,63 +355,67 @@ export default function BrowsePageB() {
                 </span>
               </button>
             </nav>
-
-            {/* ScrollShadow */}
-            <div className="pointer-events-none absolute bottom-0 left-0 h-[39px] w-full rounded-b-xl" style={{ background: "linear-gradient(to top, white 0%, transparent 100%)" }} />
-          </aside>
         </div>
       </div>
 
       {/* R. Main area ─ 2504:1086 */}
       {activeMenu === "인기 • 신규 앱" ? (
-        <HotNewAppsContent />
+        <>
+          {contentVersion === 1 ? <HotNewAppsContent /> : <HotNewAppsContentV2 />}
+          {/* 플로팅 버전 토글 (임시) */}
+          <div className="fixed bottom-6 right-6 z-50 flex items-center gap-1 rounded-full bg-white p-1 shadow-lg">
+            <button
+              type="button"
+              onClick={() => setContentVersion(1)}
+              className="rounded-full px-3 py-1.5 text-xs font-semibold transition-colors"
+              style={{
+                backgroundColor: contentVersion === 1 ? "#fbb03b" : "transparent",
+                color: contentVersion === 1 ? "white" : "#a1a1aa",
+              }}
+            >
+              V1
+            </button>
+            <button
+              type="button"
+              onClick={() => setContentVersion(2)}
+              className="rounded-full px-3 py-1.5 text-xs font-semibold transition-colors"
+              style={{
+                backgroundColor: contentVersion === 2 ? "#fbb03b" : "transparent",
+                color: contentVersion === 2 ? "white" : "#a1a1aa",
+              }}
+            >
+              V2
+            </button>
+          </div>
+        </>
+      ) : activeMenu === "앱" ? (
+        <AppStoreContent />
       ) : (
-        <div className="flex h-full flex-1 min-w-0 flex-col" data-node-id="2504:1086">
-          {/* Header ─ 2504:1087 */}
-          <header
-            className="flex h-[76px] w-full shrink-0 items-center justify-between px-5 py-4"
-            data-node-id="2504:1087"
-          >
-            <h1
-              className="font-bold tracking-[-0.22px] text-black"
-              style={{ fontSize: "22px", lineHeight: "1.3" }}
-              data-node-id="2504:1089"
-            >
-              내가 이용중인 앱
-            </h1>
-
-            {/* 검색 인풋 ─ 2504:1141 */}
-            <div
-              className="flex h-10 w-[240px] items-center gap-1.5 overflow-hidden rounded-xl bg-white px-4 py-3"
-              data-node-id="2504:1141"
-            >
-              <div className="flex items-center" data-node-id="2504:1142">
-                <div className="relative size-5 overflow-hidden" data-node-id="2504:1143">
-                  <Image
-                    src="/icons/version-b/search.svg"
-                    alt=""
-                    fill
-                    sizes="20px"
-                  />
+        <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden px-5 py-4">
+          <div className="flex h-full min-w-0 flex-1 flex-col overflow-hidden rounded-xl border-r border-gray-100 bg-white p-8 gap-10">
+            {/* Header */}
+            <div className="flex shrink-0 items-center justify-between">
+              <h1
+                className="font-bold tracking-[-0.22px] text-black"
+                style={{ fontSize: "22px", lineHeight: "1.3" }}
+              >
+                내가 이용중인 앱
+              </h1>
+              <div className="flex h-10 w-[240px] items-center gap-1.5 overflow-hidden rounded-xl bg-gray-100 px-4 py-3">
+                <div className="flex items-center">
+                  <div className="relative size-5 overflow-hidden">
+                    <Image src="/icons/version-b/search.svg" alt="" fill sizes="20px" />
+                  </div>
+                </div>
+                <div className="flex flex-1 items-center overflow-hidden">
+                  <p className="whitespace-nowrap text-base font-normal leading-[1.5] tracking-[-0.16px] text-gray-300">
+                    앱 찾기
+                  </p>
                 </div>
               </div>
-              <div className="flex flex-1 items-center overflow-hidden">
-                <p className="whitespace-nowrap text-base font-normal leading-[1.5] tracking-[-0.16px] text-gray-300">
-                  앱 찾기
-                </p>
-              </div>
             </div>
-          </header>
-
-          {/* Content area ─ 2504:1091 */}
-          <div
-            className="flex flex-1 items-start overflow-hidden px-5 py-4"
-            data-node-id="2504:1091"
-          >
-            <div
-              className="content-card h-full min-w-0 flex-1 rounded-xl border-r border-gray-100 bg-white"
-              data-node-id="2504:1092"
-            />
+            {/* Content */}
+            <div className="flex-1" />
           </div>
         </div>
       )}

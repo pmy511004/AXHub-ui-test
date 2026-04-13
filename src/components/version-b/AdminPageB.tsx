@@ -34,7 +34,7 @@ export default function AdminPageB() {
           )}
 
           {/* Nav items */}
-          <nav className="flex w-full flex-col items-center gap-4 px-5 py-4">
+          <nav className={`flex w-full flex-col items-center gap-4 px-5 ${sidebarExpanded ? "py-4" : ""}`}>
             {/* 만들기 (inactive) */}
             <Link href="/make" className="flex flex-col items-center gap-1">
               <div className="relative size-11">
@@ -99,186 +99,161 @@ export default function AdminPageB() {
         </div>
       </div>
 
-      {/* M. Middle column ─ 2530:1506 */}
-      <div className="flex h-full min-h-0 flex-col items-start">
-        {/* Search icon */}
-        <div className="flex w-full flex-col items-start justify-center py-4">
-          <button
-            type="button"
-            className="flex size-11 items-center justify-center overflow-hidden rounded-xl bg-white p-1"
-            aria-label="검색"
-          >
-            <Image src="/icons/version-b/search.svg" alt="" width={20} height={20} />
-          </button>
+      {/* M. Middle column */}
+      <div className="flex h-full flex-col gap-4 items-start py-4 shrink-0 w-[200px]">
+        {/* Team name header card */}
+        <div className="flex h-[44px] w-full shrink-0 items-center overflow-hidden rounded-xl border-r border-gray-100 bg-white px-3">
+          <p className="overflow-hidden text-ellipsis whitespace-nowrap text-base font-bold leading-[1.5] tracking-[-0.16px] text-black">
+            조코딩AX파트너스
+          </p>
         </div>
-
-        {/* Aside wrapper */}
-        <div className="flex min-h-0 flex-1 items-center py-4">
-          {/* Aside SideNavBar ─ 2530:1512 */}
-          <aside className="sidebar-enter relative flex h-full w-[200px] shrink-0 flex-col overflow-hidden rounded-xl border-r border-gray-100 bg-white">
-            {/* Header */}
-            <div className="flex w-full flex-col items-start gap-1 px-3 py-4 shrink-0">
-              <h2 className="font-semibold tracking-[-0.18px] text-black" style={{ fontSize: "18px", lineHeight: "1.4" }}>
-                관리하기
-              </h2>
-              <p className="font-normal tracking-[-0.14px] text-gray-500" style={{ fontSize: "14px", lineHeight: "1.5" }}>
-                모든 데이터를 관리하세요
-              </p>
+        {/* Menu card */}
+        <div className="flex flex-1 min-h-0 w-full flex-col overflow-hidden rounded-xl border-r border-gray-100 bg-white">
+          <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 py-2">
+            {/* 섹션 헤더: 조코딩파트너스 */}
+            <div className="flex w-full items-center px-3 pt-4 rounded-lg">
+              <span className="overflow-hidden text-ellipsis whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px]" style={{ color: "#a1a1aa" }}>
+                조코딩파트너스
+              </span>
             </div>
 
-            {/* Nav (scrollable) */}
-            <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 pb-5">
-              {/* 섹션 헤더: 조코딩파트너스 */}
-              <div className="flex w-full items-center px-3 rounded-lg">
-                <span className="overflow-hidden text-ellipsis whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px]" style={{ color: "#a1a1aa" }}>
-                  조코딩파트너스
-                </span>
-              </div>
+            {/* 전체 앱 현황 (active) */}
+            <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2">
+              <Image src="/icons/version-b/admin-menu-apps.svg" alt="" width={18} height={18} />
+              <span className="whitespace-nowrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181B]">
+                전체 앱 현황
+              </span>
+            </button>
 
-              {/* 전체 앱 현황 (active) */}
-              <button type="button" className="menu-active flex w-full items-center gap-2 rounded-lg px-3 py-2">
-                <Image src="/icons/version-b/admin-menu-apps.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181B]">
-                  전체 앱 현황
-                </span>
-              </button>
+            {/* API 관리 */}
+            <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100">
+              <Image src="/icons/version-b/admin-menu-api.svg" alt="" width={18} height={18} />
+              <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
+                API 관리
+              </span>
+            </button>
 
-              {/* API 관리 */}
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100">
-                <Image src="/icons/version-b/admin-menu-api.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
-                  API 관리
-                </span>
-              </button>
+            {/* 멤버 관리 */}
+            <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100">
+              <Image src="/icons/version-b/admin-menu-members.svg" alt="" width={18} height={18} />
+              <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
+                멤버 관리
+              </span>
+            </button>
 
-              {/* 멤버 관리 */}
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100">
-                <Image src="/icons/version-b/admin-menu-members.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
-                  멤버 관리
-                </span>
-              </button>
+            {/* 역할 관리 */}
+            <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100">
+              <Image src="/icons/version-b/admin-menu-roles.svg" alt="" width={18} height={18} />
+              <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
+                역할 관리
+              </span>
+            </button>
 
-              {/* 역할 관리 */}
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100">
-                <Image src="/icons/version-b/admin-menu-roles.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
-                  역할 관리
-                </span>
-              </button>
+            {/* 권한 관리 */}
+            <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100">
+              <Image src="/icons/version-b/admin-menu-permissions.svg" alt="" width={18} height={18} />
+              <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
+                권한 관리
+              </span>
+            </button>
 
-              {/* 권한 관리 */}
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100">
-                <Image src="/icons/version-b/admin-menu-permissions.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
-                  권한 관리
-                </span>
-              </button>
+            {/* 게이트웨이 로그 */}
+            <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100">
+              <Image src="/icons/version-b/admin-menu-gateway.svg" alt="" width={18} height={18} />
+              <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
+                게이트웨이 로그
+              </span>
+            </button>
 
-              {/* 게이트웨이 로그 */}
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100">
-                <Image src="/icons/version-b/admin-menu-gateway.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
-                  게이트웨이 로그
-                </span>
-              </button>
+            {/* 공유 데이터 관리 */}
+            <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100">
+              <Image src="/icons/version-b/admin-menu-shared-data.svg" alt="" width={18} height={18} />
+              <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
+                공유 데이터 관리
+              </span>
+            </button>
 
-              {/* 공유 데이터 관리 */}
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100">
-                <Image src="/icons/version-b/admin-menu-shared-data.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
-                  공유 데이터 관리
-                </span>
-              </button>
+            {/* 카테고리 관리 */}
+            <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100">
+              <Image src="/icons/version-b/admin-menu-categories.svg" alt="" width={18} height={18} />
+              <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
+                카테고리 관리
+              </span>
+            </button>
 
-              {/* 카테고리 관리 */}
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100">
-                <Image src="/icons/version-b/admin-menu-categories.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
-                  카테고리 관리
-                </span>
-              </button>
+            {/* 기업 정보 관리 */}
+            <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100">
+              <Image src="/icons/version-b/admin-menu-company-info.svg" alt="" width={18} height={18} />
+              <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
+                기업 정보 관리
+              </span>
+            </button>
 
-              {/* 기업 정보 관리 */}
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100">
-                <Image src="/icons/version-b/admin-menu-company-info.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
-                  기업 정보 관리
-                </span>
-              </button>
+            {/* 섹션 헤더: 모든 기업 */}
+            <div className="flex w-full items-center px-3 pt-4 rounded-lg">
+              <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px]" style={{ color: "#a1a1aa" }}>
+                모든 기업
+              </span>
+            </div>
 
-              {/* 섹션 헤더: 모든 기업 */}
-              <div className="flex w-full items-center px-3 pt-4 rounded-lg">
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px]" style={{ color: "#a1a1aa" }}>
-                  모든 기업
-                </span>
-              </div>
+            {/* 기업 생성 • 관리 */}
+            <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100">
+              <Image src="/icons/version-b/admin-menu-company-mgmt.svg" alt="" width={18} height={18} />
+              <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
+                기업 생성 • 관리
+              </span>
+            </button>
 
-              {/* 기업 생성 • 관리 */}
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100">
-                <Image src="/icons/version-b/admin-menu-company-mgmt.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
-                  기업 생성 • 관리
-                </span>
-              </button>
+            {/* 클러스터 관리 */}
+            <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100">
+              <Image src="/icons/version-b/admin-menu-cluster.svg" alt="" width={18} height={18} />
+              <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
+                클러스터 관리
+              </span>
+            </button>
 
-              {/* 클러스터 관리 */}
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100">
-                <Image src="/icons/version-b/admin-menu-cluster.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
-                  클러스터 관리
-                </span>
-              </button>
+            {/* 테이블 관리 */}
+            <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100">
+              <Image src="/icons/version-b/admin-menu-tables.svg" alt="" width={18} height={18} />
+              <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
+                테이블 관리
+              </span>
+            </button>
 
-              {/* 테이블 관리 */}
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100">
-                <Image src="/icons/version-b/admin-menu-tables.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
-                  테이블 관리
-                </span>
-              </button>
-
-              {/* 전체 비용 분석 */}
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100">
-                <Image src="/icons/version-b/admin-menu-costs.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
-                  전체 비용 분석
-                </span>
-              </button>
-            </nav>
-
-            {/* ScrollShadow ─ 2530:1896 */}
-            <div className="pointer-events-none absolute bottom-0 left-0 h-[39px] w-full rounded-b-xl" style={{ background: "linear-gradient(to top, white 0%, transparent 100%)" }} />
-          </aside>
+            {/* 전체 비용 분석 */}
+            <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100">
+              <Image src="/icons/version-b/admin-menu-costs.svg" alt="" width={18} height={18} />
+              <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
+                전체 비용 분석
+              </span>
+            </button>
+          </nav>
         </div>
       </div>
 
-      {/* R. Main area ─ 2530:1552 */}
-      <div className="flex h-full flex-1 min-w-0 flex-col">
-        {/* Header */}
-        <header className="flex h-[76px] w-full shrink-0 items-center justify-between px-5 py-4">
-          <h1 className="font-bold tracking-[-0.22px] text-black" style={{ fontSize: "22px", lineHeight: "1.3" }}>
-            전체 앱 현황
-          </h1>
-
-          {/* 검색 인풋 */}
-          <div className="flex h-10 w-[240px] items-center gap-1.5 overflow-hidden rounded-xl bg-white px-4 py-3">
-            <div className="flex items-center">
-              <div className="relative size-5 overflow-hidden">
-                <Image src="/icons/version-b/search.svg" alt="" fill sizes="20px" />
+      {/* R. Main area */}
+      <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden px-5 py-4">
+        <div className="flex h-full min-w-0 flex-1 flex-col overflow-hidden rounded-xl border-r border-gray-100 bg-white p-8 gap-10">
+          {/* Header */}
+          <div className="flex shrink-0 items-center justify-between">
+            <h1 className="font-bold tracking-[-0.22px] text-black" style={{ fontSize: "22px", lineHeight: "1.3" }}>
+              전체 앱 현황
+            </h1>
+            <div className="flex h-10 w-[240px] items-center gap-1.5 overflow-hidden rounded-xl bg-gray-100 px-4 py-3">
+              <div className="flex items-center">
+                <div className="relative size-5 overflow-hidden">
+                  <Image src="/icons/version-b/search.svg" alt="" fill sizes="20px" />
+                </div>
+              </div>
+              <div className="flex flex-1 items-center overflow-hidden">
+                <p className="whitespace-nowrap text-base font-normal leading-[1.5] tracking-[-0.16px] text-gray-300">
+                  앱 찾기
+                </p>
               </div>
             </div>
-            <div className="flex flex-1 items-center overflow-hidden">
-              <p className="whitespace-nowrap text-base font-normal leading-[1.5] tracking-[-0.16px] text-gray-300">
-                앱 찾기
-              </p>
-            </div>
           </div>
-        </header>
-
-        {/* Content area */}
-        <div className="flex flex-1 items-start overflow-hidden px-5 py-4">
-          <div className="content-card h-full min-w-0 flex-1 rounded-xl border-r border-gray-100 bg-white" />
+          {/* Content */}
+          <div className="flex-1" />
         </div>
       </div>
     </div>

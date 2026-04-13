@@ -50,7 +50,7 @@ export default function MakePageB() {
 
           {/* Nav items ─ 2471:1279 */}
           <nav
-            className="flex w-full flex-col items-center gap-4 px-5 py-4"
+            className={`flex w-full flex-col items-center gap-4 px-5 ${sidebarExpanded ? "py-4" : ""}`}
             data-node-id="2471:1279"
           >
             {/* 만들기 (active) ─ 2471:1515 */}
@@ -181,180 +181,103 @@ export default function MakePageB() {
         </div>
       </div>
 
-      {/* M. Middle column ─ 2474:1570 */}
-      <div className="flex h-full min-h-0 flex-col items-start" data-node-id="2474:1570">
-        {/* Search icon */}
-        <div className="flex w-full flex-col items-start justify-center py-4">
-          <button
-            type="button"
-            className="flex size-11 items-center justify-center overflow-hidden rounded-xl bg-white p-1"
-            aria-label="검색"
-          >
-            <Image src="/icons/version-b/search.svg" alt="" width={20} height={20} />
-          </button>
+      {/* M. Middle column */}
+      <div className="flex h-full flex-col gap-4 items-start py-4 shrink-0 w-[200px]">
+        {/* Team name header card */}
+        <div className="flex h-[44px] w-full shrink-0 items-center overflow-hidden rounded-xl border-r border-gray-100 bg-white px-3">
+          <p className="overflow-hidden text-ellipsis whitespace-nowrap text-base font-bold leading-[1.5] tracking-[-0.16px] text-black">
+            조코딩AX파트너스
+          </p>
         </div>
-
-        {/* Aside wrapper ─ 2474:1889 */}
-        <div className="flex min-h-0 flex-1 items-center py-4" data-node-id="2474:1889">
-          {/* Aside SideNavBar ─ 2474:1552 */}
-          <aside
-            className="sidebar-enter relative flex h-full w-[200px] shrink-0 flex-col overflow-hidden rounded-xl border-r border-gray-100 bg-white"
-            data-node-id="2474:1552"
-          >
-            {/* Header ─ 2474:1553 */}
-            <div
-              className="flex w-full flex-col items-start gap-1 px-3 py-4 shrink-0"
-              data-node-id="2474:1553"
-            >
-              <h2
-                className="font-semibold tracking-[-0.18px] text-black"
-                style={{ fontSize: "18px", lineHeight: "1.4" }}
-                data-node-id="2474:1554"
-              >
-                만들기
-              </h2>
-              <p
-                className="font-normal tracking-[-0.14px] text-gray-500"
-                style={{ fontSize: "14px", lineHeight: "1.5" }}
-                data-node-id="2474:1555"
-              >
-                여기에서 내 앱을 만드세요
-              </p>
+        {/* Menu card */}
+        <div className="flex flex-1 min-h-0 w-full flex-col overflow-hidden rounded-xl border-r border-gray-100 bg-white">
+          <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 py-2">
+            {/* 섹션 헤더: 내 앱 */}
+            <div className="flex w-full items-center px-3 pt-4 rounded-lg">
+              <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px]" style={{ color: "#a1a1aa" }}>
+                내 앱
+              </span>
             </div>
 
-            {/* Nav ─ 2474:1556 */}
-            <nav
-              className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 pb-5"
-              data-node-id="2474:1556"
+            {/* 내가 만든 앱 */}
+            <button
+              type="button"
+              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100"
             >
-              {/* 섹션 헤더: 내 앱 */}
-              <div className="flex w-full items-center px-3 pt-4 rounded-lg">
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px]" style={{ color: "#a1a1aa" }}>
-                  내 앱
-                </span>
-              </div>
+              <Image src="/icons/version-b/make-menu-my-apps.svg" alt="" width={18} height={18} />
+              <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
+                내가 만든 앱
+              </span>
+            </button>
 
-              {/* 내가 만든 앱 */}
-              <button
-                type="button"
-                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100"
-              >
-                <Image
-                  src="/icons/version-b/make-menu-my-apps.svg"
-                  alt=""
-                  width={18}
-                  height={18}
-                />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
-                  내가 만든 앱
-                </span>
-              </button>
+            {/* 인사이트 (active) */}
+            <button
+              type="button"
+              className="flex w-full items-center gap-2 rounded-lg px-3 py-2"
+            >
+              <Image src="/icons/version-b/make-menu-insight.svg" alt="" width={18} height={18} />
+              <span className="whitespace-nowrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-primary-500">
+                인사이트
+              </span>
+            </button>
 
-              {/* 인사이트 (active) */}
-              <button
-                type="button"
-                className="menu-active flex w-full items-center gap-2 rounded-lg px-3 py-2"
-              >
-                <Image
-                  src="/icons/version-b/make-menu-insight.svg"
-                  alt=""
-                  width={18}
-                  height={18}
-                />
-                <span className="whitespace-nowrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-primary-500">
-                  인사이트
-                </span>
-              </button>
+            {/* 섹션 헤더: 앱 만들기 */}
+            <div className="flex w-full items-center px-3 pt-4 rounded-lg">
+              <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px]" style={{ color: "#a1a1aa" }}>
+                앱 만들기
+              </span>
+            </div>
 
-              {/* 섹션 헤더: 앱 만들기 */}
-              <div className="flex w-full items-center px-3 pt-4 rounded-lg">
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px]" style={{ color: "#a1a1aa" }}>
-                  앱 만들기
-                </span>
-              </div>
+            {/* 만들기 */}
+            <button
+              type="button"
+              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100"
+            >
+              <Image src="/icons/version-b/make-menu-create.svg" alt="" width={18} height={18} />
+              <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
+                만들기
+              </span>
+            </button>
 
-              {/* 만들기 */}
-              <button
-                type="button"
-                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100"
-              >
-                <Image
-                  src="/icons/version-b/make-menu-create.svg"
-                  alt=""
-                  width={18}
-                  height={18}
-                />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
-                  만들기
-                </span>
-              </button>
-
-              {/* 템플릿 */}
-              <button
-                type="button"
-                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100"
-              >
-                <Image
-                  src="/icons/version-b/make-menu-template.svg"
-                  alt=""
-                  width={18}
-                  height={18}
-                />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
-                  템플릿
-                </span>
-              </button>
-            </nav>
-
-            {/* ScrollShadow */}
-            <div className="pointer-events-none absolute bottom-0 left-0 h-[39px] w-full rounded-b-xl" style={{ background: "linear-gradient(to top, white 0%, transparent 100%)" }} />
-          </aside>
+            {/* 템플릿 */}
+            <button
+              type="button"
+              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-100"
+            >
+              <Image src="/icons/version-b/make-menu-template.svg" alt="" width={18} height={18} />
+              <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">
+                템플릿
+              </span>
+            </button>
+          </nav>
         </div>
       </div>
 
-      {/* R. Main area ─ 2484:1893 */}
-      <div className="flex h-full flex-1 min-w-0 flex-col" data-node-id="2484:1893">
-        {/* Header ─ 2484:1894 */}
-        <header
-          className="flex h-[76px] w-full shrink-0 items-center justify-between px-5 py-4"
-          data-node-id="2484:1894"
-        >
-          <h1
-            className="font-bold tracking-[-0.22px] text-black"
-            style={{ fontSize: "22px", lineHeight: "1.3" }}
-            data-node-id="2484:1896"
-          >
-            인사이트
-          </h1>
-
-          <button
-            type="button"
-            className="flex h-10 items-center justify-center gap-1.5 overflow-hidden rounded-xl bg-primary-500 px-5 transition-colors hover:bg-[#5c2985]"
-            data-node-id="2484:1897"
-          >
-            <span className="relative size-[18px] overflow-hidden">
-              <Image
-                src="/icons/version-b/plus.svg"
-                alt=""
-                fill
-                sizes="18px"
-              />
-            </span>
-            <span className="whitespace-nowrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white">
-              앱 만들기
-            </span>
-          </button>
-        </header>
-
-        {/* Content area ─ 2484:1898 */}
-        <div
-          className="flex flex-1 items-start overflow-hidden px-5 py-4"
-          data-node-id="2484:1898"
-        >
-          <div
-            className="content-card h-full min-w-0 flex-1 rounded-xl border-r border-gray-100 bg-white"
-            data-node-id="2484:1908"
-          />
+      {/* R. Main area */}
+      <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden px-5 py-4">
+        <div className="flex h-full min-w-0 flex-1 flex-col overflow-hidden rounded-xl border-r border-gray-100 bg-white p-8 gap-10">
+          {/* Header */}
+          <div className="flex shrink-0 items-center justify-between">
+            <h1
+              className="font-bold tracking-[-0.22px] text-black"
+              style={{ fontSize: "22px", lineHeight: "1.3" }}
+            >
+              인사이트
+            </h1>
+            <button
+              type="button"
+              className="flex h-10 items-center justify-center gap-1.5 overflow-hidden rounded-xl bg-primary-500 px-5 transition-colors hover:bg-[#5c2985]"
+            >
+              <span className="relative size-[18px] overflow-hidden">
+                <Image src="/icons/version-b/plus.svg" alt="" fill sizes="18px" />
+              </span>
+              <span className="whitespace-nowrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white">
+                앱 만들기
+              </span>
+            </button>
+          </div>
+          {/* Content */}
+          <div className="flex-1" />
         </div>
       </div>
     </div>
