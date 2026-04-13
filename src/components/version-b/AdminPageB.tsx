@@ -110,14 +110,7 @@ export default function AdminPageB() {
         {/* Menu card */}
         <div className="flex flex-1 min-h-0 w-full flex-col overflow-hidden rounded-xl border-r border-gray-100 bg-white">
           <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 py-2">
-            {/* 섹션 헤더: 조코딩파트너스 */}
-            <div className="flex w-full items-center px-3 pt-4 rounded-lg">
-              <span className="overflow-hidden text-ellipsis whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px]" style={{ color: "#a1a1aa" }}>
-                조코딩파트너스
-              </span>
-            </div>
-
-            {/* 전체 앱 현황 (active) */}
+{/* 전체 앱 현황 (active) */}
             <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2">
               <Image src="/icons/version-b/admin-menu-apps.svg" alt="" width={18} height={18} />
               <span className="whitespace-nowrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181B]">
