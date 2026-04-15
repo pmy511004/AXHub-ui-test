@@ -47,10 +47,11 @@ const apps: AppItem[] = [
 interface Props {
   activeMenu: string;
   setActiveMenu: (menu: string) => void;
+  onAppClick?: (name: string, category: string) => void;
 }
 
 
-export default function AppStoreContentV2({ activeMenu, setActiveMenu }: Props) {
+export default function AppStoreContentV2({ activeMenu, setActiveMenu, onAppClick }: Props) {
   const [activeCategory, setActiveCategory] = useState("전체");
   const [sortOpen, setSortOpen] = useState(false);
   const [sortBy, setSortBy] = useState("인기순");
@@ -194,7 +195,8 @@ export default function AppStoreContentV2({ activeMenu, setActiveMenu }: Props) 
               {apps.map((app, i) => (
                 <div
                   key={i}
-                  className="app-row flex items-center gap-5 border-b border-gray-100 !rounded-none px-1 py-5"
+                  className="app-row flex cursor-pointer items-center gap-5 border-b border-gray-100 !rounded-none px-1 py-5"
+                  onClick={() => onAppClick?.(app.name, app.category)}
                 >
                   <div className="flex flex-1 items-center gap-3">
                     <div className="app-icon size-16 shrink-0 rounded-xl bg-[#e4e4e7]" />

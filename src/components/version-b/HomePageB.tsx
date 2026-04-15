@@ -174,59 +174,12 @@ export default function HomePageB() {
         {/* Right: Main content */}
         <div className="flex h-full min-w-0 flex-1 flex-col overflow-hidden rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6 gap-6">
           {/* Header */}
-          <div className="flex shrink-0 items-center gap-3">
-            <div className="flex flex-1 items-center">
-              <h1 className="font-bold tracking-[-0.22px] text-black" style={{ fontSize: "22px", lineHeight: "1.3" }}>
-                내가 만든 앱
-              </h1>
-            </div>
-            <div className="flex h-10 w-[240px] items-center gap-1.5 overflow-hidden rounded-xl px-4 py-3" style={{ backgroundColor: "#f4f4f5" }}>
-              <div className="flex items-center">
-                <div className="relative size-5 overflow-hidden">
-                  <Image src="/icons/version-b/search.svg" alt="" fill sizes="20px" />
-                </div>
-              </div>
-              <div className="flex flex-1 items-center overflow-hidden">
-                <p className="whitespace-nowrap text-base font-normal leading-[1.5] tracking-[-0.16px] text-gray-300">
-                  앱 찾기
-                </p>
-              </div>
-            </div>
+          <div className="flex shrink-0 items-center">
+            <h1 className="font-bold tracking-[-0.22px] text-black" style={{ fontSize: "22px", lineHeight: "1.3" }}>
+              좋은 오후예요, 박민영 님
+            </h1>
           </div>
-          {/* 탭 바 */}
-          <div
-            className="flex w-fit shrink-0 items-start gap-2 rounded-2xl p-2 text-sm tracking-[-0.14px]"
-            style={{ backgroundColor: "#f6f6f6" }}
-          >
-            <button
-              type="button"
-              className="flex items-center gap-1 rounded-xl px-3 py-2 leading-[1.5]"
-              style={{ backgroundColor: "#6D319D", color: "white", fontWeight: 600 }}
-            >
-              <span>내 앱</span>
-              <span style={{ color: "rgba(255,255,255,0.8)", fontWeight: 400 }}>9</span>
-            </button>
-            <button
-              type="button"
-              className="flex items-center gap-1 rounded-xl px-3 py-2 leading-[1.5]"
-              style={{ backgroundColor: "transparent", color: "rgba(24,24,27,0.48)", fontWeight: 400 }}
-            >
-              <span>보관함</span>
-              <span style={{ color: "rgba(24,24,27,0.28)", fontWeight: 400 }}>1</span>
-            </button>
-          </div>
-
-          {/* 앱 카드 그리드 */}
-          <div className="flex min-h-0 flex-1 overflow-y-auto">
-            <div className="flex flex-wrap gap-10 content-start w-full">
-              {Array.from({ length: 9 }).map((_, i) => (
-                <div key={i} className="flex flex-col items-center gap-2">
-                  <div className="size-20 rounded-2xl bg-[#e4e4e7]" />
-                  <p className="text-xs font-normal leading-[1.3] tracking-[-0.12px] text-center text-black">앱 이름</p>
-                </div>
-              ))}
-            </div>
-          </div>
+          <div className="flex-1" />
         </div>
       </div>
     </div>

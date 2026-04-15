@@ -20,7 +20,7 @@ import AppDetailView from "./AppDetailView";
 export default function BrowsePageB() {
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string>("인기 • 신규 앱");
-  const [selectedApp, setSelectedApp] = useState<{ name: string; category: string } | null>(null);
+  const [selectedApp, setSelectedApp] = useState<{ name: string; category: string; isAdmin?: boolean } | null>(null);
 
 
 
@@ -386,8 +386,47 @@ export default function BrowsePageB() {
       </div>
 
       {/* R. Main area ─ 통합 사이드바 + 콘텐츠 */}
-      {activeMenu === "앱" ? (
-        <AppStoreContentV2 activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
+      {selectedApp ? (
+        <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden pr-2 py-2">
+          <div className="flex h-full w-[200px] shrink-0 flex-col">
+            <div className="flex h-[44px] items-center overflow-hidden rounded-tl-xl border-r px-3" style={{ backgroundColor: "#f6f6f6", borderColor: "#f6f6f6" }}>
+              <p className="overflow-hidden text-ellipsis whitespace-nowrap text-base font-bold leading-[1.5] tracking-[-0.16px] text-black">
+                조코딩AX파트너스
+              </p>
+            </div>
+            <div className="flex flex-1 min-h-0 flex-col overflow-hidden rounded-bl-xl border-r" style={{ backgroundColor: "#f6f6f6", borderColor: "#f6f6f6" }}>
+              <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 py-2">
+                <button type="button" onClick={() => { setActiveMenu("인기 • 신규 앱"); setSelectedApp(null); }} className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
+                  <Image src="/icons/version-b/browse-menu-hot-apps-inactive.svg" alt="" width={18} height={18} />
+                  <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">인기 • 신규 앱</span>
+                </button>
+                <button type="button" onClick={() => { setActiveMenu("앱"); setSelectedApp(null); }} className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
+                  <Image src="/icons/version-b/browse-menu-app-store.svg" alt="" width={18} height={18} />
+                  <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">앱 스토어</span>
+                </button>
+                <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
+                  <Image src="/icons/version-b/browse-menu-api-store.svg" alt="" width={18} height={18} />
+                  <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">API 스토어</span>
+                </button>
+                <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
+                  <Image src="/icons/version-b/browse-menu-shared-data.svg" alt="" width={18} height={18} />
+                  <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">공유 데이터</span>
+                </button>
+              </nav>
+            </div>
+          </div>
+          <div className="relative flex h-full min-w-0 flex-1 flex-col overflow-y-auto rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6 gap-6">
+            <AppDetailView
+              appName={selectedApp.name}
+              category={selectedApp.category}
+              fromMenu={activeMenu === "인기 • 신규 앱" ? "인기 • 신규 앱" : "앱 스토어"}
+              onBack={() => setSelectedApp(null)}
+              isAdmin={selectedApp.isAdmin}
+            />
+          </div>
+        </div>
+      ) : activeMenu === "앱" ? (
+        <AppStoreContentV2 activeMenu={activeMenu} setActiveMenu={setActiveMenu} onAppClick={(name, category) => setSelectedApp({ name, category })} />
       ) : (
         <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden pr-2 py-2">
           {/* Left sidebar */}
@@ -419,17 +458,8 @@ export default function BrowsePageB() {
             </div>
           </div>
           {/* Right: Main content */}
-          {selectedApp ? (
-            <div className="relative flex h-full min-w-0 flex-1 flex-col overflow-y-auto rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6 gap-6">
-              <AppDetailView
-                appName={selectedApp.name}
-                category={selectedApp.category}
-                fromMenu={activeMenu === "인기 • 신규 앱" ? "인기 • 신규 앱" : "앱 스토어"}
-                onBack={() => setSelectedApp(null)}
-              />
-            </div>
-          ) : activeMenu === "인기 • 신규 앱" ? (
-            <HotNewAppsContentV2 onAppClick={(name: string, category: string) => setSelectedApp({ name, category })} />
+          {activeMenu === "인기 • 신규 앱" ? (
+            <HotNewAppsContentV2 onAppClick={(name: string, category: string) => setSelectedApp({ name, category, isAdmin: name === "경비 정산 자동화" })} />
           ) : (
             <div className="flex h-full min-w-0 flex-1 flex-col overflow-hidden rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6 gap-6">
               <div className="flex shrink-0 items-center justify-between">

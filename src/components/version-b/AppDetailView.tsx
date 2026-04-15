@@ -8,7 +8,10 @@ interface AppDetailViewProps {
   category: string;
   onBack: () => void;
   fromMenu: string;
+  isAdmin?: boolean;
 }
+
+const adminTabs = ["앱", "테이블", "배포", "로그", "연동", "SSO", "설정"];
 
 const comments = [
   { name: "박민영", time: "1시간 전", text: "댓글 카드 높이는 166px 고정입니다. 댓글의 내용이 길어질 경우 \"...\"로 보여지고 카드를 클릭하면 상세 모달로 볼 수 있습니다.", likes: 2, replies: 0, liked: false, isMine: true },
@@ -30,12 +33,14 @@ const comments = [
   { name: "문서현", time: "3일 전", text: "보고서 작성할 때 정말 유용하게 쓰고 있습니다. 감사합니다.", likes: 3, replies: 1, liked: true },
 ];
 
-export default function AppDetailView({ appName, category, onBack, fromMenu }: AppDetailViewProps) {
+export default function AppDetailView({ appName, category, onBack, fromMenu, isAdmin }: AppDetailViewProps) {
   const [expanded, setExpanded] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [moreMenuOpen, setMoreMenuOpen] = useState<number | null>(null);
   const [modalMoreOpen, setModalMoreOpen] = useState(false);
   const [modalComment, setModalComment] = useState<number | null>(null);
+  const [activeTab, setActiveTab] = useState("앱");
+  const [adminMenuOpen, setAdminMenuOpen] = useState(false);
   const [replyText, setReplyText] = useState("");
   const [likedSet, setLikedSet] = useState<Set<number>>(() => {
     const set = new Set<number>();
@@ -181,6 +186,33 @@ export default function AppDetailView({ appName, category, onBack, fromMenu }: A
         </span>
       </div>
 
+      {/* Admin Tab Bar */}
+      {isAdmin && (
+        <div className="flex items-center justify-between rounded-2xl p-2" style={{ backgroundColor: "#f6f6f6" }}>
+          <div className="flex items-center gap-2">
+            {adminTabs.map((tab) => (
+              <button
+                key={tab}
+                type="button"
+                onClick={() => setActiveTab(tab)}
+                className="min-w-[62px] rounded-xl px-3 py-2 text-center text-sm leading-[1.5] tracking-[-0.14px] transition-colors"
+                style={{
+                  backgroundColor: activeTab === tab ? "#fbb03b" : "transparent",
+                  color: activeTab === tab ? "white" : "rgba(24,24,27,0.48)",
+                  fontWeight: activeTab === tab ? 600 : 400,
+                }}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+          <div className="flex shrink-0 items-center gap-1 px-2">
+            <span className="text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-gray-500">관리자 가이드</span>
+            <Image src="/icons/version-b/admin-guide.svg" alt="" width={20} height={20} />
+          </div>
+        </div>
+      )}
+
       {/* App Header */}
       <div className="flex flex-col">
         <div className="flex items-center gap-4 border-b border-[#e4e4e7] py-5">
@@ -189,9 +221,25 @@ export default function AppDetailView({ appName, category, onBack, fromMenu }: A
           </div>
           <div className="flex flex-1 flex-col justify-between self-stretch">
             <div className="flex flex-col gap-1">
-              <h2 className="text-[28px] font-bold leading-[1.2] text-black">
-                {appName}
-              </h2>
+              <div className="flex items-center gap-2">
+                <h2 className="flex-1 text-[28px] font-bold leading-[1.2] text-black">
+                  {appName}
+                </h2>
+                {isAdmin && (
+                  <div className="relative shrink-0">
+                    <button type="button" onClick={() => setAdminMenuOpen(!adminMenuOpen)}>
+                      <Image src="/icons/version-b/app-more-24.svg" alt="" width={24} height={24} />
+                    </button>
+                    {adminMenuOpen && (
+                      <div className="absolute right-0 top-full z-20 mt-1 flex min-w-full flex-col overflow-hidden rounded-xl bg-white shadow-[0px_4px_16px_rgba(0,0,0,0.12)]">
+                        <button type="button" onClick={() => setAdminMenuOpen(false)} className="whitespace-nowrap px-4 py-2.5 text-left text-sm font-normal leading-[1.5] tracking-[-0.14px] transition-colors hover:bg-gray-50" style={{ color: "#3f3f46" }}>정보 수정</button>
+                        <button type="button" onClick={() => setAdminMenuOpen(false)} className="whitespace-nowrap px-4 py-2.5 text-left text-sm font-normal leading-[1.5] tracking-[-0.14px] transition-colors hover:bg-gray-50" style={{ color: "#3f3f46" }}>앱 보관</button>
+                        <button type="button" onClick={() => setAdminMenuOpen(false)} className="whitespace-nowrap px-4 py-2.5 text-left text-sm font-normal leading-[1.5] tracking-[-0.14px] transition-colors hover:bg-gray-50" style={{ color: "#f5475c" }}>앱 삭제</button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
               <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-gray-500">
                 {category}
               </p>
@@ -209,7 +257,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu }: A
                 className="flex h-8 items-center justify-center rounded-xl px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#18181b]"
                 style={{ backgroundColor: "#f6f6f6" }}
               >
-                앱 삭제
+                사용 해제
               </button>
             </div>
           </div>
@@ -239,7 +287,9 @@ export default function AppDetailView({ appName, category, onBack, fromMenu }: A
         </div>
 
         {/* Description */}
-        <div className="flex items-end gap-2.5 border-b border-[#e4e4e7] py-5">
+        <div className="flex flex-col gap-5 border-b border-[#e4e4e7] py-5">
+          <h3 className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">앱 정보</h3>
+          <div className="flex items-end gap-2.5">
           <div
             className={`flex-1 text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#18181b] overflow-hidden ${expanded ? "" : "h-[105px]"}`}
           >
@@ -257,6 +307,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu }: A
           >
             {expanded ? "접기" : "더보기"}
           </button>
+          </div>
         </div>
       </div>
 

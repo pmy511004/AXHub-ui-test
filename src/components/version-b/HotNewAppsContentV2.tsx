@@ -395,9 +395,9 @@ export default function HotNewAppsContentV2({ onAppClick }: Props = {}) {
                     onMouseLeave={hideTooltip}
                   >
                     {/* Icon + NEW badge */}
-                    <div className="relative flex w-full items-center p-2">
+                    <div className="relative flex w-full items-center overflow-visible p-2">
                       <div className="app-icon aspect-square flex-1 rounded-2xl bg-[#e4e4e7]" />
-                      <span className="new-badge-pulse absolute left-0 top-0 flex h-5 items-center justify-center rounded-lg bg-[#f5475c] px-1.5 text-[10px] font-semibold leading-[1.4] tracking-[-0.1px] text-white">
+                      <span className="new-badge-pulse absolute right-0 top-0 flex h-5 origin-top-right items-center justify-center rounded-lg bg-[#f5475c] px-1.5 text-[10px] font-semibold leading-[1.4] tracking-[-0.1px] text-white 2xl:scale-150">
                         NEW
                       </span>
                     </div>
