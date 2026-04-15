@@ -35,23 +35,33 @@ export default function AdminPageB() {
 
           {/* Nav items */}
           <nav className={`flex w-full flex-col items-center gap-4 px-5 ${sidebarExpanded ? "py-4" : ""}`}>
+            {/* 홈 (inactive) */}
+            <Link href="/" className="flex flex-col items-center gap-1">
+              <div className="relative size-11">
+                <Image src="/icons/version-b/nav-home.svg" alt="홈" fill sizes="44px" />
+              </div>
+              <p className="whitespace-nowrap text-center text-xs font-normal leading-[1.3] tracking-[-0.12px]" style={{ color: "rgba(255,255,255,0.7)" }}>
+                홈
+              </p>
+            </Link>
+
             {/* 만들기 (inactive) */}
             <Link href="/make" className="flex flex-col items-center gap-1">
               <div className="relative size-11">
                 <Image src="/icons/version-b/nav-make-inactive.svg" alt="만들기" fill sizes="44px" />
               </div>
               <p className="whitespace-nowrap text-center text-xs font-normal leading-[1.3] tracking-[-0.12px]" style={{ color: "rgba(255,255,255,0.7)" }}>
-                만들기
+                프로젝트
               </p>
             </Link>
 
             {/* 둘러보기 (inactive) */}
-            <Link href="/" className="flex flex-col items-center gap-1">
+            <Link href="/browse" className="flex flex-col items-center gap-1">
               <div className="relative size-11">
                 <Image src="/icons/version-b/nav-store.svg" alt="둘러보기" fill sizes="44px" />
               </div>
               <p className="whitespace-nowrap text-center text-xs font-normal leading-[1.3] tracking-[-0.12px]" style={{ color: "rgba(255,255,255,0.7)" }}>
-                둘러보기
+                스토어
               </p>
             </Link>
 
@@ -61,7 +71,7 @@ export default function AdminPageB() {
                 <Image src="/icons/version-b/nav-admin-active.svg" alt="관리하기" fill sizes="44px" />
               </div>
               <p className="text-center text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white">
-                관리하기
+                설정
               </p>
             </Link>
           </nav>

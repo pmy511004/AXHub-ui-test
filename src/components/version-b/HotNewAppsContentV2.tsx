@@ -81,7 +81,11 @@ function RankChange({ change }: { change: number }) {
   );
 }
 
-export default function HotNewAppsContentV2() {
+interface Props {
+  onAppClick?: (name: string, category: string) => void;
+}
+
+export default function HotNewAppsContentV2({ onAppClick }: Props = {}) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const bannerRef = useRef<HTMLDivElement>(null);
   const [bannerSlide, setBannerSlide] = useState(0);
@@ -330,8 +334,9 @@ export default function HotNewAppsContentV2() {
                       return (
                         <div
                           key={i}
-                          className="rank-card flex flex-1 flex-col gap-3 rounded-xl p-3 shadow-[0px_4px_10px_0px_rgba(0,0,0,0.1)]"
+                          className="rank-card flex flex-1 cursor-pointer flex-col gap-3 rounded-xl p-3 shadow-[0px_4px_10px_0px_rgba(0,0,0,0.1)]"
                           style={{ background: cardGradient }}
+                          onClick={() => onAppClick?.(app.name, app.category)}
                           onMouseEnter={(e) => showTooltip(e, popularDescriptions[i])}
                           onMouseLeave={hideTooltip}
                         >
@@ -364,7 +369,8 @@ export default function HotNewAppsContentV2() {
                   {popularApps.slice(3).map((app, i) => (
                     <div
                       key={i}
-                      className="app-row flex items-center gap-5 border-b border-gray-100 py-5"
+                      className="app-row flex cursor-pointer items-center gap-5 border-b border-gray-100 py-5"
+                      onClick={() => onAppClick?.(app.name, app.category)}
                       onMouseEnter={(e) => showTooltip(e, popularDescriptions[i + 3])}
                       onMouseLeave={hideTooltip}
                     >
@@ -439,7 +445,8 @@ export default function HotNewAppsContentV2() {
                   {newApps.slice(0, 6).map((app, i) => (
                     <div
                       key={i}
-                      className="app-row flex items-center gap-5 border-b border-gray-100 py-5"
+                      className="app-row flex cursor-pointer items-center gap-5 border-b border-gray-100 py-5"
+                      onClick={() => onAppClick?.(app.name, app.category)}
                       onMouseEnter={(e) => showTooltip(e, newDescriptions[i])}
                       onMouseLeave={hideTooltip}
                     >

@@ -6,6 +6,7 @@ import Link from "next/link";
 import TeamColumn from "./TeamColumn";
 import HotNewAppsContentV2 from "./HotNewAppsContentV2";
 import AppStoreContentV2 from "./AppStoreContentV2";
+import AppDetailView from "./AppDetailView";
 
 // 피그마 versionB-2 (node 2504:1034) — / (둘러보기) 페이지 Version B 전체 레이아웃
 //
@@ -18,7 +19,8 @@ import AppStoreContentV2 from "./AppStoreContentV2";
 //      └ Content card (2504:1092)
 export default function BrowsePageB() {
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
-  const [activeMenu, setActiveMenu] = useState<string>("내가 이용중인 앱");
+  const [activeMenu, setActiveMenu] = useState<string>("인기 • 신규 앱");
+  const [selectedApp, setSelectedApp] = useState<{ name: string; category: string } | null>(null);
 
 
 
@@ -61,6 +63,27 @@ export default function BrowsePageB() {
             className={`flex w-full flex-col items-center gap-4 px-5 ${sidebarExpanded ? "py-4" : ""}`}
             data-node-id="2504:1040"
           >
+            {/* 홈 (inactive) */}
+            <Link
+              href="/"
+              className="flex flex-col items-center gap-1"
+            >
+              <div className="relative size-11">
+                <Image
+                  src="/icons/version-b/nav-home.svg"
+                  alt="홈"
+                  fill
+                  sizes="44px"
+                />
+              </div>
+              <p
+                className="whitespace-nowrap text-center text-xs font-normal leading-[1.3] tracking-[-0.12px]"
+                style={{ color: "rgba(255,255,255,0.7)" }}
+              >
+                홈
+              </p>
+            </Link>
+
             {/* 만들기 (inactive) ─ 2504:1045 */}
             <Link
               href="/make"
@@ -79,13 +102,13 @@ export default function BrowsePageB() {
                 className="whitespace-nowrap text-center text-xs font-normal leading-[1.3] tracking-[-0.12px]"
                 style={{ color: "rgba(255,255,255,0.7)" }}
               >
-                만들기
+                프로젝트
               </p>
             </Link>
 
             {/* 둘러보기 (active) ─ 2504:1041 */}
             <Link
-              href="/"
+              href="/browse"
               className="flex w-[44px] flex-col items-center gap-1"
               data-node-id="2504:1041"
             >
@@ -101,7 +124,7 @@ export default function BrowsePageB() {
                 className="text-center text-xs font-semibold leading-[1.3] tracking-[-0.12px]"
                 style={{ color: "#ffffff" }}
               >
-                둘러보기
+                스토어
               </p>
             </Link>
 
@@ -123,7 +146,7 @@ export default function BrowsePageB() {
                 className="whitespace-nowrap text-center text-xs font-normal leading-[1.3] tracking-[-0.12px]"
                 style={{ color: "rgba(255,255,255,0.7)" }}
               >
-                관리하기
+                설정
               </p>
             </Link>
           </nav>
@@ -376,46 +399,37 @@ export default function BrowsePageB() {
             </div>
             <div className="flex flex-1 min-h-0 flex-col overflow-hidden rounded-bl-xl border-r" style={{ backgroundColor: "#f6f6f6", borderColor: "#f6f6f6" }}>
               <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 py-2">
-                <button type="button" onClick={() => setActiveMenu("내가 이용중인 앱")} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "내가 이용중인 앱" ? "menu-active" : "hover:bg-gray-200"}`}>
-                  <span className="menu-icon" style={{ maskImage: "url(/icons/version-b/menu-my-apps.svg)", WebkitMaskImage: "url(/icons/version-b/menu-my-apps.svg)", color: activeMenu === "내가 이용중인 앱" ? "#FBB03B" : "rgba(24,24,27,0.48)" }} />
-                  <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "내가 이용중인 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>내가 이용중인 앱</span>
-                </button>
                 <button type="button" onClick={() => setActiveMenu("인기 • 신규 앱")} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "인기 • 신규 앱" ? "menu-active" : "hover:bg-gray-200"}`}>
-                  <span className="menu-icon" style={{ maskImage: "url(/icons/version-b/menu-hot-apps.svg)", WebkitMaskImage: "url(/icons/version-b/menu-hot-apps.svg)", color: activeMenu === "인기 • 신규 앱" ? "#FBB03B" : "rgba(24,24,27,0.48)" }} />
+                  <Image src={activeMenu === "인기 • 신규 앱" ? "/icons/version-b/browse-menu-hot-apps.svg" : "/icons/version-b/browse-menu-hot-apps-inactive.svg"} alt="" width={18} height={18} />
                   <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>인기 • 신규 앱</span>
                 </button>
-                <div className="flex w-full items-center px-3 pt-4 rounded-lg">
-                  <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px]" style={{ color: "#a1a1aa" }}>스토어</span>
-                </div>
                 <button type="button" onClick={() => setActiveMenu("앱")} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "앱" ? "menu-active" : "hover:bg-gray-200"}`}>
-                  <span className="menu-icon" style={{ maskImage: "url(/icons/version-b/menu-store-app.svg)", WebkitMaskImage: "url(/icons/version-b/menu-store-app.svg)", color: activeMenu === "앱" ? "#FBB03B" : "rgba(24,24,27,0.48)" }} />
-                  <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>앱</span>
+                  <Image src={activeMenu === "앱" ? "/icons/version-b/browse-menu-app-store-active.svg" : "/icons/version-b/browse-menu-app-store.svg"} alt="" width={18} height={18} />
+                  <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>앱 스토어</span>
                 </button>
                 <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
-                  <span className="menu-icon" style={{ maskImage: "url(/icons/version-b/menu-store-api.svg)", WebkitMaskImage: "url(/icons/version-b/menu-store-api.svg)", color: "rgba(24,24,27,0.48)" }} />
-                  <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">API</span>
+                  <Image src="/icons/version-b/browse-menu-api-store.svg" alt="" width={18} height={18} />
+                  <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">API 스토어</span>
                 </button>
                 <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
-                  <span className="menu-icon" style={{ maskImage: "url(/icons/version-b/menu-shared-data.svg)", WebkitMaskImage: "url(/icons/version-b/menu-shared-data.svg)", color: "rgba(24,24,27,0.48)" }} />
+                  <Image src="/icons/version-b/browse-menu-shared-data.svg" alt="" width={18} height={18} />
                   <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">공유 데이터</span>
-                </button>
-                <div className="flex w-full items-center px-3 pt-4 rounded-lg">
-                  <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px]" style={{ color: "#a1a1aa" }}>요청내역</span>
-                </div>
-                <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
-                  <span className="menu-icon" style={{ maskImage: "url(/icons/version-b/menu-req-app.svg)", WebkitMaskImage: "url(/icons/version-b/menu-req-app.svg)", color: "rgba(24,24,27,0.48)" }} />
-                  <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">앱 사용</span>
-                </button>
-                <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
-                  <span className="menu-icon" style={{ maskImage: "url(/icons/version-b/menu-req-shared.svg)", WebkitMaskImage: "url(/icons/version-b/menu-req-shared.svg)", color: "rgba(24,24,27,0.48)" }} />
-                  <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">공유데이터 사용</span>
                 </button>
               </nav>
             </div>
           </div>
           {/* Right: Main content */}
-          {activeMenu === "인기 • 신규 앱" ? (
-            <HotNewAppsContentV2 />
+          {selectedApp ? (
+            <div className="relative flex h-full min-w-0 flex-1 flex-col overflow-y-auto rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6 gap-6">
+              <AppDetailView
+                appName={selectedApp.name}
+                category={selectedApp.category}
+                fromMenu={activeMenu === "인기 • 신규 앱" ? "인기 • 신규 앱" : "앱 스토어"}
+                onBack={() => setSelectedApp(null)}
+              />
+            </div>
+          ) : activeMenu === "인기 • 신규 앱" ? (
+            <HotNewAppsContentV2 onAppClick={(name: string, category: string) => setSelectedApp({ name, category })} />
           ) : (
             <div className="flex h-full min-w-0 flex-1 flex-col overflow-hidden rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6 gap-6">
               <div className="flex shrink-0 items-center justify-between">

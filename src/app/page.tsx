@@ -1,5 +1,5 @@
-import BrowsePageB from "@/components/version-b/BrowsePageB";
+import HomePageB from "@/components/version-b/HomePageB";
 
 export default function Home() {
-  return <BrowsePageB />;
+  return <HomePageB />;
 }

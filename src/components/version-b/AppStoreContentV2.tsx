@@ -49,17 +49,6 @@ interface Props {
   setActiveMenu: (menu: string) => void;
 }
 
-const menuItems = [
-  { id: "내가 이용중인 앱", icon: "menu-my-apps", section: null },
-  { id: "인기 • 신규 앱", icon: "menu-hot-apps", section: null },
-  { id: "_스토어", icon: "", section: "스토어" },
-  { id: "앱", icon: "menu-store-app", section: null },
-  { id: "_API", icon: "menu-store-api", section: null, label: "API", static: true },
-  { id: "_공유데이터", icon: "menu-shared-data", section: null, label: "공유 데이터", static: true },
-  { id: "_요청내역", icon: "", section: "요청내역" },
-  { id: "_앱사용", icon: "menu-req-app", section: null, label: "앱 사용", static: true },
-  { id: "_공유데이터사용", icon: "menu-req-shared", section: null, label: "공유데이터 사용", static: true },
-];
 
 export default function AppStoreContentV2({ activeMenu, setActiveMenu }: Props) {
   const [activeCategory, setActiveCategory] = useState("전체");
@@ -79,40 +68,22 @@ export default function AppStoreContentV2({ activeMenu, setActiveMenu }: Props) 
         {/* Nav */}
         <div className="flex flex-1 min-h-0 flex-col overflow-hidden rounded-bl-xl border-r" style={{ backgroundColor: "#f6f6f6", borderColor: "#f6f6f6" }}>
           <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 py-2">
-            {menuItems.map((item) => {
-              if (item.section) {
-                return (
-                  <div key={item.id} className="flex w-full items-center px-3 pt-4 rounded-lg">
-                    <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px]" style={{ color: "#a1a1aa" }}>
-                      {item.section}
-                    </span>
-                  </div>
-                );
-              }
-              const isActive = activeMenu === item.id;
-              const isStatic = item.static;
-              const label = item.label || item.id;
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => !isStatic && setActiveMenu(item.id)}
-                  className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${isActive ? "menu-active" : "hover:bg-gray-200"}`}
-                >
-                  <span
-                    className="menu-icon"
-                    style={{
-                      maskImage: `url(/icons/version-b/${item.icon}.svg)`,
-                      WebkitMaskImage: `url(/icons/version-b/${item.icon}.svg)`,
-                      color: isActive ? "#FBB03B" : "rgba(24,24,27,0.48)",
-                    }}
-                  />
-                  <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${isActive ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>
-                    {label}
-                  </span>
-                </button>
-              );
-            })}
+            <button type="button" onClick={() => setActiveMenu("인기 • 신규 앱")} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "인기 • 신규 앱" ? "menu-active" : "hover:bg-gray-200"}`}>
+              <Image src={activeMenu === "인기 • 신규 앱" ? "/icons/version-b/browse-menu-hot-apps.svg" : "/icons/version-b/browse-menu-hot-apps-inactive.svg"} alt="" width={18} height={18} />
+              <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>인기 • 신규 앱</span>
+            </button>
+            <button type="button" onClick={() => setActiveMenu("앱")} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "앱" ? "menu-active" : "hover:bg-gray-200"}`}>
+              <Image src={activeMenu === "앱" ? "/icons/version-b/browse-menu-app-store-active.svg" : "/icons/version-b/browse-menu-app-store.svg"} alt="" width={18} height={18} />
+              <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>앱 스토어</span>
+            </button>
+            <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
+              <Image src="/icons/version-b/browse-menu-api-store.svg" alt="" width={18} height={18} />
+              <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">API 스토어</span>
+            </button>
+            <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
+              <Image src="/icons/version-b/browse-menu-shared-data.svg" alt="" width={18} height={18} />
+              <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">공유 데이터</span>
+            </button>
           </nav>
         </div>
       </div>
