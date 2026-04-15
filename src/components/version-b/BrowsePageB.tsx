@@ -158,7 +158,7 @@ export default function BrowsePageB() {
           data-node-id="2504:1053"
         >
           <div
-            className="flex flex-col items-center gap-1 overflow-hidden rounded-2xl bg-white/20 p-1"
+            className="flex flex-col items-center gap-2"
             data-node-id="2504:1054"
           >
             {/* 사이드바 토글 */}

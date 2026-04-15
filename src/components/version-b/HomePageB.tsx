@@ -89,7 +89,7 @@ export default function HomePageB() {
 
         {/* 하단: 검색/알림/프로필 */}
         <div className="flex w-full items-center justify-center px-3 py-4">
-          <div className="flex flex-col items-center gap-2 overflow-hidden rounded-2xl bg-white/20 p-1">
+          <div className="flex flex-col items-center gap-2">
             <button
               type="button"
               onClick={() => setSidebarExpanded(!sidebarExpanded)}
@@ -139,27 +139,16 @@ export default function HomePageB() {
           </div>
           <div className="flex flex-1 min-h-0 flex-col overflow-hidden rounded-bl-xl border-r" style={{ backgroundColor: "#f6f6f6", borderColor: "#f6f6f6" }}>
             <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 py-2">
-              {/* 섹션 헤더: 앱 */}
-              <div className="flex w-full items-center px-3 pt-4 rounded-lg">
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px]" style={{ color: "#a1a1aa" }}>앱</span>
-              </div>
-
-              {/* 내가 만든 앱 (active) */}
+              {/* 홈 (active) */}
               <button type="button" className="menu-active flex w-full items-center gap-2 rounded-lg px-3 py-2">
-                <Image src="/icons/version-b/home-menu-my-apps.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#6D319D]">내가 만든 앱</span>
+                <Image src="/icons/version-b/home-menu-home.svg" alt="" width={18} height={18} />
+                <span className="whitespace-nowrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#6D319D]">홈</span>
               </button>
 
-              {/* 이용 중인 앱 */}
+              {/* 이용중인 앱 */}
               <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
                 <Image src="/icons/version-b/home-menu-using-apps.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">이용 중인 앱</span>
-              </button>
-
-              {/* 인사이트 */}
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
-                <Image src="/icons/version-b/home-menu-insight.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">인사이트</span>
+                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">이용중인 앱</span>
               </button>
 
               {/* 섹션 헤더: 요청내역 */}

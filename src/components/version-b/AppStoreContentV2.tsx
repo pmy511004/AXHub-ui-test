@@ -190,86 +190,43 @@ export default function AppStoreContentV2({ activeMenu, setActiveMenu }: Props) 
           <div className="relative min-h-0 flex-1">
             <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-6" style={{ background: "linear-gradient(to bottom, white 0%, transparent 100%)" }} />
             <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-6" style={{ background: "linear-gradient(to top, white 0%, transparent 100%)" }} />
-            <div className="sidebar-scroll flex h-full gap-8 overflow-y-auto">
-              {/* 왼쪽 컬럼 */}
-              <div className="flex flex-1 flex-col">
-                {apps.slice(0, Math.ceil(apps.length / 2)).map((app, i) => (
-                  <div
-                    key={i}
-                    className="app-row flex items-center gap-5 border-b border-gray-100 !rounded-none px-1 py-5"
-                  >
-                    <div className="flex flex-1 items-center gap-3">
-                      <div className="app-icon size-16 shrink-0 rounded-xl bg-[#e4e4e7]" />
-                      <div className="flex h-[52px] flex-col gap-2">
-                        <div className="flex items-center gap-1.5">
-                          {app.isNew && (
-                            <span className="new-badge-pulse flex h-5 items-center justify-center rounded-lg bg-[#f5475c] px-1.5 text-[10px] font-semibold leading-[1.4] tracking-[-0.1px] text-white">
-                              NEW
-                            </span>
-                          )}
-                          <p className="text-[18px] font-semibold leading-[1.4] tracking-[-0.18px] text-black">
-                            {app.name}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-500">
-                          <span>{app.category}</span>
-                          <span className="inline-block size-1 rounded-full bg-gray-500" />
-                          <span>{app.users}</span>
-                        </div>
+            <div className="sidebar-scroll grid h-full grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-x-8 overflow-y-auto">
+              {apps.map((app, i) => (
+                <div
+                  key={i}
+                  className="app-row flex items-center gap-5 border-b border-gray-100 !rounded-none px-1 py-5"
+                >
+                  <div className="flex flex-1 items-center gap-3">
+                    <div className="app-icon size-16 shrink-0 rounded-xl bg-[#e4e4e7]" />
+                    <div className="flex h-[52px] flex-col gap-2">
+                      <div className="flex items-center gap-1.5">
+                        {app.isNew && (
+                          <span className="new-badge-pulse flex h-5 items-center justify-center rounded-lg bg-[#f5475c] px-1.5 text-[10px] font-semibold leading-[1.4] tracking-[-0.1px] text-white">
+                            NEW
+                          </span>
+                        )}
+                        <p className="text-[18px] font-semibold leading-[1.4] tracking-[-0.18px] text-black">
+                          {app.name}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-500">
+                        <span>{app.category}</span>
+                        <span className="inline-block size-1 rounded-full bg-gray-500" />
+                        <span>{app.users}</span>
                       </div>
                     </div>
-                    <button
-                      type="button"
-                      className="shrink-0 rounded-xl px-3 text-[12px] font-semibold leading-[1.3] tracking-[-0.12px] transition-colors"
-                      style={{ backgroundColor: "#f6f6f6", color: "#fbb03b", height: 32 }}
-                      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#ececec"; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "#f6f6f6"; }}
-                    >
-                      사용 신청
-                    </button>
                   </div>
-                ))}
-              </div>
-
-              {/* 오른쪽 컬럼 */}
-              <div className="flex flex-1 flex-col">
-                {apps.slice(Math.ceil(apps.length / 2)).map((app, i) => (
-                  <div
-                    key={i}
-                    className="app-row flex items-center gap-5 border-b border-gray-100 !rounded-none px-1 py-5"
+                  <button
+                    type="button"
+                    className="shrink-0 rounded-xl px-3 text-[12px] font-semibold leading-[1.3] tracking-[-0.12px] transition-colors"
+                    style={{ backgroundColor: "#f6f6f6", color: "#fbb03b", height: 32 }}
+                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#ececec"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "#f6f6f6"; }}
                   >
-                    <div className="flex flex-1 items-center gap-3">
-                      <div className="app-icon size-16 shrink-0 rounded-xl bg-[#e4e4e7]" />
-                      <div className="flex h-[52px] flex-col gap-2">
-                        <div className="flex items-center gap-1.5">
-                          {app.isNew && (
-                            <span className="new-badge-pulse flex h-5 items-center justify-center rounded-lg bg-[#f5475c] px-1.5 text-[10px] font-semibold leading-[1.4] tracking-[-0.1px] text-white">
-                              NEW
-                            </span>
-                          )}
-                          <p className="text-[18px] font-semibold leading-[1.4] tracking-[-0.18px] text-black">
-                            {app.name}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-500">
-                          <span>{app.category}</span>
-                          <span className="inline-block size-1 rounded-full bg-gray-500" />
-                          <span>{app.users}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      className="shrink-0 rounded-xl px-3 text-[12px] font-semibold leading-[1.3] tracking-[-0.12px] transition-colors"
-                      style={{ backgroundColor: "#f6f6f6", color: "#fbb03b", height: 32 }}
-                      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#ececec"; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "#f6f6f6"; }}
-                    >
-                      사용 신청
-                    </button>
-                  </div>
-                ))}
-              </div>
+                    사용 신청
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
         </div>

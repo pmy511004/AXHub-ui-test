@@ -137,7 +137,7 @@ export default function MakePageB() {
           data-node-id="2471:1532"
         >
           <div
-            className="flex flex-col items-center gap-1 overflow-hidden rounded-2xl bg-white/20 p-1"
+            className="flex flex-col items-center gap-2"
             data-node-id="2471:1283"
           >
             {/* 사이드바 토글 */}
@@ -206,12 +206,12 @@ export default function MakePageB() {
           <div className="flex flex-1 min-h-0 flex-col overflow-hidden rounded-bl-xl border-r" style={{ backgroundColor: "#f6f6f6", borderColor: "#f6f6f6" }}>
             <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 py-2">
               <button type="button" className="menu-active flex w-full items-center gap-2 rounded-lg px-3 py-2">
-                <Image src="/icons/version-b/make-menu-create-active.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#E765BE]">앱 만들기</span>
+                <Image src="/icons/version-b/make-menu-project.svg" alt="" width={18} height={18} />
+                <span className="whitespace-nowrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#E765BE]">내 프로젝트</span>
               </button>
               <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
-                <Image src="/icons/version-b/make-menu-template-v2.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">템플릿</span>
+                <Image src="/icons/version-b/make-menu-insight-v2.svg" alt="" width={18} height={18} />
+                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">인사이트</span>
               </button>
             </nav>
           </div>
@@ -224,7 +224,7 @@ export default function MakePageB() {
               className="font-bold tracking-[-0.22px] text-black"
               style={{ fontSize: "22px", lineHeight: "1.3" }}
             >
-              앱 만들기
+              내 프로젝트
             </h1>
           </div>
           {/* Content */}

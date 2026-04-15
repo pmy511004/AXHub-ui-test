@@ -79,7 +79,7 @@ export default function AdminPageB() {
 
         {/* 하단: 검색/알림/프로필 카드 */}
         <div className="flex w-full items-center justify-center px-3 py-4">
-          <div className="flex flex-col items-center gap-1 overflow-hidden rounded-2xl bg-white/20 p-1">
+          <div className="flex flex-col items-center gap-2">
             {/* 사이드바 토글 */}
             <button
               type="button"
