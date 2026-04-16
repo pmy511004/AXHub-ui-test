@@ -222,6 +222,16 @@
     transition: transform 0.2s ease;
   }
 
+  .app-card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 140px));
+  }
+
+  @media (min-width: 1441px) {
+    .app-card-grid {
+      grid-template-columns: repeat(auto-fill, minmax(140px, 210px));
+    }
+  }
+
   /* 앱 미리보기 툴팁 (JS 기반 fixed positioning) */
   .app-tooltip-box {
     position: fixed;

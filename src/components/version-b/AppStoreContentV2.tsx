@@ -191,7 +191,7 @@ export default function AppStoreContentV2({ activeMenu, setActiveMenu, onAppClic
           <div className="relative min-h-0 flex-1">
             <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-6" style={{ background: "linear-gradient(to bottom, white 0%, transparent 100%)" }} />
             <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-6" style={{ background: "linear-gradient(to top, white 0%, transparent 100%)" }} />
-            <div className="sidebar-scroll grid h-full grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-x-8 overflow-y-auto">
+            <div className="sidebar-scroll grid h-full grid-cols-1 gap-x-8 overflow-y-auto sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
               {apps.map((app, i) => (
                 <div
                   key={i}

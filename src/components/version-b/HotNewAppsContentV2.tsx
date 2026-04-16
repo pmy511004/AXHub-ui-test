@@ -178,27 +178,6 @@ export default function HotNewAppsContentV2({ onAppClick }: Props = {}) {
         onScroll={handleScroll}
         className="flex h-full min-w-0 flex-1 flex-col gap-6 overflow-y-auto rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6"
       >
-        {/* Header */}
-        <div className="flex shrink-0 items-center justify-between">
-          <h1
-            className="font-bold tracking-[-0.22px] text-black"
-            style={{ fontSize: "22px", lineHeight: "1.3" }}
-          >
-            인기 • 신규 앱
-          </h1>
-          <div className="flex h-10 w-[240px] items-center gap-1.5 overflow-hidden rounded-xl bg-gray-100 px-4 py-3">
-            <div className="flex items-center">
-              <div className="relative size-5 overflow-hidden">
-                <Image src="/icons/version-b/search.svg" alt="" fill sizes="20px" />
-              </div>
-            </div>
-            <div className="flex flex-1 items-center overflow-hidden">
-              <p className="whitespace-nowrap text-base font-normal leading-[1.5] tracking-[-0.16px] text-gray-300">
-                앱 찾기
-              </p>
-            </div>
-          </div>
-        </div>
           {/* Banner 캐러셀 (슬라이드) */}
           <div className="relative w-full shrink-0" style={{ height: 212 }}>
             <div
@@ -321,7 +300,7 @@ export default function HotNewAppsContentV2({ onAppClick }: Props = {}) {
                 </button>
               </div>
 
-              <div className="sidebar-scroll grid min-h-0 flex-1 grid-cols-3 content-start gap-6 overflow-y-auto pt-4">
+              <div className="app-card-grid sidebar-scroll grid min-h-0 flex-1 content-start gap-6 overflow-y-auto pt-4">
                 {popularApps.map((app, i) => {
                   const rankColor = rankColors[i] ?? "#a1a1aa";
                   return (
@@ -385,7 +364,7 @@ export default function HotNewAppsContentV2({ onAppClick }: Props = {}) {
                 </button>
               </div>
 
-              <div className="sidebar-scroll grid min-h-0 flex-1 grid-cols-3 content-start gap-6 overflow-y-auto pt-4">
+              <div className="app-card-grid sidebar-scroll grid min-h-0 flex-1 content-start gap-6 overflow-y-auto pt-4">
                 {newApps.slice(0, 6).map((app, i) => (
                   <div
                     key={i}
