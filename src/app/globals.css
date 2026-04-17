@@ -223,12 +223,12 @@
   }
 
   .app-card-grid {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 140px));
+    grid-template-columns: repeat(auto-fill, minmax(80px, 140px));
   }
 
-  @media (min-width: 1441px) {
+  @media (max-width: 1280px) {
     .app-card-grid {
-      grid-template-columns: repeat(auto-fill, minmax(140px, 210px));
+      grid-template-columns: repeat(auto-fill, minmax(70px, 70px));
     }
   }
 

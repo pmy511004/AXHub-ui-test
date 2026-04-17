@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams, useRouter } from "next/navigation";
 import TeamColumn from "./TeamColumn";
 import HotNewAppsContentV2 from "./HotNewAppsContentV2";
 import AppStoreContentV2 from "./AppStoreContentV2";
@@ -18,9 +19,35 @@ import AppDetailView from "./AppDetailView";
 //      └ Header (2504:1087, h-76) "내가 이용중인 앱" + 검색 인풋 (2504:1141, w-240)
 //      └ Content card (2504:1092)
 export default function BrowsePageB() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string>("인기 • 신규 앱");
   const [selectedApp, setSelectedApp] = useState<{ name: string; category: string; isAdmin?: boolean } | null>(null);
+
+  // URL → state 동기화 (초기 진입 및 뒤로가기)
+  useEffect(() => {
+    const appName = searchParams.get("app");
+    const category = searchParams.get("category");
+    if (appName && category) {
+      setSelectedApp({ name: appName, category, isAdmin: appName === "경비 정산 자동화" });
+    } else {
+      setSelectedApp(null);
+    }
+  }, [searchParams]);
+
+  // 앱 선택 시 URL 변경
+  const selectApp = (name: string, category: string) => {
+    const params = new URLSearchParams();
+    params.set("app", name);
+    params.set("category", category);
+    router.push(`/browse?${params.toString()}`);
+  };
+
+  // 뒤로가기 (앱 상세 → 목록)
+  const deselectApp = () => {
+    router.push("/browse");
+  };
 
 
 
@@ -396,13 +423,13 @@ export default function BrowsePageB() {
             </div>
             <div className="flex flex-1 min-h-0 flex-col overflow-hidden rounded-bl-xl border-r" style={{ backgroundColor: "#f6f6f6", borderColor: "#f6f6f6" }}>
               <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 py-2">
-                <button type="button" onClick={() => { setActiveMenu("인기 • 신규 앱"); setSelectedApp(null); }} className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
-                  <Image src="/icons/version-b/browse-menu-hot-apps-inactive.svg" alt="" width={18} height={18} />
-                  <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">인기 • 신규 앱</span>
+                <button type="button" onClick={() => { setActiveMenu("인기 • 신규 앱"); deselectApp(); }} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "인기 • 신규 앱" ? "menu-active" : "hover:bg-gray-200"}`}>
+                  <Image src={activeMenu === "인기 • 신규 앱" ? "/icons/version-b/browse-menu-hot-apps.svg" : "/icons/version-b/browse-menu-hot-apps-inactive.svg"} alt="" width={18} height={18} />
+                  <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>인기 • 신규 앱</span>
                 </button>
-                <button type="button" onClick={() => { setActiveMenu("앱"); setSelectedApp(null); }} className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
-                  <Image src="/icons/version-b/browse-menu-app-store.svg" alt="" width={18} height={18} />
-                  <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">앱 스토어</span>
+                <button type="button" onClick={() => { setActiveMenu("앱"); deselectApp(); }} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "앱" ? "menu-active" : "hover:bg-gray-200"}`}>
+                  <Image src={activeMenu === "앱" ? "/icons/version-b/browse-menu-app-store-active.svg" : "/icons/version-b/browse-menu-app-store.svg"} alt="" width={18} height={18} />
+                  <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>앱 스토어</span>
                 </button>
                 <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
                   <Image src="/icons/version-b/browse-menu-api-store.svg" alt="" width={18} height={18} />
@@ -420,13 +447,13 @@ export default function BrowsePageB() {
               appName={selectedApp.name}
               category={selectedApp.category}
               fromMenu={activeMenu === "인기 • 신규 앱" ? "인기 • 신규 앱" : "앱 스토어"}
-              onBack={() => setSelectedApp(null)}
+              onBack={deselectApp}
               isAdmin={selectedApp.isAdmin}
             />
           </div>
         </div>
       ) : activeMenu === "앱" ? (
-        <AppStoreContentV2 activeMenu={activeMenu} setActiveMenu={setActiveMenu} onAppClick={(name, category) => setSelectedApp({ name, category })} />
+        <AppStoreContentV2 activeMenu={activeMenu} setActiveMenu={setActiveMenu} onAppClick={(name, category) => selectApp(name, category)} />
       ) : (
         <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden pr-2 py-2">
           {/* Left sidebar */}
@@ -459,7 +486,7 @@ export default function BrowsePageB() {
           </div>
           {/* Right: Main content */}
           {activeMenu === "인기 • 신규 앱" ? (
-            <HotNewAppsContentV2 onAppClick={(name: string, category: string) => setSelectedApp({ name, category, isAdmin: name === "경비 정산 자동화" })} />
+            <HotNewAppsContentV2 onAppClick={(name: string, category: string) => selectApp(name, category)} />
           ) : (
             <div className="flex h-full min-w-0 flex-1 flex-col overflow-hidden rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6 gap-6">
               <div className="flex shrink-0 items-center justify-between">

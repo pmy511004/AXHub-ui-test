@@ -47,9 +47,20 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
     comments.forEach((c, i) => { if (c.liked) set.add(i); });
     return set;
   });
+  const [isRecommended, setIsRecommended] = useState(false);
+  const [recommendCount, setRecommendCount] = useState(123);
+  const toggleRecommend = () => {
+    if (isRecommended) {
+      setIsRecommended(false);
+      setRecommendCount((c) => c - 1);
+    } else {
+      setIsRecommended(true);
+      setRecommendCount((c) => c + 1);
+    }
+  };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="mx-auto flex w-full flex-col gap-6 min-[1281px]:max-w-[1280px]">
       {/* 댓글 상세 모달 */}
       {modalComment !== null && (() => {
         const c = comments[modalComment];
@@ -213,8 +224,72 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
         </div>
       )}
 
+      {/* 추천 위젯 (스크롤 시 상단 고정) */}
+      <div
+        className="sticky top-0 z-10 -mb-[72px] flex items-center gap-4 self-end rounded-2xl bg-white px-4 py-2"
+        style={{
+          boxShadow:
+            "0px 14px 28px rgba(0, 0, 0, 0.04), 0px -6px 12px rgba(0, 0, 0, 0.03), 0px 2px 8px rgba(0, 0, 0, 0.06)",
+        }}
+      >
+          <div className="flex min-h-[56px] flex-col items-center justify-center gap-1">
+            <p className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-500">
+              이 앱을 추천한 동료들
+            </p>
+            <div className="flex items-center gap-1">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M10 2.5L12.472 7.508L18 8.313L14 12.213L14.944 17.72L10 15.12L5.056 17.72L6 12.213L2 8.313L7.528 7.508L10 2.5Z"
+                  fill="#fbb03b"
+                />
+              </svg>
+              <p className="whitespace-nowrap text-[22px] font-semibold leading-[1.3] tracking-[-0.22px] text-black">
+                {recommendCount}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center py-3">
+            {isRecommended ? (
+              <button
+                type="button"
+                onClick={toggleRecommend}
+                className="flex h-8 w-[76px] items-center justify-center rounded-lg border border-[#d4d4d8] bg-white text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-gray-500 transition-colors hover:bg-gray-50"
+              >
+                추천취소
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={toggleRecommend}
+                className="flex h-8 w-[76px] items-center justify-center rounded-lg border border-transparent text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+                style={{ backgroundColor: "#fbb03b" }}
+              >
+                추천하기
+              </button>
+            )}
+          </div>
+        </div>
+
       {/* App Header */}
       <div className="flex flex-col">
+        {appName === "매출 대시보드" && (
+          <button
+            type="button"
+            className="flex items-center gap-1 self-start rounded-lg px-3 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#1571F3] underline underline-offset-4 transition-opacity hover:opacity-80"
+          >
+            관리화면으로 이동하기
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M3.5 8H12.5M12.5 8L8.5 4M12.5 8L8.5 12" stroke="#1571F3" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+        )}
         <div className="flex items-center gap-4 border-b border-[#e4e4e7] py-5">
           <div className="p-3">
             <div className="size-24 rounded-2xl bg-[#e4e4e7]" />
@@ -267,22 +342,35 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
         <div className="flex items-start">
           <div className="flex flex-1 flex-col items-center gap-5 px-10 py-5">
             <span className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-gray-500">개발자</span>
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">안승원</span>
+            <div className="flex flex-col items-center">
+              <span className="text-xl font-bold leading-[1.3] tracking-[-0.2px] text-[#18181b]">안승원</span>
               <span className="text-xs font-normal leading-[1.3] tracking-[-0.12px] text-gray-500">sw.an@jocodingax.ai</span>
             </div>
           </div>
           <div className="flex flex-1 flex-col items-center gap-5 self-stretch px-10 py-5">
             <span className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-gray-500">생성일</span>
-            <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">2026.04.07</span>
+            <span className="text-xl font-bold leading-[1.3] tracking-[-0.2px] text-[#18181b]">2026.04.07</span>
           </div>
           <div className="flex flex-1 flex-col items-center gap-5 self-stretch px-10 py-5">
             <span className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-gray-500">사용자 수</span>
-            <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">80명</span>
+            <div className="flex flex-col items-center">
+              <span className="text-xl font-bold leading-[1.3] tracking-[-0.2px] text-[#18181b]">80</span>
+              <span className="text-xs font-normal leading-[1.3] tracking-[-0.12px] text-gray-500">명</span>
+            </div>
+          </div>
+          <div className="flex flex-1 flex-col items-center gap-5 self-stretch px-10 py-5">
+            <span className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-gray-500">추천 수</span>
+            <div className="flex flex-col items-center">
+              <span className="text-xl font-bold leading-[1.3] tracking-[-0.2px] text-[#18181b]">{recommendCount}</span>
+              <span className="text-xs font-normal leading-[1.3] tracking-[-0.12px] text-gray-500">개</span>
+            </div>
           </div>
           <div className="flex flex-1 flex-col items-center gap-5 self-stretch px-10 py-5">
             <span className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-gray-500">댓글 수</span>
-            <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">17개</span>
+            <div className="flex flex-col items-center">
+              <span className="text-xl font-bold leading-[1.3] tracking-[-0.2px] text-[#18181b]">17</span>
+              <span className="text-xs font-normal leading-[1.3] tracking-[-0.12px] text-gray-500">개</span>
+            </div>
           </div>
         </div>
 
