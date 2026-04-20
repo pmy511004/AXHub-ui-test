@@ -115,7 +115,7 @@ export default function AppStoreContentV2({ onAppClick }: Props) {
           </div>
 
           {/* Category tabs */}
-          <div className="flex items-start justify-center gap-2 text-sm tracking-[-0.14px]">
+          <div className="no-scrollbar flex w-full cursor-grab items-start gap-2 overflow-x-auto text-sm tracking-[-0.14px]">
             {categories.map((cat) => {
               const isActive = activeCategory === cat.name;
               return (
