@@ -216,9 +216,9 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 key={tab}
                 type="button"
                 onClick={() => setActiveTab(tab)}
-                className="min-w-[62px] rounded-xl px-3 py-2 text-center text-sm leading-[1.5] tracking-[-0.14px] transition-colors"
+                className={`min-w-[62px] rounded-xl px-3 py-2 text-center text-sm leading-[1.5] tracking-[-0.14px] transition-colors ${activeTab !== tab ? "hover:bg-black/[0.05]" : ""}`}
                 style={{
-                  backgroundColor: activeTab === tab ? "#E765BE" : "transparent",
+                  backgroundColor: activeTab === tab ? primaryColor : undefined,
                   color: activeTab === tab ? "white" : "rgba(24,24,27,0.48)",
                   fontWeight: activeTab === tab ? 600 : 400,
                 }}
@@ -350,7 +350,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
             <div className="flex items-start gap-2">
               <button
                 type="button"
-                className="flex h-8 items-center justify-center overflow-hidden rounded-xl px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white"
+                className="flex h-8 items-center justify-center overflow-hidden rounded-xl px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white transition-opacity hover:opacity-85"
                 style={{ backgroundColor: primaryColor }}
               >
                 열기
@@ -359,13 +359,13 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 <>
                   <button
                     type="button"
-                    className="flex h-8 items-center justify-center overflow-hidden rounded-xl bg-[#f6f6f6] px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#18181b]"
+                    className="flex h-8 items-center justify-center overflow-hidden rounded-xl bg-[#f6f6f6] px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#18181b] transition-colors hover:bg-[#ececec]"
                   >
                     보관
                   </button>
                   <button
                     type="button"
-                    className="flex h-8 items-center justify-center overflow-hidden rounded-xl border border-[#e4e4e7] px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#18181b]"
+                    className="flex h-8 items-center justify-center overflow-hidden rounded-xl border border-[#e4e4e7] px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#18181b] transition-colors hover:bg-gray-50"
                   >
                     수정
                   </button>
@@ -373,7 +373,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
               ) : (
                 <button
                   type="button"
-                  className="flex h-8 items-center justify-center overflow-hidden rounded-xl bg-[#f6f6f6] px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#18181b]"
+                  className="flex h-8 items-center justify-center overflow-hidden rounded-xl bg-[#f6f6f6] px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#18181b] transition-colors hover:bg-[#ececec]"
                 >
                   사용 해제
                 </button>

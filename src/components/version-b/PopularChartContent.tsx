@@ -220,7 +220,7 @@ export default function PopularChartContent({ onAppClick }: Props = {}) {
                   {app.status === "열기" ? (
                     <button
                       type="button"
-                      className="flex h-7 w-[66px] shrink-0 items-center justify-center overflow-hidden rounded-xl px-3 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white"
+                      className="flex h-7 w-[66px] shrink-0 items-center justify-center overflow-hidden rounded-xl px-3 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white transition-opacity hover:opacity-85"
                       style={{ backgroundColor: "#FBB03B" }}
                     >
                       열기
@@ -228,7 +228,7 @@ export default function PopularChartContent({ onAppClick }: Props = {}) {
                   ) : app.status === "승인 대기" ? (
                     <button
                       type="button"
-                      className="flex h-7 w-[66px] shrink-0 items-center justify-center overflow-hidden rounded-xl px-3 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#FBB03B]"
+                      className="flex h-7 w-[66px] shrink-0 items-center justify-center overflow-hidden rounded-xl px-3 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#FBB03B] transition-colors hover:bg-[#ffefcc]"
                       style={{ backgroundColor: "#fff8e6" }}
                     >
                       승인대기
@@ -236,7 +236,7 @@ export default function PopularChartContent({ onAppClick }: Props = {}) {
                   ) : (
                     <button
                       type="button"
-                      className="flex h-8 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#f6f6f6] px-3 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#FBB03B]"
+                      className="flex h-8 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#f6f6f6] px-3 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#FBB03B] transition-colors hover:bg-[#ececec]"
                     >
                       사용신청
                     </button>
