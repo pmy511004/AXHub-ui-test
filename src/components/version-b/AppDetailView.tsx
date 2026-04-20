@@ -34,6 +34,7 @@ const comments = [
 ];
 
 export default function AppDetailView({ appName, category, onBack, fromMenu, isAdmin }: AppDetailViewProps) {
+  const primaryColor = isAdmin ? "#E765BE" : "#FBB03B";
   const [expanded, setExpanded] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [moreMenuOpen, setMoreMenuOpen] = useState<number | null>(null);
@@ -102,7 +103,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
               <div className="flex shrink-0 flex-col gap-3">
                 <div className="flex items-center gap-2.5">
                   {c.isMine && (
-                    <span className="flex h-6 shrink-0 items-center justify-center rounded-md px-2 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white" style={{ backgroundColor: "#E765BE" }}>
+                    <span className="flex h-6 shrink-0 items-center justify-center rounded-md px-2 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white" style={{ backgroundColor: primaryColor }}>
                       내 댓글
                     </span>
                   )}
@@ -258,7 +259,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 >
                   <path
                     d="M10 2.5L12.472 7.508L18 8.313L14 12.213L14.944 17.72L10 15.12L5.056 17.72L6 12.213L2 8.313L7.528 7.508L10 2.5Z"
-                    fill="#E765BE"
+                    fill={primaryColor}
                   />
                 </svg>
                 {starAnim && [
@@ -270,7 +271,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                   { tx: "-12px", ty: "26px", delay: "0.06s" },
                 ].map((p, i) => (
                   <svg key={i} className="star-particle" width="8" height="8" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ "--tx": p.tx, "--ty": p.ty, animationDelay: p.delay } as React.CSSProperties}>
-                    <path d="M10 2.5L12.472 7.508L18 8.313L14 12.213L14.944 17.72L10 15.12L5.056 17.72L6 12.213L2 8.313L7.528 7.508L10 2.5Z" fill="#E765BE" />
+                    <path d="M10 2.5L12.472 7.508L18 8.313L14 12.213L14.944 17.72L10 15.12L5.056 17.72L6 12.213L2 8.313L7.528 7.508L10 2.5Z" fill={primaryColor} />
                   </svg>
                 ))}
               </div>
@@ -296,7 +297,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 type="button"
                 onClick={toggleRecommend}
                 className="flex h-8 w-[76px] items-center justify-center rounded-lg border border-transparent text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-all hover:opacity-90 active:scale-90"
-                style={{ backgroundColor: "#E765BE" }}
+                style={{ backgroundColor: primaryColor }}
               >
                 추천하기
               </button>
@@ -350,22 +351,33 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
               <button
                 type="button"
                 className="flex h-8 items-center justify-center overflow-hidden rounded-xl px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white"
-                style={{ backgroundColor: "#E765BE" }}
+                style={{ backgroundColor: primaryColor }}
               >
                 열기
               </button>
-              <button
-                type="button"
-                className="flex h-8 items-center justify-center overflow-hidden rounded-xl bg-[#f6f6f6] px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#18181b]"
-              >
-                보관
-              </button>
-              <button
-                type="button"
-                className="flex h-8 items-center justify-center overflow-hidden rounded-xl border border-[#e4e4e7] px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#18181b]"
-              >
-                수정
-              </button>
+              {isAdmin ? (
+                <>
+                  <button
+                    type="button"
+                    className="flex h-8 items-center justify-center overflow-hidden rounded-xl bg-[#f6f6f6] px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#18181b]"
+                  >
+                    보관
+                  </button>
+                  <button
+                    type="button"
+                    className="flex h-8 items-center justify-center overflow-hidden rounded-xl border border-[#e4e4e7] px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#18181b]"
+                  >
+                    수정
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  className="flex h-8 items-center justify-center overflow-hidden rounded-xl bg-[#f6f6f6] px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#18181b]"
+                >
+                  사용 해제
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -441,7 +453,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
             <div key={i} className="flex h-[166px] cursor-pointer flex-col gap-3 rounded-2xl bg-[#f6f6f6] p-5" onClick={() => setModalComment(i)}>
               <div className="flex items-center gap-2.5">
                 {c.isMine && (
-                  <span className="flex h-6 shrink-0 items-center justify-center rounded-md px-2 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white" style={{ backgroundColor: "#E765BE" }}>
+                  <span className="flex h-6 shrink-0 items-center justify-center rounded-md px-2 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white" style={{ backgroundColor: primaryColor }}>
                     내 댓글
                   </span>
                 )}
