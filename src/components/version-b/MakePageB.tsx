@@ -217,7 +217,8 @@ export default function MakePageB() {
           </div>
         </div>
         {/* Right: Main content */}
-        <div className="flex h-full min-w-0 flex-1 flex-col overflow-hidden rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6 gap-6">
+        <div className="flex h-full min-w-0 flex-1 flex-col overflow-hidden rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6">
+          <div className="mx-auto flex w-full flex-col gap-6 min-[1281px]:max-w-[1280px]">
           {/* Header */}
           <div className="flex h-10 shrink-0 items-center">
             <h1
@@ -229,6 +230,7 @@ export default function MakePageB() {
           </div>
           {/* Content */}
           <div className="flex-1" />
+          </div>
         </div>
       </div>
     </div>

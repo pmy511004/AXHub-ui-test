@@ -90,7 +90,8 @@ export default function AppStoreContentV2({ activeMenu, setActiveMenu, onAppClic
       </div>
 
       {/* Right: Main content */}
-      <div className="flex h-full min-w-0 flex-1 flex-col gap-6 overflow-hidden rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6">
+      <div className="flex h-full min-w-0 flex-1 flex-col overflow-hidden rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6">
+        <div className="mx-auto flex w-full flex-col gap-6 min-[1281px]:max-w-[1280px]">
         {/* Header */}
         <div className="flex shrink-0 items-center gap-3">
           <div className="flex flex-1 items-center">
@@ -231,6 +232,7 @@ export default function AppStoreContentV2({ activeMenu, setActiveMenu, onAppClic
               ))}
             </div>
           </div>
+        </div>
         </div>
       </div>
     </div>

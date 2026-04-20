@@ -5,7 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import TeamColumn from "./TeamColumn";
-import HotNewAppsContentV2 from "./HotNewAppsContentV2";
+import NewUpdateChartContent from "./NewUpdateChartContent";
+import PopularChartContent from "./PopularChartContent";
 import AppStoreContentV2 from "./AppStoreContentV2";
 import AppDetailView from "./AppDetailView";
 
@@ -24,6 +25,8 @@ export default function BrowsePageB() {
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string>("인기 • 신규 앱");
   const [selectedApp, setSelectedApp] = useState<{ name: string; category: string; isAdmin?: boolean } | null>(null);
+  const [hotAppsExpanded, setHotAppsExpanded] = useState(true);
+  const [activeSubMenu, setActiveSubMenu] = useState<string>("인기 차트");
 
   // URL → state 동기화 (초기 진입 및 뒤로가기)
   useEffect(() => {
@@ -273,25 +276,54 @@ export default function BrowsePageB() {
                 </span>
               </button>
 
-              {/* 인기 • 신규 앱 ─ 2530:1521 */}
-              <button
-                type="button"
-                onClick={() => setActiveMenu("인기 • 신규 앱")}
-                className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "인기 • 신규 앱" ? "menu-active" : "hover:bg-gray-100"}`}
-                data-node-id="2530:1521"
-              >
-                <span
-                  className="menu-icon"
-                  style={{
-                    maskImage: "url(/icons/version-b/menu-hot-apps.svg)",
-                    WebkitMaskImage: "url(/icons/version-b/menu-hot-apps.svg)",
-                    color: activeMenu === "인기 • 신규 앱" ? "#FBB03B" : "rgba(24,24,27,0.48)",
-                  }}
-                />
-                <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>
-                  인기 • 신규 앱
-                </span>
-              </button>
+              {/* 인기 • 신규 앱 (토글) */}
+              <div className="flex flex-col">
+                <button
+                  type="button"
+                  onClick={() => { setHotAppsExpanded((v) => !v); setActiveMenu("인기 • 신규 앱"); }}
+                  className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "인기 • 신규 앱" ? "menu-active" : "hover:bg-gray-100"}`}
+                  data-node-id="2530:1521"
+                >
+                  <span
+                    className="menu-icon"
+                    style={{
+                      maskImage: "url(/icons/version-b/menu-hot-apps.svg)",
+                      WebkitMaskImage: "url(/icons/version-b/menu-hot-apps.svg)",
+                      color: activeMenu === "인기 • 신규 앱" ? "#FBB03B" : "rgba(24,24,27,0.48)",
+                    }}
+                  />
+                  <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>
+                    인기 • 신규 앱
+                  </span>
+                  <svg width="16" height="16" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className={`ml-auto shrink-0 transition-transform duration-200 ${hotAppsExpanded ? "rotate-90" : ""}`}>
+                    <path d="M4.5 2.5L7.5 6L4.5 9.5" stroke="#a1a1aa" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+                {hotAppsExpanded && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => { setActiveMenu("인기 • 신규 앱"); setActiveSubMenu("인기 차트"); }}
+                      className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeSubMenu === "인기 차트" && activeMenu === "인기 • 신규 앱" ? "bg-black/[0.03]" : "hover:bg-gray-100"}`}
+                    >
+                      <span className="size-[18px] shrink-0" />
+                      <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeSubMenu === "인기 차트" && activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>
+                        인기 차트
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => { setActiveMenu("인기 • 신규 앱"); setActiveSubMenu("신규/업데이트 차트"); }}
+                      className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeSubMenu === "신규/업데이트 차트" && activeMenu === "인기 • 신규 앱" ? "bg-black/[0.03]" : "hover:bg-gray-100"}`}
+                    >
+                      <span className="size-[18px] shrink-0" />
+                      <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeSubMenu === "신규/업데이트 차트" && activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>
+                        신규/업데이트 차트
+                      </span>
+                    </button>
+                  </>
+                )}
+              </div>
 
               {/* 섹션 헤더: 스토어 ─ 2530:1454 */}
               <div
@@ -423,10 +455,27 @@ export default function BrowsePageB() {
             </div>
             <div className="flex flex-1 min-h-0 flex-col overflow-hidden rounded-bl-xl border-r" style={{ backgroundColor: "#f6f6f6", borderColor: "#f6f6f6" }}>
               <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 py-2">
-                <button type="button" onClick={() => { setActiveMenu("인기 • 신규 앱"); deselectApp(); }} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "인기 • 신규 앱" ? "menu-active" : "hover:bg-gray-200"}`}>
-                  <Image src={activeMenu === "인기 • 신규 앱" ? "/icons/version-b/browse-menu-hot-apps.svg" : "/icons/version-b/browse-menu-hot-apps-inactive.svg"} alt="" width={18} height={18} />
-                  <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>인기 • 신규 앱</span>
-                </button>
+                <div className="flex flex-col">
+                  <button type="button" onClick={() => { setHotAppsExpanded((v) => !v); }} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "인기 • 신규 앱" ? "menu-active" : "hover:bg-gray-200"}`}>
+                    <Image src={activeMenu === "인기 • 신규 앱" ? "/icons/version-b/browse-menu-hot-apps.svg" : "/icons/version-b/browse-menu-hot-apps-inactive.svg"} alt="" width={18} height={18} />
+                    <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>인기 • 신규 앱</span>
+                    <svg width="16" height="16" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className={`ml-auto shrink-0 transition-transform duration-200 ${hotAppsExpanded ? "rotate-90" : ""}`}>
+                      <path d="M4.5 2.5L7.5 6L4.5 9.5" stroke="#a1a1aa" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
+                  {hotAppsExpanded && (
+                    <>
+                      <button type="button" onClick={() => { setActiveMenu("인기 • 신규 앱"); setActiveSubMenu("인기 차트"); deselectApp(); }} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeSubMenu === "인기 차트" && activeMenu === "인기 • 신규 앱" ? "bg-black/[0.03]" : "hover:bg-gray-200"}`}>
+                        <span className="size-[18px] shrink-0" />
+                        <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeSubMenu === "인기 차트" && activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>인기 차트</span>
+                      </button>
+                      <button type="button" onClick={() => { setActiveMenu("인기 • 신규 앱"); setActiveSubMenu("신규/업데이트 차트"); deselectApp(); }} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeSubMenu === "신규/업데이트 차트" && activeMenu === "인기 • 신규 앱" ? "bg-black/[0.03]" : "hover:bg-gray-200"}`}>
+                        <span className="size-[18px] shrink-0" />
+                        <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeSubMenu === "신규/업데이트 차트" && activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>신규/업데이트 차트</span>
+                      </button>
+                    </>
+                  )}
+                </div>
                 <button type="button" onClick={() => { setActiveMenu("앱"); deselectApp(); }} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "앱" ? "menu-active" : "hover:bg-gray-200"}`}>
                   <Image src={activeMenu === "앱" ? "/icons/version-b/browse-menu-app-store-active.svg" : "/icons/version-b/browse-menu-app-store.svg"} alt="" width={18} height={18} />
                   <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>앱 스토어</span>
@@ -446,7 +495,7 @@ export default function BrowsePageB() {
             <AppDetailView
               appName={selectedApp.name}
               category={selectedApp.category}
-              fromMenu={activeMenu === "인기 • 신규 앱" ? "인기 • 신규 앱" : "앱 스토어"}
+              fromMenu={activeMenu === "인기 • 신규 앱" ? activeSubMenu : "앱 스토어"}
               onBack={deselectApp}
               isAdmin={selectedApp.isAdmin}
             />
@@ -465,10 +514,27 @@ export default function BrowsePageB() {
             </div>
             <div className="flex flex-1 min-h-0 flex-col overflow-hidden rounded-bl-xl border-r" style={{ backgroundColor: "#f6f6f6", borderColor: "#f6f6f6" }}>
               <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 py-2">
-                <button type="button" onClick={() => setActiveMenu("인기 • 신규 앱")} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "인기 • 신규 앱" ? "menu-active" : "hover:bg-gray-200"}`}>
-                  <Image src={activeMenu === "인기 • 신규 앱" ? "/icons/version-b/browse-menu-hot-apps.svg" : "/icons/version-b/browse-menu-hot-apps-inactive.svg"} alt="" width={18} height={18} />
-                  <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>인기 • 신규 앱</span>
-                </button>
+                <div className="flex flex-col">
+                  <button type="button" onClick={() => { setHotAppsExpanded((v) => !v); setActiveMenu("인기 • 신규 앱"); }} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "인기 • 신규 앱" ? "menu-active" : "hover:bg-gray-200"}`}>
+                    <Image src={activeMenu === "인기 • 신규 앱" ? "/icons/version-b/browse-menu-hot-apps.svg" : "/icons/version-b/browse-menu-hot-apps-inactive.svg"} alt="" width={18} height={18} />
+                    <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>인기 • 신규 앱</span>
+                    <svg width="16" height="16" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className={`ml-auto shrink-0 transition-transform duration-200 ${hotAppsExpanded ? "rotate-90" : ""}`}>
+                      <path d="M4.5 2.5L7.5 6L4.5 9.5" stroke="#a1a1aa" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
+                  {hotAppsExpanded && (
+                    <>
+                      <button type="button" onClick={() => { setActiveMenu("인기 • 신규 앱"); setActiveSubMenu("인기 차트"); }} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeSubMenu === "인기 차트" && activeMenu === "인기 • 신규 앱" ? "bg-black/[0.03]" : "hover:bg-gray-200"}`}>
+                        <span className="size-[18px] shrink-0" />
+                        <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeSubMenu === "인기 차트" && activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>인기 차트</span>
+                      </button>
+                      <button type="button" onClick={() => { setActiveMenu("인기 • 신규 앱"); setActiveSubMenu("신규/업데이트 차트"); }} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeSubMenu === "신규/업데이트 차트" && activeMenu === "인기 • 신규 앱" ? "bg-black/[0.03]" : "hover:bg-gray-200"}`}>
+                        <span className="size-[18px] shrink-0" />
+                        <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeSubMenu === "신규/업데이트 차트" && activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>신규/업데이트 차트</span>
+                      </button>
+                    </>
+                  )}
+                </div>
                 <button type="button" onClick={() => setActiveMenu("앱")} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "앱" ? "menu-active" : "hover:bg-gray-200"}`}>
                   <Image src={activeMenu === "앱" ? "/icons/version-b/browse-menu-app-store-active.svg" : "/icons/version-b/browse-menu-app-store.svg"} alt="" width={18} height={18} />
                   <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>앱 스토어</span>
@@ -486,7 +552,11 @@ export default function BrowsePageB() {
           </div>
           {/* Right: Main content */}
           {activeMenu === "인기 • 신규 앱" ? (
-            <HotNewAppsContentV2 onAppClick={(name: string, category: string) => selectApp(name, category)} />
+            activeSubMenu === "인기 차트" ? (
+              <PopularChartContent onAppClick={(name: string, category: string) => selectApp(name, category)} />
+            ) : (
+              <NewUpdateChartContent onAppClick={(name: string, category: string) => selectApp(name, category)} />
+            )
           ) : (
             <div className="flex h-full min-w-0 flex-1 flex-col overflow-hidden rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6 gap-6">
               <div className="flex shrink-0 items-center justify-between">

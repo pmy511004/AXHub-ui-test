@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 
 interface AppDetailViewProps {
@@ -49,14 +49,23 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
   });
   const [isRecommended, setIsRecommended] = useState(false);
   const [recommendCount, setRecommendCount] = useState(123);
+  const [countAnim, setCountAnim] = useState<"up" | "down" | null>(null);
+  const [starAnim, setStarAnim] = useState(false);
+  const countKey = useRef(0);
   const toggleRecommend = () => {
+    countKey.current += 1;
     if (isRecommended) {
       setIsRecommended(false);
       setRecommendCount((c) => c - 1);
+      setCountAnim("down");
     } else {
       setIsRecommended(true);
       setRecommendCount((c) => c + 1);
+      setCountAnim("up");
+      setStarAnim(true);
     }
+    setTimeout(() => setCountAnim(null), 400);
+    setTimeout(() => setStarAnim(false), 600);
   };
 
   return (
@@ -93,7 +102,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
               <div className="flex shrink-0 flex-col gap-3">
                 <div className="flex items-center gap-2.5">
                   {c.isMine && (
-                    <span className="flex h-6 shrink-0 items-center justify-center rounded-md px-2 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white" style={{ backgroundColor: "#fbb03b" }}>
+                    <span className="flex h-6 shrink-0 items-center justify-center rounded-md px-2 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white" style={{ backgroundColor: "#E765BE" }}>
                       내 댓글
                     </span>
                   )}
@@ -208,7 +217,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 onClick={() => setActiveTab(tab)}
                 className="min-w-[62px] rounded-xl px-3 py-2 text-center text-sm leading-[1.5] tracking-[-0.14px] transition-colors"
                 style={{
-                  backgroundColor: activeTab === tab ? "#fbb03b" : "transparent",
+                  backgroundColor: activeTab === tab ? "#E765BE" : "transparent",
                   color: activeTab === tab ? "white" : "rgba(24,24,27,0.48)",
                   fontWeight: activeTab === tab ? 600 : 400,
                 }}
@@ -237,20 +246,38 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
               이 앱을 추천한 동료들
             </p>
             <div className="flex items-center gap-1">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
+              <div className="relative flex items-center justify-center">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                  className={starAnim ? "star-squish-bounce" : ""}
+                >
+                  <path
+                    d="M10 2.5L12.472 7.508L18 8.313L14 12.213L14.944 17.72L10 15.12L5.056 17.72L6 12.213L2 8.313L7.528 7.508L10 2.5Z"
+                    fill="#E765BE"
+                  />
+                </svg>
+                {starAnim && [
+                  { tx: "-22px", ty: "-26px", delay: "0s" },
+                  { tx: "22px", ty: "-22px", delay: "0.05s" },
+                  { tx: "-26px", ty: "12px", delay: "0.1s" },
+                  { tx: "26px", ty: "16px", delay: "0.04s" },
+                  { tx: "0px", ty: "-28px", delay: "0.08s" },
+                  { tx: "-12px", ty: "26px", delay: "0.06s" },
+                ].map((p, i) => (
+                  <svg key={i} className="star-particle" width="8" height="8" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ "--tx": p.tx, "--ty": p.ty, animationDelay: p.delay } as React.CSSProperties}>
+                    <path d="M10 2.5L12.472 7.508L18 8.313L14 12.213L14.944 17.72L10 15.12L5.056 17.72L6 12.213L2 8.313L7.528 7.508L10 2.5Z" fill="#E765BE" />
+                  </svg>
+                ))}
+              </div>
+              <p
+                key={countKey.current}
+                className={`whitespace-nowrap text-[22px] font-semibold leading-[1.3] tracking-[-0.22px] text-black ${countAnim === "up" ? "count-up" : countAnim === "down" ? "count-down" : ""}`}
               >
-                <path
-                  d="M10 2.5L12.472 7.508L18 8.313L14 12.213L14.944 17.72L10 15.12L5.056 17.72L6 12.213L2 8.313L7.528 7.508L10 2.5Z"
-                  fill="#fbb03b"
-                />
-              </svg>
-              <p className="whitespace-nowrap text-[22px] font-semibold leading-[1.3] tracking-[-0.22px] text-black">
                 {recommendCount}
               </p>
             </div>
@@ -260,7 +287,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
               <button
                 type="button"
                 onClick={toggleRecommend}
-                className="flex h-8 w-[76px] items-center justify-center rounded-lg border border-[#d4d4d8] bg-white text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-gray-500 transition-colors hover:bg-gray-50"
+                className="flex h-8 w-[76px] items-center justify-center rounded-lg border border-[#d4d4d8] bg-white text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-gray-500 transition-all hover:bg-gray-50 active:scale-90"
               >
                 추천취소
               </button>
@@ -268,8 +295,8 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
               <button
                 type="button"
                 onClick={toggleRecommend}
-                className="flex h-8 w-[76px] items-center justify-center rounded-lg border border-transparent text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
-                style={{ backgroundColor: "#fbb03b" }}
+                className="flex h-8 w-[76px] items-center justify-center rounded-lg border border-transparent text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-all hover:opacity-90 active:scale-90"
+                style={{ backgroundColor: "#E765BE" }}
               >
                 추천하기
               </button>
@@ -322,17 +349,22 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
             <div className="flex items-start gap-2">
               <button
                 type="button"
-                className="flex h-8 items-center justify-center rounded-xl px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white"
-                style={{ backgroundColor: "#fbb03b" }}
+                className="flex h-8 items-center justify-center overflow-hidden rounded-xl px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white"
+                style={{ backgroundColor: "#E765BE" }}
               >
                 열기
               </button>
               <button
                 type="button"
-                className="flex h-8 items-center justify-center rounded-xl px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#18181b]"
-                style={{ backgroundColor: "#f6f6f6" }}
+                className="flex h-8 items-center justify-center overflow-hidden rounded-xl bg-[#f6f6f6] px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#18181b]"
               >
-                사용 해제
+                보관
+              </button>
+              <button
+                type="button"
+                className="flex h-8 items-center justify-center overflow-hidden rounded-xl border border-[#e4e4e7] px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#18181b]"
+              >
+                수정
               </button>
             </div>
           </div>
@@ -409,7 +441,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
             <div key={i} className="flex h-[166px] cursor-pointer flex-col gap-3 rounded-2xl bg-[#f6f6f6] p-5" onClick={() => setModalComment(i)}>
               <div className="flex items-center gap-2.5">
                 {c.isMine && (
-                  <span className="flex h-6 shrink-0 items-center justify-center rounded-md px-2 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white" style={{ backgroundColor: "#fbb03b" }}>
+                  <span className="flex h-6 shrink-0 items-center justify-center rounded-md px-2 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white" style={{ backgroundColor: "#E765BE" }}>
                     내 댓글
                   </span>
                 )}
