@@ -28,28 +28,57 @@ export default function BrowsePageB() {
   const [hotAppsExpanded, setHotAppsExpanded] = useState(true);
   const [activeSubMenu, setActiveSubMenu] = useState<string>("인기 차트");
 
+  const tabToMenu: Record<string, { menu: string; sub: string }> = {
+    "popular": { menu: "인기 • 신규 앱", sub: "인기 차트" },
+    "new-update": { menu: "인기 • 신규 앱", sub: "신규/업데이트 차트" },
+    "app-store": { menu: "앱", sub: "" },
+  };
+
+  const menuToTab = (menu: string, sub: string): string => {
+    if (menu === "앱") return "app-store";
+    if (sub === "신규/업데이트 차트") return "new-update";
+    return "popular";
+  };
+
   // URL → state 동기화 (초기 진입 및 뒤로가기)
   useEffect(() => {
     const appName = searchParams.get("app");
     const category = searchParams.get("category");
+    const tab = searchParams.get("tab");
+
     if (appName && category) {
       setSelectedApp({ name: appName, category, isAdmin: appName === "경비 정산 자동화" });
     } else {
       setSelectedApp(null);
     }
+
+    if (tab && tabToMenu[tab]) {
+      setActiveMenu(tabToMenu[tab].menu);
+      if (tabToMenu[tab].sub) setActiveSubMenu(tabToMenu[tab].sub);
+    }
   }, [searchParams]);
+
+  // 탭 변경 시 URL 업데이트
+  const navigateTab = (menu: string, sub: string) => {
+    setActiveMenu(menu);
+    if (sub) setActiveSubMenu(sub);
+    const tab = menuToTab(menu, sub);
+    router.push(`/browse?tab=${tab}`);
+  };
 
   // 앱 선택 시 URL 변경
   const selectApp = (name: string, category: string) => {
     const params = new URLSearchParams();
     params.set("app", name);
     params.set("category", category);
+    params.set("tab", menuToTab(activeMenu, activeSubMenu));
     router.push(`/browse?${params.toString()}`);
   };
 
   // 뒤로가기 (앱 상세 → 목록)
   const deselectApp = () => {
-    router.push("/browse");
+    const tab = menuToTab(activeMenu, activeSubMenu);
+    router.push(`/browse?tab=${tab}`);
   };
 
 
@@ -280,7 +309,7 @@ export default function BrowsePageB() {
               <div className="flex flex-col">
                 <button
                   type="button"
-                  onClick={() => { setHotAppsExpanded((v) => !v); setActiveMenu("인기 • 신규 앱"); }}
+                  onClick={() => { setHotAppsExpanded((v) => !v); navigateTab("인기 • 신규 앱", activeSubMenu); }}
                   className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "인기 • 신규 앱" ? "menu-active" : "hover:bg-gray-100"}`}
                   data-node-id="2530:1521"
                 >
@@ -303,7 +332,7 @@ export default function BrowsePageB() {
                   <>
                     <button
                       type="button"
-                      onClick={() => { setActiveMenu("인기 • 신규 앱"); setActiveSubMenu("인기 차트"); }}
+                      onClick={() => navigateTab("인기 • 신규 앱", "인기 차트")}
                       className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeSubMenu === "인기 차트" && activeMenu === "인기 • 신규 앱" ? "bg-black/[0.03]" : "hover:bg-gray-100"}`}
                     >
                       <span className="size-[18px] shrink-0" />
@@ -313,7 +342,7 @@ export default function BrowsePageB() {
                     </button>
                     <button
                       type="button"
-                      onClick={() => { setActiveMenu("인기 • 신규 앱"); setActiveSubMenu("신규/업데이트 차트"); }}
+                      onClick={() => navigateTab("인기 • 신규 앱", "신규/업데이트 차트")}
                       className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeSubMenu === "신규/업데이트 차트" && activeMenu === "인기 • 신규 앱" ? "bg-black/[0.03]" : "hover:bg-gray-100"}`}
                     >
                       <span className="size-[18px] shrink-0" />
@@ -338,7 +367,7 @@ export default function BrowsePageB() {
               {/* 앱 ─ 2530:1527 */}
               <button
                 type="button"
-                onClick={() => setActiveMenu("앱")}
+                onClick={() => navigateTab("앱", "")}
                 className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "앱" ? "menu-active" : "hover:bg-gray-100"}`}
                 data-node-id="2530:1527"
               >
@@ -465,18 +494,18 @@ export default function BrowsePageB() {
                   </button>
                   {hotAppsExpanded && (
                     <>
-                      <button type="button" onClick={() => { setActiveMenu("인기 • 신규 앱"); setActiveSubMenu("인기 차트"); deselectApp(); }} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeSubMenu === "인기 차트" && activeMenu === "인기 • 신규 앱" ? "bg-black/[0.03]" : "hover:bg-gray-200"}`}>
+                      <button type="button" onClick={() => navigateTab("인기 • 신규 앱", "인기 차트")} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeSubMenu === "인기 차트" && activeMenu === "인기 • 신규 앱" ? "bg-black/[0.03]" : "hover:bg-gray-200"}`}>
                         <span className="size-[18px] shrink-0" />
                         <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeSubMenu === "인기 차트" && activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>인기 차트</span>
                       </button>
-                      <button type="button" onClick={() => { setActiveMenu("인기 • 신규 앱"); setActiveSubMenu("신규/업데이트 차트"); deselectApp(); }} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeSubMenu === "신규/업데이트 차트" && activeMenu === "인기 • 신규 앱" ? "bg-black/[0.03]" : "hover:bg-gray-200"}`}>
+                      <button type="button" onClick={() => navigateTab("인기 • 신규 앱", "신규/업데이트 차트")} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeSubMenu === "신규/업데이트 차트" && activeMenu === "인기 • 신규 앱" ? "bg-black/[0.03]" : "hover:bg-gray-200"}`}>
                         <span className="size-[18px] shrink-0" />
                         <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeSubMenu === "신규/업데이트 차트" && activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>신규/업데이트 차트</span>
                       </button>
                     </>
                   )}
                 </div>
-                <button type="button" onClick={() => { setActiveMenu("앱"); deselectApp(); }} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "앱" ? "menu-active" : "hover:bg-gray-200"}`}>
+                <button type="button" onClick={() => navigateTab("앱", "")} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "앱" ? "menu-active" : "hover:bg-gray-200"}`}>
                   <Image src={activeMenu === "앱" ? "/icons/version-b/browse-menu-app-store-active.svg" : "/icons/version-b/browse-menu-app-store.svg"} alt="" width={18} height={18} />
                   <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>앱 스토어</span>
                 </button>
@@ -513,7 +542,7 @@ export default function BrowsePageB() {
             <div className="flex flex-1 min-h-0 flex-col overflow-hidden rounded-bl-xl border-r" style={{ backgroundColor: "#f6f6f6", borderColor: "#f6f6f6" }}>
               <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 py-2">
                 <div className="flex flex-col">
-                  <button type="button" onClick={() => { setHotAppsExpanded((v) => !v); setActiveMenu("인기 • 신규 앱"); }} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "인기 • 신규 앱" ? "menu-active" : "hover:bg-gray-200"}`}>
+                  <button type="button" onClick={() => { setHotAppsExpanded((v) => !v); navigateTab("인기 • 신규 앱", activeSubMenu); }} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "인기 • 신규 앱" ? "menu-active" : "hover:bg-gray-200"}`}>
                     <Image src={activeMenu === "인기 • 신규 앱" ? "/icons/version-b/browse-menu-hot-apps.svg" : "/icons/version-b/browse-menu-hot-apps-inactive.svg"} alt="" width={18} height={18} />
                     <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>인기 • 신규 앱</span>
                     <svg width="16" height="16" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className={`ml-auto shrink-0 transition-transform duration-200 ${hotAppsExpanded ? "rotate-90" : ""}`}>
@@ -522,18 +551,18 @@ export default function BrowsePageB() {
                   </button>
                   {hotAppsExpanded && (
                     <>
-                      <button type="button" onClick={() => { setActiveMenu("인기 • 신규 앱"); setActiveSubMenu("인기 차트"); }} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeSubMenu === "인기 차트" && activeMenu === "인기 • 신규 앱" ? "bg-black/[0.03]" : "hover:bg-gray-200"}`}>
+                      <button type="button" onClick={() => navigateTab("인기 • 신규 앱", "인기 차트")} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeSubMenu === "인기 차트" && activeMenu === "인기 • 신규 앱" ? "bg-black/[0.03]" : "hover:bg-gray-200"}`}>
                         <span className="size-[18px] shrink-0" />
                         <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeSubMenu === "인기 차트" && activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>인기 차트</span>
                       </button>
-                      <button type="button" onClick={() => { setActiveMenu("인기 • 신규 앱"); setActiveSubMenu("신규/업데이트 차트"); }} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeSubMenu === "신규/업데이트 차트" && activeMenu === "인기 • 신규 앱" ? "bg-black/[0.03]" : "hover:bg-gray-200"}`}>
+                      <button type="button" onClick={() => navigateTab("인기 • 신규 앱", "신규/업데이트 차트")} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeSubMenu === "신규/업데이트 차트" && activeMenu === "인기 • 신규 앱" ? "bg-black/[0.03]" : "hover:bg-gray-200"}`}>
                         <span className="size-[18px] shrink-0" />
                         <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeSubMenu === "신규/업데이트 차트" && activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>신규/업데이트 차트</span>
                       </button>
                     </>
                   )}
                 </div>
-                <button type="button" onClick={() => setActiveMenu("앱")} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "앱" ? "menu-active" : "hover:bg-gray-200"}`}>
+                <button type="button" onClick={() => navigateTab("앱", "")} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "앱" ? "menu-active" : "hover:bg-gray-200"}`}>
                   <Image src={activeMenu === "앱" ? "/icons/version-b/browse-menu-app-store-active.svg" : "/icons/version-b/browse-menu-app-store.svg"} alt="" width={18} height={18} />
                   <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>앱 스토어</span>
                 </button>
