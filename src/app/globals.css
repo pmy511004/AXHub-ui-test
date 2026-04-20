@@ -279,14 +279,15 @@
 
   /* 인기 차트 앱 그리드 */
   .popular-chart-grid {
-    grid-template-columns: repeat(6, 1fr);
-    column-gap: 12px;
+    grid-template-columns: repeat(5, 1fr);
+    column-gap: 0;
+    justify-items: center;
   }
 
   @media (min-width: 1441px) {
     .popular-chart-grid {
-      grid-template-columns: repeat(7, 1fr);
-      column-gap: 12px;
+      grid-template-columns: repeat(6, 1fr);
+      column-gap: 0;
     }
   }
 

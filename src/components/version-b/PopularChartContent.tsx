@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import Image from "next/image";
 
 type AppStatus = "사용 신청" | "열기" | "승인 대기";
@@ -57,9 +57,14 @@ interface Props {
 export default function PopularChartContent({ onAppClick }: Props = {}) {
   const [activeCategory, setActiveCategory] = useState("전체");
   const [isGridView, setIsGridView] = useState(true);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scrollToTop = useCallback(() => {
+    scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   return (
-    <div className="flex h-full min-w-0 flex-1 items-start justify-center overflow-y-auto rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6">
+    <div ref={scrollRef} className="flex h-full min-w-0 flex-1 items-start justify-center overflow-y-auto rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6">
       <div className="mx-auto flex w-full flex-col gap-6 min-[1281px]:max-w-[1280px]">
       {/* Header */}
       <div className="flex shrink-0 items-center justify-between">
@@ -70,36 +75,13 @@ export default function PopularChartContent({ onAppClick }: Props = {}) {
           <div className="relative size-5 shrink-0 overflow-hidden">
             <Image src="/icons/version-b/search.svg" alt="" fill sizes="20px" />
           </div>
-          <p className="whitespace-nowrap text-base font-normal leading-[1.5] tracking-[-0.16px] text-gray-300">앱 찾기</p>
+          <p className="whitespace-nowrap text-base font-normal leading-[1.5] tracking-[-0.16px] text-gray-300">앱, 개발자 검색</p>
         </div>
       </div>
 
-      {/* Content: category sidebar + app grid */}
+      {/* Content: app grid + category sidebar */}
       <div className="flex min-h-0 flex-1 gap-8">
-        {/* Left: Category sidebar */}
-        <div className="sticky top-0 flex shrink-0 self-start flex-col gap-2">
-          <p className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-gray-500">
-            카테고리
-          </p>
-          <div className="flex w-[140px] flex-col rounded-xl bg-[#f9f9f9] p-3">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => setActiveCategory(cat)}
-                className={`w-full rounded-lg px-3 py-2 text-left text-sm leading-[1.5] tracking-[-0.14px] ${
-                  activeCategory === cat
-                    ? "font-semibold text-[#FBB03B]"
-                    : "font-normal text-gray-500 hover:bg-gray-100"
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Right: App grid */}
+        {/* Left: App grid */}
         <div className="flex min-h-0 flex-1 flex-col gap-2">
           {/* Header row */}
           <div className="flex shrink-0 items-center justify-between">
@@ -246,6 +228,40 @@ export default function PopularChartContent({ onAppClick }: Props = {}) {
             })}
           </div>
           )}
+        </div>
+
+        {/* Right: Category sidebar */}
+        <div className="sticky top-0 flex shrink-0 self-start flex-col gap-2">
+          <p className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-gray-500">
+            카테고리
+          </p>
+          <div className="flex w-[140px] flex-col rounded-xl bg-[#f9f9f9] p-3">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setActiveCategory(cat)}
+                className={`w-full rounded-lg px-3 py-2 text-left text-sm leading-[1.5] tracking-[-0.14px] ${
+                  activeCategory === cat
+                    ? "font-semibold text-[#FBB03B]"
+                    : "font-normal text-gray-500 hover:bg-gray-100"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+          {/* Scroll to top */}
+          <button
+            type="button"
+            onClick={scrollToTop}
+            className="flex size-10 items-center justify-center rounded-full border border-[#e4e4e7] transition-colors hover:bg-gray-50"
+            aria-label="맨 위로"
+          >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M10 15V5M10 5L5 10M10 5L15 10" stroke="#18181b" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
         </div>
       </div>
       </div>

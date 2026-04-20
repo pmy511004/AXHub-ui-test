@@ -501,8 +501,6 @@ export default function BrowsePageB() {
             />
           </div>
         </div>
-      ) : activeMenu === "앱" ? (
-        <AppStoreContentV2 activeMenu={activeMenu} setActiveMenu={setActiveMenu} onAppClick={(name, category) => selectApp(name, category)} />
       ) : (
         <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden pr-2 py-2">
           {/* Left sidebar */}
@@ -557,6 +555,8 @@ export default function BrowsePageB() {
             ) : (
               <NewUpdateChartContent onAppClick={(name: string, category: string) => selectApp(name, category)} />
             )
+          ) : activeMenu === "앱" ? (
+            <AppStoreContentV2 activeMenu={activeMenu} setActiveMenu={setActiveMenu} onAppClick={(name, category) => selectApp(name, category)} />
           ) : (
             <div className="flex h-full min-w-0 flex-1 flex-col overflow-hidden rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6 gap-6">
               <div className="flex shrink-0 items-center justify-between">

@@ -14,6 +14,12 @@ const newApps = [
   { name: "맞춤 교육 추천", category: "교육", recommends: 12 },
   { name: "업무 자동화 봇", category: "자동화", recommends: 9 },
   { name: "OKR 관리", category: "프로젝트관리", recommends: 7 },
+  { name: "비용 리포트", category: "경영재무", recommends: 5 },
+  { name: "사내 위키", category: "협업도구", recommends: 3 },
+  { name: "API 모니터링", category: "개발도구", recommends: 2 },
+  { name: "스마트 알림", category: "생산성", recommends: 1 },
+  { name: "디자인 리뷰", category: "디자인", recommends: 4 },
+  { name: "온보딩 가이드", category: "인사관리", recommends: 6 },
 ];
 
 const updatedApps = [
@@ -26,6 +32,8 @@ const updatedApps = [
   { name: "전자 결재", category: "경영재무", recommends: 121 },
   { name: "팀 메신저", category: "커뮤니케이션", recommends: 118 },
   { name: "고객 CRM", category: "고객관리", recommends: 98 },
+  { name: "보안 점검 도구", category: "보안", recommends: 94 },
+  { name: "워크플로우 빌더", category: "자동화", recommends: 89 },
 ];
 
 function AppCard({
@@ -67,6 +75,101 @@ function AppCard({
         >
           사용신청
         </button>
+      </div>
+    </div>
+  );
+}
+
+const ITEMS_PER_PAGE = 9; // 3열 × 3줄
+
+function AppCarouselSection({
+  label,
+  title,
+  apps,
+  onAppClick,
+}: {
+  label: string;
+  title: string;
+  apps: { name: string; category: string; recommends: number }[];
+  onAppClick?: (name: string, category: string) => void;
+}) {
+  const [page, setPage] = useState(0);
+  const totalPages = Math.ceil(apps.length / ITEMS_PER_PAGE);
+  const hasCarousel = apps.length >= 10;
+  const needsFixedHeight = apps.length > 6;
+
+  const gridRef = useRef<HTMLDivElement>(null);
+  const [gridMinHeight, setGridMinHeight] = useState<number | undefined>(undefined);
+
+  useEffect(() => {
+    if (needsFixedHeight && gridRef.current && page === 0 && !gridMinHeight) {
+      setGridMinHeight(gridRef.current.offsetHeight);
+    }
+  }, [needsFixedHeight, page, gridMinHeight]);
+
+  const pages = Array.from({ length: totalPages }, (_, i) =>
+    apps.slice(i * ITEMS_PER_PAGE, (i + 1) * ITEMS_PER_PAGE)
+  );
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-end justify-between">
+        <div className="flex flex-col gap-1">
+          <span className="text-sm font-bold leading-[1.5] tracking-[-0.14px] text-[#FBB03B]">{label}</span>
+          <h2 className="font-medium text-black" style={{ fontSize: "20px", lineHeight: "1.3" }}>
+            {title}
+          </h2>
+        </div>
+        {hasCarousel && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-gray-400">
+              {page + 1} / {totalPages}
+            </span>
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => setPage((p) => Math.max(0, p - 1))}
+                disabled={page === 0}
+                className="flex size-8 items-center justify-center rounded-lg border border-gray-200 transition-colors disabled:opacity-30"
+              >
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M10 4L6 8L10 12" stroke="#71717a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+                disabled={page === totalPages - 1}
+                className="flex size-8 items-center justify-center rounded-lg border border-gray-200 transition-colors disabled:opacity-30"
+              >
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M6 4L10 8L6 12" stroke="#71717a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+      <div
+        className="overflow-hidden"
+        style={needsFixedHeight && gridMinHeight ? { minHeight: gridMinHeight } : undefined}
+      >
+        <div
+          className="flex transition-transform duration-400 ease-in-out"
+          style={{ transform: `translateX(-${page * 100}%)` }}
+        >
+          {pages.map((pageApps, pi) => (
+            <div
+              key={pi}
+              ref={pi === 0 ? gridRef : undefined}
+              className="grid w-full shrink-0 grid-cols-3 gap-x-8 gap-y-6"
+            >
+              {pageApps.map((app) => (
+                <AppCard key={app.name} app={app} onAppClick={onAppClick} />
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -218,36 +321,22 @@ export default function NewUpdateChartContent({ onAppClick }: Props = {}) {
         </div>
 
         {/* 새로 나온 앱 */}
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1">
-            <span className="text-sm font-bold leading-[1.5] tracking-[-0.14px] text-[#FBB03B]">NEW</span>
-            <h2 className="font-medium text-black" style={{ fontSize: "20px", lineHeight: "1.3" }}>
-              새로 나온 앱
-            </h2>
-          </div>
-          <div className="grid grid-cols-3 gap-x-8 gap-y-6 min-[1441px]:grid-cols-4">
-            {newApps.map((app) => (
-              <AppCard key={app.name} app={app} onAppClick={onAppClick} />
-            ))}
-          </div>
-        </div>
+        <AppCarouselSection
+          label="NEW"
+          title="새로 나온 앱"
+          apps={newApps}
+          onAppClick={onAppClick}
+        />
 
         <hr className="border-0 border-t border-gray-200" />
 
         {/* 업데이트된 앱 */}
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1">
-            <span className="text-sm font-bold leading-[1.5] tracking-[-0.14px] text-[#FBB03B]">UPDATE</span>
-            <h2 className="font-medium text-black" style={{ fontSize: "20px", lineHeight: "1.3" }}>
-              업데이트된 앱
-            </h2>
-          </div>
-          <div className="grid grid-cols-3 gap-x-8 gap-y-6 min-[1441px]:grid-cols-4">
-            {updatedApps.map((app) => (
-              <AppCard key={app.name} app={app} onAppClick={onAppClick} />
-            ))}
-          </div>
-        </div>
+        <AppCarouselSection
+          label="UPDATE"
+          title="업데이트된 앱"
+          apps={updatedApps}
+          onAppClick={onAppClick}
+        />
       </div>
     </div>
   );

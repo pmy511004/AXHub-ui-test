@@ -1,47 +1,72 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import Image from "next/image";
 
-const categories = [
-  { name: "전체", count: 240 },
-  { name: "백엔드", count: 38 },
-  { name: "디자인", count: 24 },
-  { name: "경영재무", count: 12 },
-];
+type AppStatus = "바로 사용" | "승인 필요";
 
 interface AppItem {
   name: string;
   category: string;
-  users: string;
+  categoryTag: string;
+  recommends: number;
   isNew: boolean;
+  status: AppStatus;
 }
 
-const apps: AppItem[] = [
-  { name: "경비 정산 자동화", category: "경영재무", users: "312명 사용중", isNew: false },
-  { name: "AI 문서 요약", category: "생산성", users: "24명 사용중", isNew: true },
-  { name: "스마트 출퇴근", category: "인사관리", users: "18명 사용중", isNew: true },
-  { name: "스마트 캘린더", category: "협업도구", users: "287명 사용중", isNew: false },
-  { name: "데이터 시각화", category: "데이터분석", users: "15명 사용중", isNew: true },
-  { name: "매출 대시보드", category: "데이터분석", users: "245명 사용중", isNew: false },
-  { name: "사내 문서 검색", category: "생산성", users: "198명 사용중", isNew: false },
-  { name: "맞춤 교육 추천", category: "교육", users: "12명 사용중", isNew: true },
-  { name: "프로젝트 트래커", category: "프로젝트관리", users: "176명 사용중", isNew: false },
-  { name: "업무 자동화 봇", category: "자동화", users: "9명 사용중", isNew: true },
-  { name: "회의실 예약", category: "사내시설", users: "153명 사용중", isNew: false },
-  { name: "OKR 관리", category: "프로젝트관리", users: "7명 사용중", isNew: true },
-  { name: "피드백 분석기", category: "고객관리", users: "132명 사용중", isNew: false },
-  { name: "비용 리포트", category: "경영재무", users: "5명 사용중", isNew: true },
-  { name: "재고 모니터링", category: "물류관리", users: "98명 사용중", isNew: false },
-  { name: "사내 위키", category: "협업도구", users: "3명 사용중", isNew: false },
-  { name: "전자 결재", category: "경영재무", users: "87명 사용중", isNew: false },
-  { name: "API 모니터링", category: "개발도구", users: "2명 사용중", isNew: true },
-  { name: "팀 메신저", category: "커뮤니케이션", users: "76명 사용중", isNew: false },
-  { name: "스마트 알림", category: "생산성", users: "1명 사용중", isNew: true },
-  { name: "고객 CRM", category: "고객관리", users: "64명 사용중", isNew: false },
-  { name: "워크플로우 빌더", category: "자동화", users: "42명 사용중", isNew: true },
-  { name: "보안 점검 도구", category: "보안", users: "31명 사용중", isNew: false },
-  { name: "디자인 리뷰", category: "디자인", users: "28명 사용중", isNew: true },
+const categoryNames = ["백엔드", "디자인", "경영재무", "생산성", "인사관리", "협업도구", "데이터분석", "자동화", "고객관리", "개발도구", "마케팅", "보안"];
+
+function generateApps(count: number): AppItem[] {
+  const names = [
+    "경비 정산 자동화", "스마트 캘린더", "매출 대시보드", "사내 문서 검색", "프로젝트 트래커",
+    "회의실 예약", "피드백 분석기", "재고 모니터링", "전자 결재", "팀 메신저",
+    "AI 문서 요약", "스마트 출퇴근", "데이터 시각화", "맞춤 교육 추천", "업무 자동화 봇",
+    "OKR 관리", "비용 리포트", "사내 위키", "API 모니터링", "스마트 알림",
+    "고객 CRM", "워크플로우 빌더", "보안 점검 도구", "디자인 리뷰", "온보딩 가이드",
+    "계약서 관리", "설문 조사 툴", "이슈 트래커", "자산 관리", "근태 분석",
+    "미팅 노트", "코드 리뷰 봇", "마케팅 대시보드", "고객 피드백 허브", "채용 관리",
+    "예산 플래너", "팀 캘린더", "문서 전자서명", "성과 리뷰", "AI 번역기",
+    "로그 분석기", "배포 자동화", "디자인 시스템", "브랜드 가이드", "세금 계산기",
+    "급여 관리", "화상 회의", "BI 리포트", "봇 빌더", "티켓 관리",
+    "깃 관리 도구", "SEO 분석기", "방화벽 설정", "프로토타입 뷰어", "예산 추적기",
+    "출장비 관리", "팀 보드", "데이터 파이프라인", "일정 자동화", "NPS 분석",
+    "CI/CD 모니터", "광고 관리", "취약점 스캐너", "UI 테스트 도구", "매출 예측",
+    "연차 관리", "프로젝트 보드", "ETL 도구", "챗봇 빌더", "VOC 분석",
+    "서버 모니터링", "이메일 캠페인", "암호화 도구", "와이어프레임 도구", "손익 계산기",
+    "인사 평가", "스프린트 플래너", "실시간 대시보드", "RPA 도구", "설문 분석",
+    "API 게이트웨이", "SNS 관리", "접근 제어", "컬러 팔레트", "법인카드 관리",
+    "복리후생 관리", "타임라인 뷰", "데이터 크롤러", "알림 봇", "리뷰 관리",
+    "부하 테스트 도구", "리타겟팅 도구", "백업 관리", "아이콘 라이브러리", "세무 신고 도구",
+    "조직도 관리",
+  ];
+  const statuses: AppStatus[] = ["바로 사용", "승인 필요"];
+  const result: AppItem[] = [];
+  for (let i = 0; i < count; i++) {
+    const cat = categoryNames[i % categoryNames.length];
+    let tag = "백엔드";
+    if (["디자인", "마케팅"].includes(cat)) tag = "디자인";
+    else if (["경영재무", "인사관리"].includes(cat)) tag = "경영재무";
+    else if (["백엔드", "개발도구", "보안", "자동화"].includes(cat)) tag = "백엔드";
+    else tag = "백엔드";
+    result.push({
+      name: names[i % names.length] + (i >= names.length ? ` ${Math.floor(i / names.length) + 1}` : ""),
+      category: cat,
+      categoryTag: tag,
+      recommends: Math.floor(Math.random() * 400) + 10,
+      isNew: i % 5 === 2 || i % 7 === 3,
+      status: statuses[i % 3 === 0 ? 1 : 0],
+    });
+  }
+  return result;
+}
+
+const allApps = generateApps(96);
+
+const categories = [
+  { name: "전체", count: allApps.length },
+  { name: "백엔드", count: allApps.filter((a) => a.categoryTag === "백엔드").length },
+  { name: "디자인", count: allApps.filter((a) => a.categoryTag === "디자인").length },
+  { name: "경영재무", count: allApps.filter((a) => a.categoryTag === "경영재무").length },
 ];
 
 interface Props {
@@ -50,190 +75,150 @@ interface Props {
   onAppClick?: (name: string, category: string) => void;
 }
 
-
-export default function AppStoreContentV2({ activeMenu, setActiveMenu, onAppClick }: Props) {
+export default function AppStoreContentV2({ onAppClick }: Props) {
   const [activeCategory, setActiveCategory] = useState("전체");
-  const [sortOpen, setSortOpen] = useState(false);
-  const [sortBy, setSortBy] = useState("인기순");
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  const handleScroll = useCallback(() => {
+    if (scrollRef.current) {
+      setShowScrollTop(scrollRef.current.scrollTop > 200);
+    }
+  }, []);
+
+  const scrollToTop = useCallback(() => {
+    scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+  const filteredApps = activeCategory === "전체"
+    ? allApps
+    : allApps.filter((a) => a.categoryTag === activeCategory);
 
   return (
-    <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden pr-2 py-2">
-      {/* Left sidebar */}
-      <div className="flex h-full w-[200px] shrink-0 flex-col">
+    <div ref={scrollRef} onScroll={handleScroll} className="flex h-full min-w-0 flex-1 flex-col overflow-y-auto rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6">
+      <div className="mx-auto flex w-full flex-col gap-6 min-[1281px]:max-w-[1280px]">
         {/* Header */}
-        <div className="flex h-[44px] items-center overflow-hidden rounded-tl-xl border-r px-3" style={{ backgroundColor: "#f6f6f6", borderColor: "#f6f6f6" }}>
-          <p className="overflow-hidden text-ellipsis whitespace-nowrap text-base font-bold leading-[1.5] tracking-[-0.16px] text-black">
-            조코딩AX파트너스
-          </p>
-        </div>
-        {/* Nav */}
-        <div className="flex flex-1 min-h-0 flex-col overflow-hidden rounded-bl-xl border-r" style={{ backgroundColor: "#f6f6f6", borderColor: "#f6f6f6" }}>
-          <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 py-2">
-            <button type="button" onClick={() => setActiveMenu("인기 • 신규 앱")} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "인기 • 신규 앱" ? "menu-active" : "hover:bg-gray-200"}`}>
-              <Image src={activeMenu === "인기 • 신규 앱" ? "/icons/version-b/browse-menu-hot-apps.svg" : "/icons/version-b/browse-menu-hot-apps-inactive.svg"} alt="" width={18} height={18} />
-              <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>인기 • 신규 앱</span>
-            </button>
-            <button type="button" onClick={() => setActiveMenu("앱")} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "앱" ? "menu-active" : "hover:bg-gray-200"}`}>
-              <Image src={activeMenu === "앱" ? "/icons/version-b/browse-menu-app-store-active.svg" : "/icons/version-b/browse-menu-app-store.svg"} alt="" width={18} height={18} />
-              <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>앱 스토어</span>
-            </button>
-            <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
-              <Image src="/icons/version-b/browse-menu-api-store.svg" alt="" width={18} height={18} />
-              <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">API 스토어</span>
-            </button>
-            <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
-              <Image src="/icons/version-b/browse-menu-shared-data.svg" alt="" width={18} height={18} />
-              <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">공유 데이터</span>
-            </button>
-          </nav>
-        </div>
-      </div>
+        <h1 className="font-bold tracking-[-0.22px] text-black" style={{ fontSize: "22px", lineHeight: "1.3" }}>
+          앱스토어
+        </h1>
 
-      {/* Right: Main content */}
-      <div className="flex h-full min-w-0 flex-1 flex-col overflow-hidden rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6">
-        <div className="mx-auto flex w-full flex-col gap-6 min-[1281px]:max-w-[1280px]">
-        {/* Header */}
-        <div className="flex shrink-0 items-center gap-3">
-          <div className="flex flex-1 items-center">
-            <h1
-              className="font-bold tracking-[-0.22px] text-black"
-              style={{ fontSize: "22px", lineHeight: "1.3" }}
-            >
-              앱스토어
-            </h1>
-          </div>
-          <div className="flex h-10 w-[240px] items-center gap-1.5 overflow-hidden rounded-xl px-4 py-3" style={{ backgroundColor: "#f4f4f5" }}>
-            <div className="flex items-center">
-              <div className="relative size-5 overflow-hidden">
-                <Image src="/icons/version-b/search.svg" alt="" fill sizes="20px" />
-              </div>
+        {/* Search + Category */}
+        <div className="flex flex-col items-center gap-2.5 px-[100px]">
+          {/* Search input */}
+          <div className="flex w-full items-center gap-1.5 overflow-hidden rounded-2xl border border-[#e4e4e7] bg-white px-4 py-4">
+            <div className="relative size-5 shrink-0 overflow-hidden">
+              <Image src="/icons/version-b/search.svg" alt="" fill sizes="20px" />
             </div>
-            <div className="flex flex-1 items-center overflow-hidden">
-              <p className="whitespace-nowrap text-base font-normal leading-[1.5] tracking-[-0.16px] text-gray-300">
-                앱 찾기
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* 카테고리 + 정렬 + 리스트 */}
-        <div className="flex min-h-0 flex-1 flex-col gap-5">
-          {/* 카테고리 탭 */}
-          <div
-            className="flex shrink-0 items-start gap-2 rounded-2xl p-2 text-sm tracking-[-0.14px]"
-            style={{ backgroundColor: "#f6f6f6" }}
-          >
-            {categories.map((cat) => (
-              <button
-                key={cat.name}
-                type="button"
-                onClick={() => setActiveCategory(cat.name)}
-                className="flex items-center gap-1 rounded-xl px-3 py-2 leading-[1.5] transition-colors"
-                style={{
-                  backgroundColor: activeCategory === cat.name ? "#fbb03b" : "transparent",
-                  color: activeCategory === cat.name ? "white" : "rgba(24,24,27,0.48)",
-                  fontWeight: activeCategory === cat.name ? 600 : 400,
-                }}
-              >
-                <span>{cat.name}</span>
-                <span
-                  style={{
-                    color: activeCategory === cat.name
-                      ? "rgba(255,255,255,0.8)"
-                      : "rgba(24,24,27,0.3)",
-                    fontWeight: 400,
-                  }}
-                >
-                  {cat.count}
-                </span>
-              </button>
-            ))}
-          </div>
-
-          {/* 앱 수 + 정렬 */}
-          <div className="flex shrink-0 items-center gap-3">
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setSortOpen(!sortOpen)}
-                className="relative flex h-8 items-center justify-center gap-1 overflow-hidden rounded-xl px-3.5 text-sm font-medium leading-[1.5] tracking-[-0.14px] text-gray-900"
-                style={{ backgroundColor: "#f6f6f6" }}
-              >
-                {sortBy}
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 6L8 10L4 6" stroke="#18181B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
-              {sortOpen && (
-                <div className="absolute left-0 top-full z-20 mt-1 flex w-full min-w-full flex-col overflow-hidden rounded-xl bg-white shadow-[0px_4px_16px_rgba(0,0,0,0.12)]">
-                  {["인기순", "최신순"].map((option) => (
-                    <button
-                      key={option}
-                      type="button"
-                      onClick={() => { setSortBy(option); setSortOpen(false); }}
-                      className="whitespace-nowrap px-4 py-2.5 text-left text-sm leading-[1.5] tracking-[-0.14px] transition-colors hover:bg-gray-50"
-                      style={{
-                        fontWeight: sortBy === option ? 600 : 400,
-                        color: sortBy === option ? "#fbb03b" : "#18181b",
-                      }}
-                    >
-                      {option}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-            <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-black">
-              240개의 앱
+            <p className="whitespace-nowrap text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#d4d4d8]">
+              앱, 개발자를 검색하세요
             </p>
           </div>
 
-          {/* 앱 리스트 (2컬럼) */}
-          <div className="relative min-h-0 flex-1">
-            <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-6" style={{ background: "linear-gradient(to bottom, white 0%, transparent 100%)" }} />
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-6" style={{ background: "linear-gradient(to top, white 0%, transparent 100%)" }} />
-            <div className="sidebar-scroll grid h-full grid-cols-1 gap-x-8 overflow-y-auto sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-              {apps.map((app, i) => (
-                <div
-                  key={i}
-                  className="app-row flex cursor-pointer items-center gap-5 border-b border-gray-100 !rounded-none px-1 py-5"
-                  onClick={() => onAppClick?.(app.name, app.category)}
+          {/* Category tabs */}
+          <div className="flex items-start justify-center gap-2 text-sm tracking-[-0.14px]">
+            {categories.map((cat) => {
+              const isActive = activeCategory === cat.name;
+              return (
+                <button
+                  key={cat.name}
+                  type="button"
+                  onClick={() => setActiveCategory(cat.name)}
+                  className="flex items-center gap-1 rounded-xl px-3 py-2 leading-[1.5] transition-colors"
+                  style={isActive ? {
+                    backgroundColor: "#fbb03b",
+                    color: "white",
+                    fontWeight: 600,
+                  } : {
+                    backgroundColor: "transparent",
+                    border: "1px solid #e4e4e7",
+                    color: "rgba(24,24,27,0.9)",
+                    fontWeight: 400,
+                  }}
                 >
-                  <div className="flex flex-1 items-center gap-3">
-                    <div className="app-icon size-16 shrink-0 rounded-xl bg-[#e4e4e7]" />
-                    <div className="flex h-[52px] flex-col gap-2">
-                      <div className="flex items-center gap-1.5">
-                        {app.isNew && (
-                          <span className="new-badge-pulse flex h-5 items-center justify-center rounded-lg bg-[#f5475c] px-1.5 text-[10px] font-semibold leading-[1.4] tracking-[-0.1px] text-white">
-                            NEW
-                          </span>
-                        )}
-                        <p className="text-[18px] font-semibold leading-[1.4] tracking-[-0.18px] text-black">
-                          {app.name}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-500">
-                        <span>{app.category}</span>
-                        <span className="inline-block size-1 rounded-full bg-gray-500" />
-                        <span>{app.users}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    className="shrink-0 rounded-xl px-3 text-[12px] font-semibold leading-[1.3] tracking-[-0.12px] transition-colors"
-                    style={{ backgroundColor: "#f6f6f6", color: "#fbb03b", height: 32 }}
-                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#ececec"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "#f6f6f6"; }}
-                  >
-                    사용 신청
-                  </button>
-                </div>
-              ))}
-            </div>
+                  <span>{cat.name}</span>
+                  <span style={{
+                    color: isActive ? "rgba(255,255,255,0.9)" : "rgba(24,24,27,0.48)",
+                    fontWeight: 400,
+                  }}>
+                    {isActive ? filteredApps.length : cat.count}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
+
+        {/* App list - 2 columns */}
+        <div className="flex flex-wrap gap-x-10">
+          {filteredApps.map((app, i) => (
+            <div
+              key={i}
+              className="flex w-[calc(50%-20px)] cursor-pointer items-center gap-5 border-b border-[#f6f6f6] py-6"
+              onClick={() => onAppClick?.(app.name, app.category)}
+            >
+              {/* Left: icon + info */}
+              <div className="flex flex-1 items-center gap-3 min-w-0">
+                <div className="size-16 shrink-0 rounded-xl bg-[#e4e4e7]" />
+                <div className="flex min-w-0 flex-1 flex-col gap-1 py-0.5">
+                  {/* App name + NEW badge */}
+                  <div className="flex items-center gap-2">
+                    {app.isNew && (
+                      <span className="flex h-5 shrink-0 items-center justify-center rounded-lg bg-[#f5475c] px-1.5 text-[10px] font-semibold leading-[1.4] tracking-[-0.1px] text-white">
+                        NEW
+                      </span>
+                    )}
+                    <span className="truncate text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-black">
+                      {app.name}
+                    </span>
+                  </div>
+                  {/* Category */}
+                  <p className="truncate text-xs font-normal leading-[1.3] tracking-[-0.12px] text-[#71717a]">
+                    {app.category}
+                  </p>
+                  {/* Star + recommends */}
+                  <div className="flex items-center gap-1">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                      <path d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z" fill="#FBB03B" />
+                    </svg>
+                    <span className="text-xs font-normal leading-[1.3] tracking-[-0.12px] text-black">
+                      {app.recommends}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right: button + status */}
+              <div className="flex shrink-0 flex-col items-center gap-1">
+                <button
+                  type="button"
+                  className="rounded-xl bg-[#f6f6f6] px-3 py-1.5 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#fbb03b] transition-colors hover:bg-[#ececec]"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  사용신청
+                </button>
+                <span className="text-xs font-normal leading-[1.3] tracking-[-0.12px] text-[#a1a1aa]">
+                  {app.status}
+                </span>
+              </div>
+            </div>
+          ))}
         </div>
+      </div>
+      {/* Scroll to top - sticky bottom center */}
+      <div
+        className="sticky bottom-6 z-10 mt-4 flex shrink-0 justify-center transition-opacity duration-300"
+        style={{ opacity: showScrollTop ? 1 : 0, pointerEvents: showScrollTop ? "auto" : "none" }}
+      >
+        <button
+          type="button"
+          onClick={scrollToTop}
+          className="flex size-10 items-center justify-center rounded-full border border-[#e4e4e7] bg-white shadow-sm transition-colors hover:bg-gray-50"
+          aria-label="맨 위로"
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 15V5M10 5L5 10M10 5L15 10" stroke="#18181b" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
       </div>
     </div>
   );
