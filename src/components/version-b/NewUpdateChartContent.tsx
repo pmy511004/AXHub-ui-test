@@ -162,7 +162,7 @@ function AppCarouselSection({
             <div
               key={pi}
               ref={pi === 0 ? gridRef : undefined}
-              className="grid w-full shrink-0 grid-cols-3 gap-x-8 gap-y-6"
+              className="grid w-full shrink-0 grid-cols-2 gap-x-8 gap-y-6 min-[1281px]:grid-cols-3"
             >
               {pageApps.map((app) => (
                 <AppCard key={app.name} app={app} onAppClick={onAppClick} />
