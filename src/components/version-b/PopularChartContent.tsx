@@ -202,7 +202,7 @@ export default function PopularChartContent({ onAppClick }: Props = {}) {
                   {app.status === "열기" ? (
                     <button
                       type="button"
-                      className="flex h-7 w-[66px] shrink-0 items-center justify-center overflow-hidden rounded-xl px-3 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white transition-opacity hover:opacity-85"
+                      className="flex h-7 w-[66px] shrink-0 items-center justify-center overflow-hidden rounded-xl px-3 text-sm font-semibold leading-[1.3] tracking-[-0.12px] text-white transition-opacity hover:opacity-85"
                       style={{ backgroundColor: "#FBB03B" }}
                     >
                       열기
@@ -210,17 +210,16 @@ export default function PopularChartContent({ onAppClick }: Props = {}) {
                   ) : app.status === "승인 대기" ? (
                     <button
                       type="button"
-                      className="flex h-7 w-[66px] shrink-0 items-center justify-center overflow-hidden rounded-xl px-3 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#FBB03B] transition-colors hover:bg-[#ffefcc]"
-                      style={{ backgroundColor: "#fff8e6" }}
+                      className="flex h-7 w-[66px] shrink-0 items-center justify-center overflow-hidden rounded-xl px-3 text-sm font-semibold leading-[1.3] tracking-[-0.12px] text-[#6D319D] bg-[#F4ECFA] hover:bg-[#EEE3F7] transition-colors"
                     >
-                      승인대기
+                      승인중
                     </button>
                   ) : (
                     <button
                       type="button"
-                      className="flex h-8 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#f6f6f6] px-3 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#FBB03B] transition-colors hover:bg-[#ececec]"
+                      className="flex h-7 w-[66px] shrink-0 items-center justify-center overflow-hidden rounded-xl text-sm font-semibold leading-[1.3] tracking-[-0.12px] text-[#FBB03B] bg-[rgba(251,176,59,0.1)] hover:bg-[rgba(251,176,59,0.2)] transition-colors"
                     >
-                      사용신청
+                      설치
                     </button>
                   )}
                 </div>

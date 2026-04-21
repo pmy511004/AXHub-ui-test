@@ -67,13 +67,13 @@ function AppCard({
         </div>
         <button
           type="button"
-          className="self-start rounded-xl bg-[#f6f6f6] px-3 py-1.5 text-xs font-semibold text-[#FBB03B]"
+          className="flex h-7 w-[66px] shrink-0 items-center justify-center rounded-xl text-sm font-semibold leading-[1.3] tracking-[-0.12px] text-[#FBB03B] bg-[rgba(251,176,59,0.1)] hover:bg-[rgba(251,176,59,0.2)] transition-colors"
           onClick={(e) => {
             e.stopPropagation();
             onAppClick?.(app.name, app.category);
           }}
         >
-          사용신청
+          설치
         </button>
       </div>
     </div>

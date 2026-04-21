@@ -191,10 +191,10 @@ export default function AppStoreContentV2({ onAppClick }: Props) {
               <div className="flex shrink-0 flex-col items-center gap-1">
                 <button
                   type="button"
-                  className="rounded-xl bg-[#f6f6f6] px-3 py-1.5 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#fbb03b] transition-colors hover:bg-[#ececec]"
+                  className="flex h-7 w-[66px] items-center justify-center rounded-xl text-sm font-semibold leading-[1.3] tracking-[-0.12px] text-[#FBB03B] bg-[rgba(251,176,59,0.1)] hover:bg-[rgba(251,176,59,0.2)] transition-colors"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  사용신청
+                  설치
                 </button>
                 <span className="text-xs font-normal leading-[1.3] tracking-[-0.12px] text-[#a1a1aa]">
                   {app.status}
