@@ -79,6 +79,55 @@ export default function PopularChartContent({ onAppClick }: Props = {}) {
         </div>
       </div>
 
+      {/* Top 3 Banner */}
+      <div
+        className="flex items-start gap-6 rounded-2xl px-8 py-6"
+        style={{
+          background: "linear-gradient(135deg, #FBB03B 0%, #F7931E 50%, #FBB03B 100%)",
+        }}
+      >
+        {/* Banner title */}
+        <div className="flex shrink-0 flex-col gap-1">
+          <span className="text-[32px] font-bold leading-[1.2] text-white">TOP 3</span>
+          <span className="text-sm font-medium leading-[1.5] text-white/80">
+            동료들에게
+            <br />
+            가장 많이 추천받은 앱
+          </span>
+        </div>
+
+        {/* Top 3 apps */}
+        <div className="flex flex-1 items-end justify-end gap-4">
+          {popularApps.slice(0, 3).map((app, i) => {
+            const rankLabel = ["1st", "2nd", "3rd"][i];
+            return (
+              <div
+                key={i}
+                className="flex w-[200px] min-[1281px]:w-[250px] cursor-pointer flex-col items-start gap-3 rounded-xl bg-white/20 p-4 transition-colors hover:bg-white/30"
+                onClick={() => onAppClick?.(app.name, app.category)}
+              >
+                {/* Rank label */}
+                <span className="text-[28px] font-bold leading-[1.2] text-white">
+                  {rankLabel}
+                </span>
+                {/* App icon + info */}
+                <div className="flex w-full items-start gap-3">
+                  <div className="size-[62px] shrink-0 rounded-xl bg-white/30" />
+                  <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                    <span className="truncate text-sm font-bold text-white">{app.name}</span>
+                    <span className="text-xs font-medium text-white/70">{app.category}</span>
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs text-white/90">★</span>
+                      <span className="text-xs font-semibold text-white/90">{app.recommends}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Content: app grid + category sidebar */}
       <div className="flex min-h-0 flex-1 gap-8">
         {/* Left: App grid */}
