@@ -24,7 +24,7 @@ export default function BrowsePageB() {
   const router = useRouter();
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string>("인기 • 신규 앱");
-  const [selectedApp, setSelectedApp] = useState<{ name: string; category: string; isAdmin?: boolean } | null>(null);
+  const [selectedApp, setSelectedApp] = useState<{ name: string; category: string; isAdmin?: boolean; status?: string } | null>(null);
   const [hotAppsExpanded, setHotAppsExpanded] = useState(true);
   const [activeSubMenu, setActiveSubMenu] = useState<string>("인기 차트");
 
@@ -47,7 +47,8 @@ export default function BrowsePageB() {
     const tab = searchParams.get("tab");
 
     if (appName && category) {
-      setSelectedApp({ name: appName, category, isAdmin: appName === "경비 정산 자동화" });
+      const status = searchParams.get("status") || undefined;
+      setSelectedApp({ name: appName, category, isAdmin: appName === "경비 정산 자동화", status });
     } else {
       setSelectedApp(null);
     }
@@ -67,11 +68,12 @@ export default function BrowsePageB() {
   };
 
   // 앱 선택 시 URL 변경
-  const selectApp = (name: string, category: string) => {
+  const selectApp = (name: string, category: string, status?: string) => {
     const params = new URLSearchParams();
     params.set("app", name);
     params.set("category", category);
     params.set("tab", menuToTab(activeMenu, activeSubMenu));
+    if (status) params.set("status", status);
     router.push(`/browse?${params.toString()}`);
   };
 
@@ -527,6 +529,7 @@ export default function BrowsePageB() {
               fromMenu={activeMenu === "인기 • 신규 앱" ? activeSubMenu : "앱 스토어"}
               onBack={deselectApp}
               isAdmin={selectedApp.isAdmin}
+              appStatus={selectedApp.status}
             />
           </div>
         </div>
@@ -580,7 +583,7 @@ export default function BrowsePageB() {
           {/* Right: Main content */}
           {activeMenu === "인기 • 신규 앱" ? (
             activeSubMenu === "인기 차트" ? (
-              <PopularChartContent onAppClick={(name: string, category: string) => selectApp(name, category)} />
+              <PopularChartContent onAppClick={(name: string, category: string, status?: string) => selectApp(name, category, status)} />
             ) : (
               <NewUpdateChartContent onAppClick={(name: string, category: string) => selectApp(name, category)} />
             )

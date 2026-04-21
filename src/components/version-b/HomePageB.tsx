@@ -1,12 +1,49 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, type ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import TeamColumn from "./TeamColumn";
 
+function FadeInSection({ children, delay = 0 }: { children: ReactNode; delay?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.unobserve(el); } },
+      { threshold: 0.15 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className="transition-all duration-700 ease-out"
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(24px)",
+        transitionDelay: `${delay}ms`,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
 export default function HomePageB() {
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  const [appsExpanded, setAppsExpanded] = useState(false);
+
+  const myApps = [
+    "경비 정산", "스마트 캘린더", "매출 대시보드", "문서 검색", "프로젝트 트래커",
+    "회의실 예약", "전자 결재", "고객 CRM", "워크플로우", "AI 요약",
+    "팀 메신저", "데이터 시각화",
+  ];
 
   return (
     <div
@@ -145,12 +182,6 @@ export default function HomePageB() {
                 <span className="whitespace-nowrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#6D319D]">홈</span>
               </button>
 
-              {/* 이용중인 앱 */}
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
-                <Image src="/icons/version-b/home-menu-using-apps.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">이용중인 앱</span>
-              </button>
-
               {/* 섹션 헤더: 요청내역 */}
               <div className="flex w-full items-center px-3 pt-4 rounded-lg">
                 <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px]" style={{ color: "#a1a1aa" }}>요청내역</span>
@@ -160,6 +191,7 @@ export default function HomePageB() {
               <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
                 <Image src="/icons/version-b/home-menu-app-request.svg" alt="" width={18} height={18} />
                 <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">앱 신청</span>
+                <span className="ml-auto flex size-5 items-center justify-center rounded-full bg-red-500 text-[11px] font-bold text-white">2</span>
               </button>
 
               {/* 공유데이터 신청 */}
@@ -172,15 +204,161 @@ export default function HomePageB() {
         </div>
 
         {/* Right: Main content */}
-        <div className="flex h-full min-w-0 flex-1 flex-col overflow-hidden rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6">
-          <div className="mx-auto flex w-full flex-col gap-6 min-[1281px]:max-w-[1280px]">
+        <div className="flex h-full min-w-0 flex-1 flex-col overflow-y-auto rounded-br-2xl rounded-tr-2xl border-r border-[#f6f6f6] bg-white px-6 py-10">
+          <div className="mx-auto flex w-full flex-col gap-[60px] min-[1281px]:max-w-[1280px]">
           {/* Header */}
-          <div className="flex shrink-0 items-center">
-            <h1 className="font-bold tracking-[-0.22px] text-black" style={{ fontSize: "22px", lineHeight: "1.3" }}>
-              좋은 오후예요, 박민영 님
+          <FadeInSection>
+          <div className="flex items-end">
+            <h1 className="flex-1 text-2xl font-bold text-[#18181b]">
+              안녕하세요, 박민영 님
             </h1>
+            <span className="text-xl font-medium text-[#18181b]">
+              2026년 4월 16일 목요일
+            </span>
           </div>
-          <div className="flex-1" />
+
+          </FadeInSection>
+
+          {/* 박민영 님의 업무공간 */}
+          <FadeInSection delay={100}>
+          <div className="flex flex-col items-center gap-5">
+            <span className="w-full text-lg font-medium text-black">박민영 님의 업무공간</span>
+            <div
+              className="w-full overflow-hidden rounded-[20px] p-2 transition-[max-height] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
+              style={{ maxHeight: appsExpanded ? "1000px" : "145px" }}
+            >
+              <div className="grid grid-cols-7 gap-6">
+                {myApps.map((name, i) => (
+                  <div key={i} className="group/app flex cursor-pointer flex-col items-center gap-2 p-2">
+                    <div className="size-[97px] rounded-xl bg-[#e4e4e7] transition-all duration-300 ease-out group-hover/app:scale-105 group-hover/app:shadow-lg" />
+                    <span className="truncate text-sm font-normal text-[#18181b]">{name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {myApps.length > 7 && (
+              <button
+                type="button"
+                onClick={() => setAppsExpanded(!appsExpanded)}
+                className="flex h-8 w-[77px] items-center justify-center rounded-lg border border-[#e4e4e7] bg-white text-sm font-normal text-[#18181b] transition-colors hover:bg-gray-50"
+              >
+                {appsExpanded ? "접기" : "펼치기"}
+              </button>
+            )}
+          </div>
+
+          </FadeInSection>
+
+          {/* 빠른 메뉴 */}
+          <FadeInSection delay={200}>
+          <div className="flex flex-col gap-5">
+            <span className="text-lg font-medium text-black">빠른 메뉴</span>
+            <div className="flex gap-5">
+              <button type="button" className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[rgba(109,49,157,0.2)] p-5 transition-opacity hover:opacity-80">
+                <Image src="/icons/version-b/quick-menu-guide.svg" alt="" width={20} height={20} />
+                <span className="text-base font-semibold text-[#6D319D]">시작가이드 보기</span>
+              </button>
+              <button type="button" className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[rgba(231,101,190,0.2)] p-5 transition-opacity hover:opacity-80">
+                <Image src="/icons/version-b/quick-menu-create.svg" alt="" width={20} height={20} />
+                <span className="text-base font-semibold text-[#E765BE]">앱 만들기</span>
+              </button>
+              <button type="button" className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[rgba(251,176,59,0.2)] p-5 transition-opacity hover:opacity-80">
+                <Image src="/icons/version-b/quick-menu-manage.svg" alt="" width={20} height={20} />
+                <span className="text-base font-semibold text-[#FBB03B]">내가 만든 앱 관리하기</span>
+              </button>
+            </div>
+          </div>
+
+          </FadeInSection>
+
+          {/* 새로 나온 앱 / 지금 동료들이 많이 찾는 앱 */}
+          <FadeInSection delay={300}>
+          <div className="flex gap-5">
+            {/* 새로 나온 앱 */}
+            <div className="flex flex-1 flex-col gap-5">
+              <div className="flex items-end">
+                <span className="flex-1 text-lg font-medium text-black">새로 나온 앱</span>
+                <button type="button" className="flex items-center gap-1 text-sm font-semibold text-[#a1a1aa] hover:text-[#71717a]">
+                  더보기
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M7 5L10 9L7 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                </button>
+              </div>
+              <div className="flex h-[374px] flex-col rounded-[20px] bg-[#f9f9f9] p-5">
+                <div className="group relative flex-1 min-h-0">
+                  <div className="h-full overflow-y-auto pb-5 [scrollbar-width:none] group-hover:[scrollbar-width:thin] group-hover:[scrollbar-color:rgba(0,0,0,0.15)_transparent]">
+                    {[
+                      { name: "스마트 리포트", category: "데이터분석", stars: 0 },
+                      { name: "AI 문서 작성기", category: "생산성", stars: 1 },
+                      { name: "팀 피드백 허브", category: "협업도구", stars: 3 },
+                      { name: "자동 번역 봇", category: "생산성", stars: 2 },
+                      { name: "프로젝트 타임라인", category: "프로젝트관리", stars: 5 },
+                      { name: "디자인 에셋 관리", category: "디자인", stars: 4 },
+                      { name: "스마트 온보딩", category: "인사관리", stars: 1 },
+                      { name: "API 테스트 도구", category: "개발도구", stars: 7 },
+                      { name: "실시간 번역", category: "커뮤니케이션", stars: 2 },
+                      { name: "보안 대시보드", category: "보안", stars: 6 },
+                    ].map((app, i) => (
+                      <div key={i} className="flex cursor-pointer items-start gap-3 py-3">
+                        <div className="size-16 shrink-0 rounded-xl bg-[#e4e4e7]" />
+                        <div className="flex flex-col gap-1 py-0.5">
+                          <span className="text-base font-semibold text-black">{app.name}</span>
+                          <span className="text-sm font-normal text-[#71717a]">{app.category}</span>
+                          <div className="flex items-center gap-1">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z" fill="#FBB03B" /></svg>
+                            <span className="text-xs font-normal text-black">{app.stars}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-[#f9f9f9] to-transparent" />
+                </div>
+              </div>
+            </div>
+
+            {/* 지금 동료들이 많이 찾는 앱 */}
+            <div className="flex flex-[2] flex-col gap-5">
+              <div className="flex items-end">
+                <span className="flex-1 text-lg font-medium text-black">지금 동료들이 많이 찾는 앱</span>
+                <button type="button" className="flex items-center gap-1 text-sm font-semibold text-[#a1a1aa] hover:text-[#71717a]">
+                  더보기
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M7 5L10 9L7 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                </button>
+              </div>
+              <div className="flex h-[374px] flex-col rounded-[20px] bg-[#f9f9f9] p-5">
+                <div className="group relative flex-1 min-h-0">
+                  <div className="h-full overflow-y-auto pb-5 [scrollbar-width:none] group-hover:[scrollbar-width:thin] group-hover:[scrollbar-color:rgba(0,0,0,0.15)_transparent]">
+                    {[
+                      { name: "경비 정산 자동화", category: "경영재무", stars: 0 },
+                      { name: "스마트 캘린더", category: "협업도구", stars: 1 },
+                      { name: "매출 대시보드", category: "데이터분석", stars: 3 },
+                      { name: "사내 문서 검색", category: "생산성", stars: 2 },
+                      { name: "프로젝트 트래커", category: "프로젝트관리", stars: 5 },
+                      { name: "회의실 예약", category: "사내시설", stars: 4 },
+                      { name: "전자 결재", category: "경영재무", stars: 1 },
+                      { name: "고객 CRM", category: "고객관리", stars: 7 },
+                      { name: "워크플로우 빌더", category: "자동화", stars: 2 },
+                      { name: "AI 문서 요약", category: "생산성", stars: 6 },
+                    ].map((app, i) => (
+                      <div key={i} className="flex cursor-pointer items-start gap-3 py-3">
+                        <div className="size-16 shrink-0 rounded-xl bg-[#e4e4e7]" />
+                        <div className="flex flex-col gap-1 py-0.5">
+                          <span className="text-base font-semibold text-black">{app.name}</span>
+                          <span className="text-sm font-normal text-[#71717a]">{app.category}</span>
+                          <div className="flex items-center gap-1">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z" fill="#FBB03B" /></svg>
+                            <span className="text-xs font-normal text-black">{app.stars}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-[#f9f9f9] to-transparent" />
+                </div>
+              </div>
+            </div>
+          </div>
+          </FadeInSection>
           </div>
         </div>
       </div>

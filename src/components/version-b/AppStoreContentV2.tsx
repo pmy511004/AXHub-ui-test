@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback } from "react";
 import Image from "next/image";
 
-type AppStatus = "바로 사용" | "승인 필요";
+type AppStatus = "바로 사용" | "승인 요청" | "승인 중" | "열기";
 
 interface AppItem {
   name: string;
@@ -39,7 +39,7 @@ function generateApps(count: number): AppItem[] {
     "부하 테스트 도구", "리타겟팅 도구", "백업 관리", "아이콘 라이브러리", "세무 신고 도구",
     "조직도 관리",
   ];
-  const statuses: AppStatus[] = ["바로 사용", "승인 필요"];
+  const statuses: AppStatus[] = ["바로 사용", "승인 요청", "승인 중", "열기"];
   const result: AppItem[] = [];
   for (let i = 0; i < count; i++) {
     const cat = categoryNames[i % categoryNames.length];
@@ -54,7 +54,7 @@ function generateApps(count: number): AppItem[] {
       categoryTag: tag,
       recommends: Math.floor(Math.random() * 400) + 10,
       isNew: i % 5 === 2 || i % 7 === 3,
-      status: statuses[i % 3 === 0 ? 1 : 0],
+      status: statuses[i % 4],
     });
   }
   return result;
@@ -189,16 +189,42 @@ export default function AppStoreContentV2({ onAppClick }: Props) {
 
               {/* Right: button + status */}
               <div className="flex shrink-0 flex-col items-center gap-1">
-                <button
-                  type="button"
-                  className="flex h-7 w-[66px] items-center justify-center rounded-xl text-sm font-semibold leading-[1.3] tracking-[-0.12px] text-[#FBB03B] bg-[rgba(251,176,59,0.1)] hover:bg-[rgba(251,176,59,0.2)] transition-colors"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  설치
-                </button>
-                <span className="text-xs font-normal leading-[1.3] tracking-[-0.12px] text-[#a1a1aa]">
-                  {app.status}
-                </span>
+                {app.status === "열기" ? (
+                  <button
+                    type="button"
+                    className="flex h-7 w-[66px] items-center justify-center rounded-xl text-sm font-semibold leading-[1.3] tracking-[-0.12px] text-white transition-opacity hover:opacity-85"
+                    style={{ backgroundColor: "#FBB03B" }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    열기
+                  </button>
+                ) : app.status === "승인 중" ? (
+                  <>
+                    <button
+                      type="button"
+                      className="flex h-7 w-[66px] items-center justify-center rounded-xl text-sm font-semibold leading-[1.3] tracking-[-0.12px] text-[#6D319D] bg-[#F4ECFA] hover:bg-[#EEE3F7] transition-colors"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      대기
+                    </button>
+                    <span className="text-xs font-normal leading-[1.3] tracking-[-0.12px] text-[#a1a1aa]">
+                      승인 중
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      className="flex h-7 w-[66px] items-center justify-center rounded-xl text-sm font-semibold leading-[1.3] tracking-[-0.12px] text-[#FBB03B] bg-[rgba(251,176,59,0.1)] hover:bg-[rgba(251,176,59,0.2)] transition-colors"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      받기
+                    </button>
+                    <span className="text-xs font-normal leading-[1.3] tracking-[-0.12px] text-[#a1a1aa]">
+                      {app.status}
+                    </span>
+                  </>
+                )}
               </div>
             </div>
           ))}

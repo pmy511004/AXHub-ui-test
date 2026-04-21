@@ -51,7 +51,7 @@ const popularApps: { name: string; category: string; recommends: number; status:
 const categories = ["전체", "공용", "인사", "업무", "데이터", "시스템"];
 
 interface Props {
-  onAppClick?: (name: string, category: string) => void;
+  onAppClick?: (name: string, category: string, status?: string) => void;
 }
 
 export default function PopularChartContent({ onAppClick }: Props = {}) {
@@ -88,8 +88,8 @@ export default function PopularChartContent({ onAppClick }: Props = {}) {
       >
         {/* Banner title */}
         <div className="flex shrink-0 flex-col gap-1">
-          <span className="text-[32px] font-bold leading-[1.2] text-white">TOP 3</span>
-          <span className="text-sm font-medium leading-[1.5] text-white/80">
+          <span className="text-[40px] font-bold leading-[1.2] text-white">TOP 3</span>
+          <span className="text-base font-medium leading-[1.5] text-white/80">
             동료들에게
             <br />
             가장 많이 추천받은 앱
@@ -104,7 +104,7 @@ export default function PopularChartContent({ onAppClick }: Props = {}) {
               <div
                 key={i}
                 className="flex w-[200px] min-[1281px]:w-[250px] cursor-pointer flex-col items-start gap-3 rounded-xl bg-white/20 p-4 transition-colors hover:bg-white/30"
-                onClick={() => onAppClick?.(app.name, app.category)}
+                onClick={() => onAppClick?.(app.name, app.category, app.status)}
               >
                 {/* Rank label */}
                 <span className="text-[28px] font-bold leading-[1.2] text-white">
@@ -114,7 +114,7 @@ export default function PopularChartContent({ onAppClick }: Props = {}) {
                 <div className="flex w-full items-start gap-3">
                   <div className="size-[62px] shrink-0 rounded-xl bg-white/30" />
                   <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                    <span className="truncate text-sm font-bold text-white">{app.name}</span>
+                    <span className="truncate text-base font-bold text-white">{app.name}</span>
                     <span className="text-xs font-medium text-white/70">{app.category}</span>
                     <div className="flex items-center gap-1">
                       <span className="text-xs text-white/90">★</span>
@@ -179,7 +179,7 @@ export default function PopularChartContent({ onAppClick }: Props = {}) {
                 <div
                   key={i}
                   className="flex cursor-pointer items-start"
-                  onClick={() => onAppClick?.(app.name, app.category)}
+                  onClick={() => onAppClick?.(app.name, app.category, app.status)}
                 >
                   {/* Rank (left, full height) */}
                   <div
@@ -221,7 +221,7 @@ export default function PopularChartContent({ onAppClick }: Props = {}) {
                 <div
                   key={i}
                   className="flex cursor-pointer items-center gap-3 border-b border-gray-100 py-4"
-                  onClick={() => onAppClick?.(app.name, app.category)}
+                  onClick={() => onAppClick?.(app.name, app.category, app.status)}
                 >
                   <div
                     className="flex size-6 shrink-0 items-center justify-center text-center text-[18px] font-bold leading-[1.4] tracking-[-0.18px]"
@@ -261,14 +261,14 @@ export default function PopularChartContent({ onAppClick }: Props = {}) {
                       type="button"
                       className="flex h-7 w-[66px] shrink-0 items-center justify-center overflow-hidden rounded-xl px-3 text-sm font-semibold leading-[1.3] tracking-[-0.12px] text-[#6D319D] bg-[#F4ECFA] hover:bg-[#EEE3F7] transition-colors"
                     >
-                      승인중
+                      대기
                     </button>
                   ) : (
                     <button
                       type="button"
                       className="flex h-7 w-[66px] shrink-0 items-center justify-center overflow-hidden rounded-xl text-sm font-semibold leading-[1.3] tracking-[-0.12px] text-[#FBB03B] bg-[rgba(251,176,59,0.1)] hover:bg-[rgba(251,176,59,0.2)] transition-colors"
                     >
-                      설치
+                      받기
                     </button>
                   )}
                 </div>

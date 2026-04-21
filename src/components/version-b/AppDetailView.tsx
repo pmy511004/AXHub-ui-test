@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import Image from "next/image";
 
 interface AppDetailViewProps {
@@ -9,9 +9,9 @@ interface AppDetailViewProps {
   onBack: () => void;
   fromMenu: string;
   isAdmin?: boolean;
+  appStatus?: string;
 }
 
-const adminTabs = ["앱", "테이블", "배포", "로그", "연동", "SSO", "설정"];
 
 const comments = [
   { name: "박민영", time: "1시간 전", text: "댓글 카드 높이는 166px 고정입니다. 댓글의 내용이 길어질 경우 \"...\"로 보여지고 카드를 클릭하면 상세 모달로 볼 수 있습니다.", likes: 2, replies: 0, liked: false, isMine: true },
@@ -33,14 +33,13 @@ const comments = [
   { name: "문서현", time: "3일 전", text: "보고서 작성할 때 정말 유용하게 쓰고 있습니다. 감사합니다.", likes: 3, replies: 1, liked: true },
 ];
 
-export default function AppDetailView({ appName, category, onBack, fromMenu, isAdmin }: AppDetailViewProps) {
+export default function AppDetailView({ appName, category, onBack, fromMenu, isAdmin, appStatus }: AppDetailViewProps) {
   const primaryColor = isAdmin ? "#E765BE" : "#FBB03B";
   const [expanded, setExpanded] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [moreMenuOpen, setMoreMenuOpen] = useState<number | null>(null);
   const [modalMoreOpen, setModalMoreOpen] = useState(false);
   const [modalComment, setModalComment] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState("앱");
   const [adminMenuOpen, setAdminMenuOpen] = useState(false);
   const [replyText, setReplyText] = useState("");
   const [likedSet, setLikedSet] = useState<Set<number>>(() => {
@@ -48,26 +47,6 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
     comments.forEach((c, i) => { if (c.liked) set.add(i); });
     return set;
   });
-  const [isRecommended, setIsRecommended] = useState(false);
-  const [recommendCount, setRecommendCount] = useState(123);
-  const [countAnim, setCountAnim] = useState<"up" | "down" | null>(null);
-  const [starAnim, setStarAnim] = useState(false);
-  const countKey = useRef(0);
-  const toggleRecommend = () => {
-    countKey.current += 1;
-    if (isRecommended) {
-      setIsRecommended(false);
-      setRecommendCount((c) => c - 1);
-      setCountAnim("down");
-    } else {
-      setIsRecommended(true);
-      setRecommendCount((c) => c + 1);
-      setCountAnim("up");
-      setStarAnim(true);
-    }
-    setTimeout(() => setCountAnim(null), 400);
-    setTimeout(() => setStarAnim(false), 600);
-  };
 
   return (
     <div className="mx-auto flex w-full flex-col gap-6 min-[1281px]:max-w-[1280px]">
@@ -207,103 +186,6 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
         </span>
       </div>
 
-      {/* Admin Tab Bar */}
-      {isAdmin && (
-        <div className="flex items-center justify-between rounded-2xl p-2" style={{ backgroundColor: "#f6f6f6" }}>
-          <div className="flex items-center gap-2">
-            {adminTabs.map((tab) => (
-              <button
-                key={tab}
-                type="button"
-                onClick={() => setActiveTab(tab)}
-                className={`min-w-[62px] rounded-xl px-3 py-2 text-center text-sm leading-[1.5] tracking-[-0.14px] transition-colors ${activeTab !== tab ? "hover:bg-black/[0.05]" : ""}`}
-                style={{
-                  backgroundColor: activeTab === tab ? primaryColor : undefined,
-                  color: activeTab === tab ? "white" : "rgba(24,24,27,0.48)",
-                  fontWeight: activeTab === tab ? 600 : 400,
-                }}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
-          <div className="flex shrink-0 items-center gap-1 px-2">
-            <span className="text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-gray-500">관리자 가이드</span>
-            <Image src="/icons/version-b/admin-guide.svg" alt="" width={20} height={20} />
-          </div>
-        </div>
-      )}
-
-      {/* 추천 위젯 (스크롤 시 상단 고정) */}
-      <div
-        className="sticky top-0 z-10 -mb-[72px] flex items-center gap-4 self-end rounded-2xl bg-white px-4 py-2"
-        style={{
-          boxShadow:
-            "0px 14px 28px rgba(0, 0, 0, 0.04), 0px -6px 12px rgba(0, 0, 0, 0.03), 0px 2px 8px rgba(0, 0, 0, 0.06)",
-        }}
-      >
-          <div className="flex min-h-[56px] flex-col items-center justify-center gap-1">
-            <p className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-500">
-              이 앱을 추천한 동료들
-            </p>
-            <div className="flex items-center gap-1">
-              <div className="relative flex items-center justify-center">
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                  className={starAnim ? "star-squish-bounce" : ""}
-                >
-                  <path
-                    d="M10 2.5L12.472 7.508L18 8.313L14 12.213L14.944 17.72L10 15.12L5.056 17.72L6 12.213L2 8.313L7.528 7.508L10 2.5Z"
-                    fill={primaryColor}
-                  />
-                </svg>
-                {starAnim && [
-                  { tx: "-22px", ty: "-26px", delay: "0s" },
-                  { tx: "22px", ty: "-22px", delay: "0.05s" },
-                  { tx: "-26px", ty: "12px", delay: "0.1s" },
-                  { tx: "26px", ty: "16px", delay: "0.04s" },
-                  { tx: "0px", ty: "-28px", delay: "0.08s" },
-                  { tx: "-12px", ty: "26px", delay: "0.06s" },
-                ].map((p, i) => (
-                  <svg key={i} className="star-particle" width="8" height="8" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ "--tx": p.tx, "--ty": p.ty, animationDelay: p.delay } as React.CSSProperties}>
-                    <path d="M10 2.5L12.472 7.508L18 8.313L14 12.213L14.944 17.72L10 15.12L5.056 17.72L6 12.213L2 8.313L7.528 7.508L10 2.5Z" fill={primaryColor} />
-                  </svg>
-                ))}
-              </div>
-              <p
-                key={countKey.current}
-                className={`whitespace-nowrap text-[22px] font-semibold leading-[1.3] tracking-[-0.22px] text-black ${countAnim === "up" ? "count-up" : countAnim === "down" ? "count-down" : ""}`}
-              >
-                {recommendCount}
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center py-3">
-            {isRecommended ? (
-              <button
-                type="button"
-                onClick={toggleRecommend}
-                className="flex h-8 w-[76px] items-center justify-center rounded-lg border border-[#d4d4d8] bg-white text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-gray-500 transition-all hover:bg-gray-50 active:scale-90"
-              >
-                추천취소
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={toggleRecommend}
-                className="flex h-8 w-[76px] items-center justify-center rounded-lg border border-transparent text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-all hover:opacity-90 active:scale-90"
-                style={{ backgroundColor: primaryColor }}
-              >
-                추천하기
-              </button>
-            )}
-          </div>
-        </div>
 
       {/* App Header */}
       <div className="flex flex-col">
@@ -348,14 +230,30 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
               </p>
             </div>
             <div className="flex items-start gap-2">
-              <button
-                type="button"
-                className="flex h-8 items-center justify-center overflow-hidden rounded-xl px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white transition-opacity hover:opacity-85"
-                style={{ backgroundColor: primaryColor }}
-              >
-                열기
-              </button>
-              {isAdmin ? (
+              {appStatus === "열기" ? (
+                <button
+                  type="button"
+                  className="flex h-8 items-center justify-center overflow-hidden rounded-xl px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white transition-opacity hover:opacity-85"
+                  style={{ backgroundColor: primaryColor }}
+                >
+                  열기
+                </button>
+              ) : appStatus === "승인 대기" ? (
+                <button
+                  type="button"
+                  className="flex h-8 items-center justify-center overflow-hidden rounded-xl px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#6D319D] bg-[#F4ECFA] hover:bg-[#EEE3F7] transition-colors"
+                >
+                  대기
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="flex h-8 items-center justify-center overflow-hidden rounded-xl px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#FBB03B] bg-[rgba(251,176,59,0.1)] hover:bg-[rgba(251,176,59,0.2)] transition-colors"
+                >
+                  받기
+                </button>
+              )}
+              {isAdmin && (
                 <>
                   <button
                     type="button"
@@ -370,13 +268,6 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                     수정
                   </button>
                 </>
-              ) : (
-                <button
-                  type="button"
-                  className="flex h-8 items-center justify-center overflow-hidden rounded-xl bg-[#f6f6f6] px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#18181b] transition-colors hover:bg-[#ececec]"
-                >
-                  사용 해제
-                </button>
               )}
             </div>
           </div>
@@ -405,7 +296,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
           <div className="flex flex-1 flex-col items-center gap-5 self-stretch px-10 py-5">
             <span className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-gray-500">추천 수</span>
             <div className="flex flex-col items-center">
-              <span className="text-xl font-bold leading-[1.3] tracking-[-0.2px] text-[#18181b]">{recommendCount}</span>
+              <span className="text-xl font-bold leading-[1.3] tracking-[-0.2px] text-[#18181b]">123</span>
               <span className="text-xs font-normal leading-[1.3] tracking-[-0.12px] text-gray-500">개</span>
             </div>
           </div>

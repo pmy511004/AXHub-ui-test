@@ -73,7 +73,7 @@ function AppCard({
             onAppClick?.(app.name, app.category);
           }}
         >
-          설치
+          받기
         </button>
       </div>
     </div>
