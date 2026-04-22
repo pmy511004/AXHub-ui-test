@@ -178,7 +178,7 @@ export default function HotNewAppsContentV2({ onAppClick }: Props = {}) {
         onScroll={handleScroll}
         className="flex h-full min-w-0 flex-1 flex-col overflow-y-auto rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6"
       >
-        <div className="mx-auto flex w-full flex-col gap-6 min-[1281px]:max-w-[1280px]">
+        <div className="mx-auto flex w-full flex-col gap-6 min-[1281px]:max-w-[1280px]" style={{ animation: "fadeSlideIn 0.4s ease-out" }}>
           {/* Banner 캐러셀 (슬라이드) */}
           <div className="relative w-full shrink-0" style={{ height: 212 }}>
             <div

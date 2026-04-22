@@ -205,7 +205,7 @@ export default function HomePageB() {
 
         {/* Right: Main content */}
         <div className="flex h-full min-w-0 flex-1 flex-col overflow-y-auto rounded-br-2xl rounded-tr-2xl border-r border-[#f6f6f6] bg-white px-6 py-10">
-          <div className="mx-auto flex w-full flex-col gap-[60px] min-[1281px]:max-w-[1280px]">
+          <div className="mx-auto flex w-full flex-col gap-[60px] min-[1281px]:max-w-[1280px]" style={{ animation: "fadeSlideIn 0.4s ease-out" }}>
           {/* Header */}
           <FadeInSection>
           <div className="flex items-end">

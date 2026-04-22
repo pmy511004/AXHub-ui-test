@@ -49,7 +49,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
   });
 
   return (
-    <div className="mx-auto flex w-full flex-col gap-6 min-[1281px]:max-w-[1280px]">
+    <div className="mx-auto flex w-full flex-col gap-6 min-[1281px]:max-w-[1280px]" style={{ animation: "fadeSlideIn 0.4s ease-out" }}>
       {/* 댓글 상세 모달 */}
       {modalComment !== null && (() => {
         const c = comments[modalComment];
