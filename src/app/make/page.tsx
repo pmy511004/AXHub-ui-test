@@ -1,5 +1,10 @@
+import { Suspense } from "react";
 import MakePageB from "@/components/version-b/MakePageB";
 
 export default function MakePage() {
-  return <MakePageB />;
+  return (
+    <Suspense>
+      <MakePageB />
+    </Suspense>
+  );
 }
