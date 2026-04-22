@@ -15,6 +15,8 @@ import TeamColumn from "./TeamColumn";
 //      └ Header (2484:1894, h-76) + Content card (2484:1908)
 export default function MakePageB() {
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  const [sortOpen, setSortOpen] = useState(false);
+  const [sortBy, setSortBy] = useState("최근 생성순");
 
   return (
     <div
@@ -220,16 +222,91 @@ export default function MakePageB() {
         <div className="flex h-full min-w-0 flex-1 flex-col overflow-hidden rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6">
           <div className="mx-auto flex w-full flex-col gap-6 min-[1281px]:max-w-[1280px]">
           {/* Header */}
-          <div className="flex h-10 shrink-0 items-center">
-            <h1
-              className="font-bold tracking-[-0.22px] text-black"
-              style={{ fontSize: "22px", lineHeight: "1.3" }}
-            >
+          <div className="flex shrink-0 items-center">
+            <h1 className="font-bold tracking-[-0.22px] text-black" style={{ fontSize: "22px", lineHeight: "1.3" }}>
               내 프로젝트
             </h1>
           </div>
-          {/* Content */}
-          <div className="flex-1" />
+
+          {/* Action bar */}
+          <div className="flex items-end border-b border-[#e4e4e7] pb-4">
+            <div className="flex flex-1 items-center gap-2">
+              <button type="button" className="flex h-9 items-center gap-2 rounded-lg border border-[#e4e4e7] bg-white px-4 text-sm font-normal text-[#18181b] transition-colors hover:bg-gray-50">
+                앱 보관함
+              </button>
+              <button type="button" className="flex h-9 items-center gap-2 rounded-lg bg-[#E765BE] px-4 text-sm font-semibold text-white transition-opacity hover:opacity-90">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 3.75V14.25M3.75 9H14.25" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                새 앱 만들기
+              </button>
+            </div>
+            <div className="relative">
+              <button type="button" onClick={() => setSortOpen(!sortOpen)} className="flex items-center gap-1 text-sm font-semibold text-[#18181b]">
+                {sortBy}
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M6 7.5L9 10.5L12 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              </button>
+              {sortOpen && (
+                <div className="absolute right-0 top-8 z-20 flex min-w-[140px] flex-col overflow-hidden rounded-lg border border-[#e4e4e7] bg-white shadow-lg">
+                  {["최근 생성순", "최근 수정순", "API 호출순"].map((option) => (
+                    <button
+                      key={option}
+                      type="button"
+                      onClick={() => { setSortBy(option); setSortOpen(false); }}
+                      className={`px-4 py-2.5 text-left text-sm transition-colors hover:bg-[#f6f6f6] ${sortBy === option ? "font-semibold text-[#E765BE]" : "font-normal text-[#18181b]"}`}
+                    >
+                      {option}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Project cards */}
+          <div className="grid grid-cols-3 gap-6 min-[1441px]:grid-cols-4">
+            {[
+              { name: "경비 정산 자동화", category: "경영재무", stars: 0, status: "draft" as const, progress: 2, total: 4, date: "" },
+              { name: "스마트 캘린더", category: "협업도구", stars: 0, status: "active" as const, progress: 0, total: 0, date: "26.04.12" },
+              { name: "매출 대시보드", category: "데이터분석", stars: 0, status: "active" as const, progress: 0, total: 0, date: "26.04.12" },
+              { name: "프로젝트 트래커", category: "프로젝트관리", stars: 0, status: "active" as const, progress: 0, total: 0, date: "26.04.12" },
+            ].map((app, i) => (
+              <div key={i} className="flex cursor-pointer flex-col gap-4 rounded-2xl bg-[#f9f9f9] p-5">
+                {/* App info */}
+                <div className="flex items-start gap-4">
+                  <div className="size-16 shrink-0 rounded-xl bg-[#e4e4e7]" />
+                  <div className="flex flex-col gap-1">
+                    <span className="text-base font-semibold text-black">{app.name}</span>
+                    <span className="text-sm font-normal text-[#71717a]">{app.category}</span>
+                    <div className="flex items-center gap-1">
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z" fill="#FBB03B" /></svg>
+                      <span className="text-xs font-normal text-black">{app.stars}</span>
+                    </div>
+                  </div>
+                </div>
+                {/* Divider */}
+                <div className="h-px bg-[#e4e4e7]" />
+                {/* Status */}
+                {app.status === "draft" ? (
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium text-[#71717a]">남은 단계</span>
+                      <span className="text-sm font-semibold text-[#71717a]">{app.progress}/{app.total}</span>
+                    </div>
+                    <div className="relative h-1.5 flex-1 rounded-full bg-[#e4e4e7]">
+                      <div className="absolute left-0 top-0 h-full rounded-full bg-[#A1A1AA]" style={{ width: `${(app.progress / app.total) * 100}%` }} />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center">
+                    <div className="flex flex-1 items-center gap-1">
+                      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#E765BE" /><path d="M5.5 9L8 11.5L12.5 6.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                      <span className="text-sm font-medium text-[#E765BE]">앱 활성중</span>
+                    </div>
+                    <span className="text-sm font-medium text-[#71717a]">{app.date}</span>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
           </div>
         </div>
       </div>
