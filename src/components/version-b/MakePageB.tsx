@@ -17,6 +17,7 @@ export default function MakePageB() {
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
   const [sortBy, setSortBy] = useState("최근 생성순");
+  const [isEmpty, setIsEmpty] = useState(false);
 
   return (
     <div
@@ -220,7 +221,7 @@ export default function MakePageB() {
         </div>
         {/* Right: Main content */}
         <div className="flex h-full min-w-0 flex-1 flex-col overflow-hidden rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6">
-          <div className="mx-auto flex w-full flex-col gap-6 min-[1281px]:max-w-[1280px]">
+          <div className="mx-auto flex w-full flex-1 flex-col gap-6 min-[1281px]:max-w-[1280px]">
           {/* Header */}
           <div className="flex shrink-0 items-center">
             <h1 className="font-bold tracking-[-0.22px] text-black" style={{ fontSize: "22px", lineHeight: "1.3" }}>
@@ -261,52 +262,65 @@ export default function MakePageB() {
             </div>
           </div>
 
-          {/* Project cards */}
-          <div className="grid grid-cols-3 gap-6 min-[1441px]:grid-cols-4">
-            {[
-              { name: "경비 정산 자동화", category: "경영재무", stars: 0, status: "draft" as const, progress: 2, total: 4, date: "" },
-              { name: "스마트 캘린더", category: "협업도구", stars: 0, status: "active" as const, progress: 0, total: 0, date: "26.04.12" },
-              { name: "매출 대시보드", category: "데이터분석", stars: 0, status: "active" as const, progress: 0, total: 0, date: "26.04.12" },
-              { name: "프로젝트 트래커", category: "프로젝트관리", stars: 0, status: "active" as const, progress: 0, total: 0, date: "26.04.12" },
-            ].map((app, i) => (
-              <div key={i} className="flex cursor-pointer flex-col gap-4 rounded-2xl bg-[#f9f9f9] p-5">
-                {/* App info */}
-                <div className="flex items-start gap-4">
-                  <div className="size-16 shrink-0 rounded-xl bg-[#e4e4e7]" />
-                  <div className="flex flex-col gap-1">
-                    <span className="text-base font-semibold text-black">{app.name}</span>
-                    <span className="text-sm font-normal text-[#71717a]">{app.category}</span>
-                    <div className="flex items-center gap-1">
-                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z" fill="#FBB03B" /></svg>
-                      <span className="text-xs font-normal text-black">{app.stars}</span>
+          {/* Project cards or Empty state */}
+          {isEmpty ? (
+            <div className="flex flex-1 flex-col items-center justify-center gap-5 pb-[20%]">
+              <Image src="/icons/version-b/empty-folder.svg" alt="" width={100} height={97} />
+              <p className="text-base font-normal text-[#a1a1aa]">앱을 만들고 출시해보세요</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-3 gap-6 min-[1441px]:grid-cols-4">
+              {[
+                { name: "경비 정산 자동화", category: "경영재무", stars: 0, status: "draft" as const, progress: 2, total: 4, date: "" },
+                { name: "스마트 캘린더", category: "협업도구", stars: 0, status: "active" as const, progress: 0, total: 0, date: "26.04.12" },
+                { name: "매출 대시보드", category: "데이터분석", stars: 0, status: "active" as const, progress: 0, total: 0, date: "26.04.12" },
+                { name: "프로젝트 트래커", category: "프로젝트관리", stars: 0, status: "active" as const, progress: 0, total: 0, date: "26.04.12" },
+              ].map((app, i) => (
+                <div key={i} className="flex cursor-pointer flex-col gap-4 rounded-2xl bg-[#f9f9f9] p-5">
+                  <div className="flex items-start gap-4">
+                    <div className="size-16 shrink-0 rounded-xl bg-[#e4e4e7]" />
+                    <div className="flex flex-col gap-1">
+                      <span className="text-base font-semibold text-black">{app.name}</span>
+                      <span className="text-sm font-normal text-[#71717a]">{app.category}</span>
+                      <div className="flex items-center gap-1">
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z" fill="#FBB03B" /></svg>
+                        <span className="text-xs font-normal text-black">{app.stars}</span>
+                      </div>
                     </div>
                   </div>
+                  <div className="h-px bg-[#e4e4e7]" />
+                  {app.status === "draft" ? (
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium text-[#71717a]">남은 단계</span>
+                        <span className="text-sm font-semibold text-[#71717a]">{app.progress}/{app.total}</span>
+                      </div>
+                      <div className="relative h-1.5 flex-1 rounded-full bg-[#e4e4e7]">
+                        <div className="absolute left-0 top-0 h-full rounded-full bg-[#A1A1AA]" style={{ width: `${(app.progress / app.total) * 100}%` }} />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-center">
+                      <div className="flex flex-1 items-center gap-1">
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#E765BE" /><path d="M5.5 9L8 11.5L12.5 6.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                        <span className="text-sm font-medium text-[#E765BE]">앱 활성중</span>
+                      </div>
+                      <span className="text-sm font-medium text-[#71717a]">{app.date}</span>
+                    </div>
+                  )}
                 </div>
-                {/* Divider */}
-                <div className="h-px bg-[#e4e4e7]" />
-                {/* Status */}
-                {app.status === "draft" ? (
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-[#71717a]">남은 단계</span>
-                      <span className="text-sm font-semibold text-[#71717a]">{app.progress}/{app.total}</span>
-                    </div>
-                    <div className="relative h-1.5 flex-1 rounded-full bg-[#e4e4e7]">
-                      <div className="absolute left-0 top-0 h-full rounded-full bg-[#A1A1AA]" style={{ width: `${(app.progress / app.total) * 100}%` }} />
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex items-center">
-                    <div className="flex flex-1 items-center gap-1">
-                      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#E765BE" /><path d="M5.5 9L8 11.5L12.5 6.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                      <span className="text-sm font-medium text-[#E765BE]">앱 활성중</span>
-                    </div>
-                    <span className="text-sm font-medium text-[#71717a]">{app.date}</span>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
+
+          {/* 임시 토글 버튼 */}
+          <button
+            type="button"
+            onClick={() => setIsEmpty(!isEmpty)}
+            className="fixed bottom-6 right-6 z-50 rounded-lg bg-[#E765BE] px-4 py-2 text-sm font-semibold text-white shadow-lg transition-opacity hover:opacity-90"
+          >
+            {isEmpty ? "데이터 있을 때" : "데이터 없을 때"}
+          </button>
           </div>
         </div>
       </div>
