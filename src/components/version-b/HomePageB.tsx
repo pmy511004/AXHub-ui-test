@@ -246,8 +246,9 @@ export default function HomePageB() {
             /* 데이터 X 화면 */
             <div className="mx-auto flex w-full flex-col gap-[60px] min-[1281px]:max-w-[1280px]" style={{ animation: "fadeSlideIn 0.4s ease-out" }}>
               {/* 상단 히어로 */}
-              <div className="flex h-[400px] flex-col items-center justify-center gap-10">
-                <div className="flex flex-col items-center gap-3">
+              <div className="relative flex h-[400px] flex-col items-center justify-center gap-10">
+                <Image src="/icons/version-b/home-bg-empty.png" alt="" width={948} height={584} className="pointer-events-none absolute left-0 -top-[120px] w-full object-cover" />
+                <div className="relative z-10 flex flex-col items-center gap-3">
                   <h1 className="text-center text-[32px] font-bold leading-[1.4] text-[#18181b]">
                     안녕하세요 박민영 님!
                     <br />
@@ -255,11 +256,11 @@ export default function HomePageB() {
                   </h1>
                   <p className="text-center text-base font-normal text-[#18181b]">원하는 방법으로 빠르게 시작해 보세요</p>
                 </div>
-                <div className="flex gap-2">
+                <div className="relative z-10 flex gap-2">
                   <button type="button" className="flex h-12 w-[169px] items-center justify-center rounded-xl bg-[#6D319D] text-base font-semibold text-white transition-opacity hover:opacity-90">
                     내가 앱 만들기
                   </button>
-                  <button type="button" className="flex h-12 items-center justify-center rounded-xl bg-[#f6f6f6] px-6 text-base font-semibold text-[#18181b] transition-colors hover:bg-[#ececec]">
+                  <button type="button" className="flex h-12 items-center justify-center rounded-xl bg-white/50 px-6 text-base font-semibold text-[#18181b] transition-colors hover:bg-white/70">
                     동료가 만든 앱 쓰기
                   </button>
                 </div>
