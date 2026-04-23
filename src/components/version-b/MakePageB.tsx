@@ -35,6 +35,7 @@ export default function MakePageB() {
   const step1Valid = appName.trim() !== "" && selectedCategory !== "" && useMethod !== null;
   const [accessId, setAccessId] = useState("");
   const [selectedDomain, setSelectedDomain] = useState("");
+  const [domainOpen, setDomainOpen] = useState(false);
   const step2Valid = deployMethod !== null && podSize !== null && accessId.trim() !== "" && selectedDomain !== "";
 
   return (
@@ -456,12 +457,28 @@ export default function MakePageB() {
                         <div className="flex gap-3">
                           <input type="text" value={accessId} onChange={(e) => setAccessId(e.target.value)} placeholder="3~63자의 영문 소문자, 숫자,-만 가능해요" className="min-h-[48px] flex-[6] rounded-xl border border-[#e4e4e7] bg-white px-4 text-base text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#E765BE] focus:outline-none" />
                           <div className="relative flex-[4]">
-                            <select value={selectedDomain} onChange={(e) => { setSelectedDomain(e.target.value); e.target.style.color = e.target.value ? "#18181b" : "#a1a1aa"; }} className="min-h-[48px] w-full appearance-none rounded-xl border border-[#e4e4e7] bg-white px-4 pr-12 text-base text-[#a1a1aa] focus:border-[#E765BE] focus:outline-none">
-                              <option value="">도메인 선택</option>
-                              <option>.jocodingax.ai</option>
-                              <option>.axhub.dev</option>
-                            </select>
-                            <svg className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 8L10 12L14 8" stroke="#71717a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                            <button
+                              type="button"
+                              onClick={() => setDomainOpen(!domainOpen)}
+                              className={`flex min-h-[48px] w-full items-center rounded-xl border bg-white px-4 text-base ${selectedDomain ? "border-[#e4e4e7] text-[#18181b]" : "border-[#e4e4e7] text-[#a1a1aa]"}`}
+                            >
+                              <span className="flex-1 text-left">{selectedDomain || "도메인 선택"}</span>
+                              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 8L10 12L14 8" stroke="#71717a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                            </button>
+                            {domainOpen && (
+                              <div className="absolute left-0 right-0 top-[52px] z-20 flex flex-col overflow-hidden rounded-xl border border-[#e4e4e7] bg-white p-2 shadow-lg">
+                                {[".jocodingax.ai", ".axhub.dev"].map((domain) => (
+                                  <button
+                                    key={domain}
+                                    type="button"
+                                    onClick={() => { setSelectedDomain(domain); setDomainOpen(false); }}
+                                    className={`px-4 py-2.5 text-left text-base transition-colors hover:bg-[#f6f6f6] ${selectedDomain === domain ? "font-semibold text-[#E765BE]" : "font-normal text-[#18181b]"}`}
+                                  >
+                                    {domain}
+                                  </button>
+                                ))}
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
