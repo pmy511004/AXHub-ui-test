@@ -198,7 +198,7 @@ export default function HomePageB() {
               <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
                 <Image src="/icons/version-b/home-menu-app-request.svg" alt="" width={18} height={18} />
                 <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">앱 신청</span>
-                <span className="ml-auto flex size-5 items-center justify-center rounded-full bg-red-500 text-[11px] font-bold text-white">2</span>
+                {homeView !== "initial" && <span className="ml-auto flex size-5 items-center justify-center rounded-full bg-red-500 text-[11px] font-bold text-white">2</span>}
               </button>
 
               {/* 공유데이터 신청 */}
@@ -211,7 +211,7 @@ export default function HomePageB() {
         </div>
 
         {/* Right: Main content */}
-        <div className="relative flex h-full min-w-0 flex-1 flex-col overflow-y-auto rounded-br-2xl rounded-tr-2xl border-r border-[#f6f6f6] bg-white px-6 py-10">
+        <div className="relative flex h-full min-w-0 flex-1 flex-col overflow-y-auto rounded-br-2xl rounded-tr-2xl border-r border-[#f6f6f6] bg-white px-6 pb-20 pt-10">
           {homeView === "initial" ? (
             /* 초기 화면 */
             <div className="flex flex-1 flex-col items-center justify-center pb-[15%]" style={{ animation: "fadeSlideIn 0.4s ease-out" }}>
@@ -231,22 +231,94 @@ export default function HomePageB() {
                   AXHub 시작하기
                 </button>
                 <div className="relative z-10 flex items-center gap-5">
-                  <button type="button" className="group flex items-center text-sm font-semibold text-[#18181b]/70 transition-colors hover:text-[#18181b]">
+                  <button type="button" className="flex items-center text-sm font-semibold text-[#18181b]/70 transition-opacity hover:opacity-90">
                     앱 만들고 배포하기
-                    <Image src="/icons/version-b/arrow-outward.svg" alt="" width={18} height={18} className="opacity-70 transition-opacity group-hover:opacity-100" />
+                    <Image src="/icons/version-b/arrow-outward.svg" alt="" width={18} height={18} className="" />
                   </button>
-                  <button type="button" className="group flex items-center text-sm font-semibold text-[#18181b]/70 transition-colors hover:text-[#18181b]">
+                  <button type="button" className="flex items-center text-sm font-semibold text-[#18181b]/70 transition-opacity hover:opacity-90">
                     내 직무를 위한 가이드
-                    <Image src="/icons/version-b/arrow-outward.svg" alt="" width={18} height={18} className="opacity-70 transition-opacity group-hover:opacity-100" />
+                    <Image src="/icons/version-b/arrow-outward.svg" alt="" width={18} height={18} className="" />
                   </button>
                 </div>
               </div>
             </div>
           ) : homeView === "empty" ? (
             /* 데이터 X 화면 */
-            <div className="flex flex-1 flex-col items-center justify-center pb-[10%]" style={{ animation: "fadeSlideIn 0.4s ease-out" }}>
-              <Image src="/icons/version-b/empty-folder.svg" alt="" width={100} height={97} />
-              <p className="mt-5 text-base font-normal text-[#a1a1aa]">아직 등록된 앱이 없어요</p>
+            <div className="mx-auto flex w-full flex-col gap-[60px] min-[1281px]:max-w-[1280px]" style={{ animation: "fadeSlideIn 0.4s ease-out" }}>
+              {/* 상단 히어로 */}
+              <div className="flex h-[400px] flex-col items-center justify-center gap-10">
+                <div className="flex flex-col items-center gap-3">
+                  <h1 className="text-center text-[32px] font-bold leading-[1.4] text-[#18181b]">
+                    안녕하세요 박민영 님!
+                    <br />
+                    업무 자동화를 어떻게 시작할까요?
+                  </h1>
+                  <p className="text-center text-base font-normal text-[#18181b]">원하는 방법으로 빠르게 시작해 보세요</p>
+                </div>
+                <div className="flex gap-2">
+                  <button type="button" className="flex h-12 w-[169px] items-center justify-center rounded-xl bg-[#6D319D] text-base font-semibold text-white transition-opacity hover:opacity-90">
+                    내가 앱 만들기
+                  </button>
+                  <button type="button" className="flex h-12 items-center justify-center rounded-xl bg-[#f6f6f6] px-6 text-base font-semibold text-[#18181b] transition-colors hover:bg-[#ececec]">
+                    동료가 만든 앱 쓰기
+                  </button>
+                </div>
+              </div>
+
+              {/* 빠른 메뉴 */}
+              <div className="mb-5 flex flex-col gap-5">
+                <span className="text-lg font-medium text-black">빠른 메뉴</span>
+                <div className="flex gap-5">
+                  <button type="button" className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[rgba(109,49,157,0.2)] p-5 transition-opacity hover:opacity-80">
+                    <Image src="/icons/version-b/quick-menu-guide.svg" alt="" width={20} height={20} />
+                    <span className="text-base font-semibold text-[#6D319D]">개발가이드 보기</span>
+                  </button>
+                  <button type="button" className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[rgba(231,101,190,0.2)] p-5 transition-opacity hover:opacity-80">
+                    <Image src="/icons/version-b/quick-menu-create.svg" alt="" width={20} height={20} />
+                    <span className="text-base font-semibold text-[#E765BE]">앱 만들기</span>
+                  </button>
+                  <button type="button" className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[rgba(251,176,59,0.2)] p-5 transition-opacity hover:opacity-80">
+                    <Image src="/icons/version-b/quick-menu-manage.svg" alt="" width={20} height={20} />
+                    <span className="text-base font-semibold text-[#FBB03B]">내가 만든 앱 관리하기</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* 새로 나온 앱 / 동료들이 많이 찾는 앱 (빈 상태) */}
+              <div className="flex gap-5">
+                <div className="flex flex-1 flex-col gap-5">
+                  <div className="flex items-end">
+                    <span className="flex-1 text-lg font-medium text-black">새로 나온 앱</span>
+                    <button type="button" className="flex items-center gap-1 text-sm font-semibold text-[#a1a1aa] hover:text-[#71717a]">
+                      더보기
+                      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M7 5L10 9L7 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                    </button>
+                  </div>
+                  <div className="flex h-[374px] flex-col items-center justify-center rounded-[20px] bg-[#f9f9f9] p-5">
+                    <p className="text-center text-sm font-normal leading-[1.5] text-[#a1a1aa]">
+                      여기서 동료들이 만든 앱을
+                      <br />
+                      보여드릴게요
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-[2] flex-col gap-5">
+                  <div className="flex items-end">
+                    <span className="flex-1 text-lg font-medium text-black">지금 동료들이 많이 찾는 앱</span>
+                    <button type="button" className="flex items-center gap-1 text-sm font-semibold text-[#a1a1aa] hover:text-[#71717a]">
+                      더보기
+                      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M7 5L10 9L7 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                    </button>
+                  </div>
+                  <div className="flex h-[374px] flex-col items-center justify-center rounded-[20px] bg-[#f9f9f9] p-5">
+                    <p className="text-center text-sm font-normal leading-[1.5] text-[#a1a1aa]">
+                      여기서 가장 인기있는 앱을
+                      <br />
+                      보여드릴게요
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           ) : (
           <>
@@ -296,12 +368,12 @@ export default function HomePageB() {
 
           {/* 빠른 메뉴 */}
           <FadeInSection delay={200}>
-          <div className="flex flex-col gap-5">
+          <div className="mb-5 flex flex-col gap-5">
             <span className="text-lg font-medium text-black">빠른 메뉴</span>
             <div className="flex gap-5">
               <button type="button" className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[rgba(109,49,157,0.2)] p-5 transition-opacity hover:opacity-80">
                 <Image src="/icons/version-b/quick-menu-guide.svg" alt="" width={20} height={20} />
-                <span className="text-base font-semibold text-[#6D319D]">시작가이드 보기</span>
+                <span className="text-base font-semibold text-[#6D319D]">개발가이드 보기</span>
               </button>
               <button type="button" className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[rgba(231,101,190,0.2)] p-5 transition-opacity hover:opacity-80">
                 <Image src="/icons/version-b/quick-menu-create.svg" alt="" width={20} height={20} />
