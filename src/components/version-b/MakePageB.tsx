@@ -31,6 +31,11 @@ export default function MakePageB() {
   const [podSize, setPodSize] = useState<"small" | "medium" | "large" | "xlarge" | null>(null);
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [exampleOpen, setExampleOpen] = useState(false);
+  const [exampleClosing, setExampleClosing] = useState(false);
+  const closeExample = () => {
+    setExampleClosing(true);
+    setTimeout(() => { setExampleOpen(false); setExampleClosing(false); }, 250);
+  };
   const [selectedCategory, setSelectedCategory] = useState("");
   const step1Valid = appName.trim() !== "" && selectedCategory !== "" && useMethod !== null;
   const [accessId, setAccessId] = useState("");
@@ -242,8 +247,8 @@ export default function MakePageB() {
         <div className="relative flex h-full min-w-0 flex-1 flex-col overflow-y-auto rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6">
           {/* 예시 보기 모달 */}
           {exampleOpen && (
-            <div className="absolute inset-0 z-50 flex items-center justify-center rounded-br-2xl rounded-tr-2xl bg-white/50" onClick={() => setExampleOpen(false)}>
-              <div className="flex w-[510px] flex-col gap-5 rounded-2xl bg-white px-5 py-8" style={{ boxShadow: "0 0 24px rgba(0,0,0,0.08)" }} onClick={(e) => e.stopPropagation()}>
+            <div className="absolute inset-0 z-50 flex items-center justify-center rounded-br-2xl rounded-tr-2xl bg-white/50 transition-opacity duration-250" style={{ opacity: exampleClosing ? 0 : 1 }} onClick={closeExample}>
+              <div className="flex w-[510px] flex-col gap-5 rounded-2xl bg-white px-5 py-8" style={{ boxShadow: "0 0 24px rgba(0,0,0,0.08)", animation: exampleClosing ? "modalScaleOut 0.25s ease-in forwards" : "modalScaleIn 0.3s ease-out" }} onClick={(e) => e.stopPropagation()}>
                 <h3 className="text-xl font-semibold text-black">이렇게 작성해보세요</h3>
                 <div className="flex flex-col gap-2">
                   <p className="text-base font-medium text-[#71717a]">• 어느 직무의 동료가 보더라도 이해할 수 있도록 쉬운 단어 사용하기</p>
@@ -258,7 +263,7 @@ export default function MakePageB() {
                   </p>
                 </div>
                 <div className="flex justify-end">
-                  <button type="button" onClick={() => setExampleOpen(false)} className="rounded-lg bg-[#E765BE] px-8 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90">
+                  <button type="button" onClick={closeExample} className="rounded-lg bg-[#E765BE] px-8 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90">
                     확인
                   </button>
                 </div>
