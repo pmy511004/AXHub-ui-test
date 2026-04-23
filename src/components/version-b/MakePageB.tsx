@@ -376,7 +376,7 @@ export default function MakePageB() {
                           <p className="flex-1 text-base font-semibold text-black">상세 설명</p>
                           <button type="button" onClick={() => setExampleOpen(true)} className="rounded-lg bg-[#f6f6f6] px-3 py-2 text-xs font-semibold text-[#3f3f46] transition-colors hover:bg-[#ececec]">예시 보기</button>
                         </div>
-                        <textarea placeholder="사용자가 서비스에서 무엇을 경험할 수 있는 지 구체적으로 적어주세요" className="min-h-[96px] resize-none rounded-xl border border-[#e4e4e7] bg-white p-4 text-base text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#E765BE] focus:outline-none" />
+                        <textarea placeholder="어떤 업무를 자동화할 수 있는 지 동료들에게 설명해주세요" className="min-h-[96px] resize-none rounded-xl border border-[#e4e4e7] bg-white p-4 text-base text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#E765BE] focus:outline-none" />
                       </div>
                       <div className="flex flex-col gap-3 pb-5">
                         <p className="text-base font-semibold text-black">앱 사용방법<span className="text-[#ef1026]">*</span></p>
