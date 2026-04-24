@@ -207,6 +207,12 @@ export default function HomePageB() {
                 <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">공유데이터 신청</span>
               </button>
             </nav>
+            <div className="flex-1" />
+            <div className="p-5">
+              <button type="button" onClick={() => setGuideModalOpen(true)} className="flex h-[37px] w-full items-center justify-center rounded-lg border border-[#d4d4d8] px-3 py-2 text-xs font-semibold text-[#52525b] transition-colors hover:bg-[#f0f0f0]">
+                클로드코드 세팅하기
+              </button>
+            </div>
           </div>
         </div>
 
@@ -246,7 +252,7 @@ export default function HomePageB() {
             /* 데이터 X 화면 */
             <div className="mx-auto flex w-full flex-col gap-[60px] min-[1281px]:max-w-[1280px]" style={{ animation: "fadeSlideIn 0.4s ease-out" }}>
               {/* 상단 히어로 */}
-              <div className="relative flex h-[400px] flex-col items-center justify-center gap-10">
+              <div className="relative flex h-[500px] flex-col items-center justify-center gap-16">
                 <Image src="/icons/version-b/home-bg-empty.png" alt="" width={948} height={584} className="pointer-events-none absolute left-0 -top-[120px] w-full object-cover" />
                 <div className="relative z-10 flex flex-col items-center gap-3">
                   <h1 className="text-center text-[32px] font-bold leading-[1.4] text-[#18181b]">
@@ -256,12 +262,17 @@ export default function HomePageB() {
                   </h1>
                   <p className="text-center text-base font-normal text-[#18181b]">원하는 방법으로 빠르게 시작해 보세요</p>
                 </div>
-                <div className="relative z-10 flex gap-2">
-                  <button type="button" className="flex h-12 w-[169px] items-center justify-center rounded-xl bg-[#6D319D] text-base font-semibold text-white transition-opacity hover:opacity-90">
-                    내가 앱 만들기
-                  </button>
-                  <button type="button" className="flex h-12 items-center justify-center rounded-xl bg-white/50 px-6 text-base font-semibold text-[#18181b] transition-colors hover:bg-white/70">
-                    동료가 만든 앱 쓰기
+                <div className="relative z-10 flex flex-col items-center gap-8">
+                  <div className="flex gap-2">
+                    <button type="button" className="flex h-12 w-[169px] items-center justify-center rounded-xl bg-[#6D319D] text-base font-semibold text-white transition-opacity hover:opacity-90">
+                      내가 앱 만들기
+                    </button>
+                    <button type="button" className="flex h-12 items-center justify-center rounded-xl bg-white/50 px-6 text-base font-semibold text-[#18181b] transition-colors hover:bg-white/70">
+                      동료가 만든 앱 쓰기
+                    </button>
+                  </div>
+                  <button type="button" onClick={() => setGuideModalOpen(true)} className="text-sm font-semibold text-[#18181b] transition-opacity hover:opacity-70">
+                    아직 ClaudeCode 세팅 전이신가요?
                   </button>
                 </div>
               </div>
@@ -482,8 +493,8 @@ export default function HomePageB() {
           )}
           {/* 초기 시작 가이드 모달 */}
           {guideModalOpen && (
-            <div className="absolute inset-0 z-50 flex items-center justify-center rounded-br-2xl rounded-tr-2xl bg-white/50 transition-opacity duration-250" style={{ opacity: guideModalClosing ? 0 : 1 }} onClick={closeGuideModal}>
-              <div className="flex w-[540px] max-h-[90%] overflow-y-auto flex-col gap-8 rounded-2xl bg-white p-5" style={{ boxShadow: "0 0 24px rgba(0,0,0,0.08)", backdropFilter: "blur(20px)", animation: guideModalClosing ? "modalScaleOut 0.25s ease-in forwards" : "modalScaleIn 0.3s ease-out" }} onClick={(e) => e.stopPropagation()}>
+            <div className="absolute inset-0 z-50 flex items-center justify-center overflow-hidden rounded-br-2xl rounded-tr-2xl bg-white/50 transition-opacity duration-250" style={{ opacity: guideModalClosing ? 0 : 1 }} onClick={closeGuideModal}>
+              <div className="flex w-[540px] flex-col gap-8 rounded-2xl bg-white p-5" style={{ boxShadow: "0 0 24px rgba(0,0,0,0.08)", backdropFilter: "blur(20px)", animation: guideModalClosing ? "modalScaleOut 0.25s ease-in forwards" : "modalScaleIn 0.3s ease-out" }} onClick={(e) => e.stopPropagation()}>
                 {/* Step 1 */}
                 <div className="flex gap-3">
                   <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#e7d8f3] text-base font-bold text-[#6D319D]">1</span>
