@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import TeamColumn from "./TeamColumn";
+import AppDetailView from "./AppDetailView";
 
 // 피그마 versionB (node 2471:1262) — /make 페이지 Version B 전체 레이아웃
 //
@@ -20,6 +21,9 @@ export default function MakePageB() {
   const view = searchParams.get("view");
   const isArchive = view === "archive";
   const isCreate = view === "create";
+  const isDetail = view === "detail";
+  const detailApp = searchParams.get("app") || "";
+  const detailCategory = searchParams.get("category") || "";
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
   const [sortBy, setSortBy] = useState("최근 생성순");
@@ -290,15 +294,17 @@ export default function MakePageB() {
                 </h1>
               </div>
             </>
-          ) : (
-            <div className="flex shrink-0 items-center">
-              <h1 className="font-bold tracking-[-0.22px] text-black" style={{ fontSize: "22px", lineHeight: "1.3" }}>
-                내 프로젝트
-              </h1>
-            </div>
-          )}
+          ) : null}
 
-          {isCreate ? (
+          {isDetail ? (
+            <AppDetailView
+              appName={detailApp}
+              category={detailCategory}
+              fromMenu="내 프로젝트"
+              onBack={() => router.push("/make")}
+              isAdmin
+            />
+          ) : isCreate ? (
             /* 앱 만들기 폼 */
             <div className="flex items-start gap-4">
               {/* Step sidebar */}
@@ -583,7 +589,8 @@ export default function MakePageB() {
                   { name: "사내 문서 검색", category: "생산성", stars: 0, date: "26.04.22" },
                   { name: "팀 메신저", category: "커뮤니케이션", stars: 0, date: "26.04.20" },
                 ].map((app, i) => (
-                  <div key={i} className="flex cursor-pointer flex-col gap-4 rounded-2xl bg-[#f9f9f9] p-5">
+                  <div key={i} className="flex cursor-pointer flex-col gap-4 rounded-2xl bg-[#f9f9f9] p-5" onClick={() => router.push(`/make?view=detail&app=${encodeURIComponent(app.name)}&category=${encodeURIComponent(app.category)}`)}>
+
                     <div className="flex items-start gap-4">
                       <div className="size-16 shrink-0 rounded-xl bg-[#e4e4e7]" />
                       <div className="flex flex-col gap-1">
@@ -619,7 +626,8 @@ export default function MakePageB() {
                 { name: "매출 대시보드", category: "데이터분석", stars: 0, status: "active" as const, progress: 0, total: 0, date: "26.04.12" },
                 { name: "프로젝트 트래커", category: "프로젝트관리", stars: 0, status: "active" as const, progress: 0, total: 0, date: "26.04.12" },
               ].map((app, i) => (
-                <div key={i} className="flex cursor-pointer flex-col gap-4 rounded-2xl bg-[#f9f9f9] p-5">
+                <div key={i} className="flex cursor-pointer flex-col gap-4 rounded-2xl bg-[#f9f9f9] p-5" onClick={() => router.push(`/make?view=detail&app=${encodeURIComponent(app.name)}&category=${encodeURIComponent(app.category)}`)}>
+
                   <div className="flex items-start gap-4">
                     <div className="size-16 shrink-0 rounded-xl bg-[#e4e4e7]" />
                     <div className="flex flex-col gap-1">
@@ -660,7 +668,7 @@ export default function MakePageB() {
           )}
 
           {/* 임시 토글 버튼 (앱 만들기 뷰에서는 숨김) */}
-          {!isCreate && (
+          {!isCreate && !isDetail && (
             <button
               type="button"
               onClick={() => setIsEmpty(!isEmpty)}
