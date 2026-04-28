@@ -14,23 +14,18 @@ interface AppDetailViewProps {
 
 
 const comments = [
-  { name: "박민영", time: "1시간 전", text: "댓글 카드 높이는 166px 고정입니다. 댓글의 내용이 길어질 경우 \"...\"로 보여지고 카드를 클릭하면 상세 모달로 볼 수 있습니다.", likes: 2, replies: 0, liked: false, isMine: true },
-  { name: "송재희", time: "2시간 전", text: "상단 좌측부터 최신순으로 정렬됩니다. 자신이 남긴 댓글일 경우, 수정과 삭제가 가능합니다.", likes: 3, replies: 0, liked: true },
-  { name: "김태호", time: "3시간 전", text: "이 앱 덕분에 업무 효율이 많이 올라갔습니다. 추천합니다!", likes: 5, replies: 1, liked: true },
-  { name: "이수진", time: "4시간 전", text: "UI가 직관적이고 사용하기 편합니다. 다만 로딩 속도가 조금 느린 것 같아요.", likes: 1, replies: 2, liked: false },
-  { name: "정현우", time: "5시간 전", text: "팀원들과 공유하기 좋은 앱이네요. 협업할 때 유용하게 쓰고 있습니다.", likes: 4, replies: 0, liked: true },
-  { name: "최예린", time: "6시간 전", text: "기능이 다양하고 좋습니다. 특히 데이터 분석 기능이 마음에 듭니다.", likes: 2, replies: 1, liked: false },
-  { name: "한지민", time: "7시간 전", text: "매일 사용하는 필수 앱이 되었어요. 감사합니다!", likes: 7, replies: 10, liked: true },
-  { name: "오승현", time: "8시간 전", text: "업데이트 후 새로운 기능이 추가되어서 더 좋아졌습니다.", likes: 0, replies: 0, liked: false },
-  { name: "윤서아", time: "9시간 전", text: "다크모드 지원이 되면 더 좋을 것 같습니다. 그 외에는 만족합니다.", likes: 3, replies: 1, liked: false },
-  { name: "강민수", time: "10시간 전", text: "알림 기능이 정확하게 작동해서 중요한 일정을 놓치지 않게 되었어요.", likes: 1, replies: 0, liked: false },
-  { name: "임하늘", time: "11시간 전", text: "사용법이 간단해서 온보딩 없이도 바로 쓸 수 있었습니다.", likes: 6, replies: 2, liked: true },
-  { name: "서준혁", time: "12시간 전", text: "API 연동이 잘 되어있어서 다른 툴과 함께 사용하기 좋습니다.", likes: 2, replies: 0, liked: false },
-  { name: "배수연", time: "1일 전", text: "모바일에서도 잘 작동합니다. 반응형 지원 감사합니다.", likes: 4, replies: 1, liked: true },
-  { name: "조민재", time: "1일 전", text: "처음엔 어색했는데 쓰다보니 없으면 안 되는 앱이 되었어요.", likes: 0, replies: 0, liked: false },
-  { name: "신예진", time: "2일 전", text: "다른 팀에도 추천했습니다. 반응이 좋더라고요!", likes: 8, replies: 4, liked: true },
-  { name: "황도윤", time: "2일 전", text: "정기적으로 업데이트되는 점이 신뢰가 갑니다.", likes: 1, replies: 0, liked: false },
-  { name: "문서현", time: "3일 전", text: "보고서 작성할 때 정말 유용하게 쓰고 있습니다. 감사합니다.", likes: 3, replies: 1, liked: true },
+  { name: "박민영", time: "1시간 전", text: "이 앱을 도입한 이후로 팀 전체의 업무 프로세스가 확 달라졌어요. 특히 반복 작업이 자동화되면서 하루에 2시간 정도 절약되는 것 같습니다. 다른 팀에도 적극 추천하고 있어요!", likes: 2, replies: 0, liked: false, isMine: true },
+  { name: "송재희", time: "2시간 전", text: "사용하기 정말 편하고, 팀원들 사이에서 반응이 좋아요. 대시보드에서 한눈에 현황을 파악할 수 있어서 회의 시간도 줄었습니다. 다만 엑셀 내보내기 기능이 추가되면 더 좋겠어요.", likes: 3, replies: 0, liked: true },
+  { name: "김태호", time: "3시간 전", text: "이 앱 덕분에 업무 효율이 많이 올라갔습니다. 특히 알림 기능과 일정 관리가 잘 연동되어 있어서 중요한 마감을 놓치는 일이 없어졌어요. 강력 추천합니다!", likes: 5, replies: 1, liked: true },
+  { name: "이수진", time: "4시간 전", text: "UI가 직관적이고 사용하기 편합니다. 처음 접하는 동료도 별도 교육 없이 바로 적응할 수 있었어요. 다만 로딩 속도가 데이터가 많을 때 조금 느린 것 같아 개선되면 좋겠습니다.", likes: 1, replies: 2, liked: false },
+  { name: "정현우", time: "5시간 전", text: "팀원들과 실시간으로 협업할 수 있어서 좋습니다. 코멘트 기능과 태스크 할당이 매끄러워서 이메일로 소통하던 시절과는 비교가 안 돼요. 프로젝트 관리에 필수 앱입니다.", likes: 4, replies: 0, liked: true },
+  { name: "최예린", time: "6시간 전", text: "기능이 다양하고 좋습니다. 특히 데이터 분석 기능으로 월별 리포트를 자동 생성할 수 있어서 보고서 작성 시간이 크게 줄었어요. 커스텀 차트 기능도 유용합니다.", likes: 2, replies: 1, liked: false },
+  { name: "한지민", time: "7시간 전", text: "매일 출근하면 가장 먼저 켜는 앱이 되었어요. 하루 업무를 계획하고 추적하는 데 이만한 도구가 없습니다. 모바일에서도 완벽하게 동작해서 외근 중에도 편하게 사용합니다.", likes: 7, replies: 10, liked: true },
+  { name: "오승현", time: "8시간 전", text: "최근 업데이트에서 검색 기능이 강화되어서 과거 데이터를 찾기 쉬워졌어요. 필터링 옵션도 다양해져서 원하는 정보를 빠르게 찾을 수 있습니다. 꾸준한 개선에 감사드려요.", likes: 0, replies: 0, liked: false },
+  { name: "윤서아", time: "9시간 전", text: "다크모드가 지원되면 야간 작업 시 눈이 편할 것 같아요. 그 외에는 전반적으로 만족합니다. 특히 단축키 지원이 잘 되어 있어서 파워 유저에게 추천합니다.", likes: 3, replies: 1, liked: false },
+  { name: "강민수", time: "10시간 전", text: "알림 설정을 세밀하게 조정할 수 있어서 좋아요. 중요한 건만 푸시 알림으로 받고, 나머지는 요약으로 확인하고 있습니다. 덕분에 업무 집중도가 높아졌어요.", likes: 1, replies: 0, liked: false },
+  { name: "임하늘", time: "11시간 전", text: "사용법이 간단해서 온보딩 교육 없이도 신규 입사자가 바로 쓸 수 있었습니다. 인터페이스가 깔끔하고 기능 배치가 논리적이에요. 관리자 대시보드도 잘 만들어져 있습니다.", likes: 6, replies: 2, liked: true },
+  { name: "서준혁", time: "12시간 전", text: "API 연동이 잘 되어있어서 기존에 사용하던 Slack, Notion과 함께 사용하기 좋습니다. 웹훅 설정도 간편하고, 자동화 시나리오를 구성하기 편해서 개발팀에서 특히 좋아합니다.", likes: 2, replies: 0, liked: false },
 ];
 
 export default function AppDetailView({ appName, category, onBack, fromMenu, isAdmin, appStatus }: AppDetailViewProps) {
@@ -50,130 +45,34 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
   const [guideComplete, setGuideComplete] = useState(false);
   const [guideDismissed, setGuideDismissed] = useState(false);
   const [guideHidden, setGuideHidden] = useState(false);
-  const [modalMoreOpen, setModalMoreOpen] = useState(false);
   const [modalComment, setModalComment] = useState<number | null>(null);
+  const [deployStarted, setDeployStarted] = useState(false);
+  const [deployDetailId, setDeployDetailId] = useState<number | null>(null);
+  const [deployExpanded, setDeployExpanded] = useState(false);
+  const [deployFilterOpen, setDeployFilterOpen] = useState(false);
+  const [deployFilter, setDeployFilter] = useState("전체 상태");
+  const [ciFilterOpen, setCiFilterOpen] = useState(false);
+  const [ciFilter, setCiFilter] = useState("전체 활동");
+  const [statTooltip, setStatTooltip] = useState<string | null>(null);
   const [adminMenuOpen, setAdminMenuOpen] = useState(false);
-  const [replyText, setReplyText] = useState("");
-  const [likedSet, setLikedSet] = useState<Set<number>>(() => {
-    const set = new Set<number>();
-    comments.forEach((c, i) => { if (c.liked) set.add(i); });
-    return set;
-  });
 
   return (
     <div className="mx-auto flex w-full flex-col gap-6 pb-[100px] min-[1281px]:max-w-[1280px]" style={{ animation: "fadeSlideIn 0.4s ease-out" }}>
       {/* 댓글 상세 모달 */}
       {modalComment !== null && (() => {
         const c = comments[modalComment];
-        const repliesMap: Record<number, { name: string; time: string; text: string }[]> = {
-          6: [ // 한지민 — 답글 10개 (스크롤 테스트)
-            { name: "안승원", time: "1시간 전", text: "정말 유용한 앱이에요! 저도 매일 쓰고 있습니다." },
-            { name: "박민영", time: "2시간 전", text: "동의합니다. 업무 효율이 확 올라갔어요." },
-            { name: "김태호", time: "3시간 전", text: "우리 팀에서도 필수 앱으로 지정했어요." },
-            { name: "이수진", time: "4시간 전", text: "기능 업데이트도 자주 되어서 좋습니다." },
-            { name: "정현우", time: "5시간 전", text: "모바일에서도 잘 작동하나요?" },
-            { name: "안승원", time: "5시간 전", text: "네, 모바일에서도 완벽하게 작동합니다." },
-            { name: "최예린", time: "6시간 전", text: "다크모드도 지원되면 더 좋겠어요." },
-            { name: "송재희", time: "7시간 전", text: "알림 기능이 특히 편리합니다." },
-            { name: "오승현", time: "8시간 전", text: "API 연동 문서도 잘 되어있어서 개발하기 좋아요." },
-            { name: "강민수", time: "9시간 전", text: "추천합니다! 팀 전체가 만족하고 있어요." },
-          ],
-        };
-        const defaultReplies = [
-          { name: "안승원", time: "3시간 전", text: "어쩌구저쩌구 답글을 남겼습니다" },
-          { name: "안승원", time: "3시간 전", text: "어쩌구저쩌구 답글을 남겼습니다" },
-        ];
-        const replies = c.isMine ? [] : (repliesMap[modalComment] ?? defaultReplies);
         return (
-          <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/20" onClick={() => { setModalComment(null); setReplyText(""); setModalMoreOpen(false); }}>
+          <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/20" onClick={() => setModalComment(null)}>
             <div
-              className="flex max-h-[80vh] w-full max-w-[480px] flex-col gap-3 rounded-2xl bg-[#f6f6f6] p-5 shadow-[0px_8px_32px_rgba(0,0,0,0.12)]"
+              className="flex max-h-[80vh] w-full max-w-[480px] flex-col gap-3 overflow-y-auto rounded-2xl bg-[#f6f6f6] p-5 shadow-[0px_8px_32px_rgba(0,0,0,0.12)]"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* 원본 댓글 (고정) */}
-              <div className="flex shrink-0 flex-col gap-3">
-                <div className="flex items-center gap-2.5">
-                  {c.isMine && (
-                    <span className="flex h-6 shrink-0 items-center justify-center rounded-md px-2 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white" style={{ backgroundColor: primaryColor }}>
-                      내 댓글
-                    </span>
-                  )}
-                  <span className="flex-1 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">{c.name}</span>
-                  <span className="text-xs font-normal leading-[1.3] tracking-[-0.12px] text-gray-500">{c.time}</span>
-                </div>
-                <div className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#18181b]">
-                  <p>{c.text}</p>
-                </div>
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start gap-1">
-                    <button
-                      type="button"
-                      className="flex items-center gap-1"
-                      onClick={() => setLikedSet((prev) => {
-                        const next = new Set(prev);
-                        if (next.has(modalComment)) next.delete(modalComment); else next.add(modalComment);
-                        return next;
-                      })}
-                    >
-                      <Image src={likedSet.has(modalComment) ? "/icons/version-b/comment-heart-active.svg" : "/icons/version-b/comment-heart.svg"} alt="" width={18} height={18} />
-                      <span className="min-w-5 text-left text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-gray-500">{c.likes + (likedSet.has(modalComment) !== c.liked ? (likedSet.has(modalComment) ? 1 : -1) : 0)}</span>
-                    </button>
-                    <div className="flex items-center gap-1">
-                      <Image src="/icons/version-b/comment-reply.svg" alt="" width={18} height={18} />
-                      <span className="min-w-5 text-left text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-gray-500">{c.isMine ? c.replies : replies.length}</span>
-                    </div>
-                  </div>
-                  {c.isMine && (
-                    <div className="relative">
-                      <button type="button" onClick={() => setModalMoreOpen(!modalMoreOpen)}>
-                        <Image src="/icons/version-b/comment-more.svg" alt="" width={18} height={18} />
-                      </button>
-                      {modalMoreOpen && (
-                        <div className="absolute right-0 top-full z-20 mt-1 flex min-w-full flex-col overflow-hidden rounded-xl bg-white shadow-[0px_4px_16px_rgba(0,0,0,0.12)]">
-                          <button type="button" onClick={() => setModalMoreOpen(false)} className="whitespace-nowrap px-4 py-2.5 text-left text-sm font-normal leading-[1.5] tracking-[-0.14px] transition-colors hover:bg-gray-50" style={{ color: "#3f3f46" }}>수정</button>
-                          <button type="button" onClick={() => setModalMoreOpen(false)} className="whitespace-nowrap px-4 py-2.5 text-left text-sm font-normal leading-[1.5] tracking-[-0.14px] transition-colors hover:bg-gray-50" style={{ color: "#f5475c" }}>삭제</button>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
+              <div className="flex items-center gap-2.5">
+                <span className="flex-1 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">{c.name}</span>
+                <span className="text-xs font-normal leading-[1.3] tracking-[-0.12px] text-[#71717a]">{c.time}</span>
               </div>
-
-              {/* 구분선 */}
-              <div className="h-px shrink-0 bg-[#e4e4e7]" />
-
-              {/* 답글 목록 (스크롤) */}
-              <div className="sidebar-scroll flex min-h-0 flex-1 flex-col overflow-y-auto">
-                {replies.length === 0 ? (
-                  <div className="flex items-center justify-center py-6">
-                    <span className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-400">아직 답글이 없습니다</span>
-                  </div>
-                ) : replies.map((r, ri) => (
-                  <div key={ri} className="flex flex-col gap-1 py-3">
-                    <div className="flex items-center gap-2.5">
-                      <span className="flex-1 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b]">{r.name}</span>
-                      <span className="text-xs font-normal leading-[1.3] tracking-[-0.12px] text-gray-500">{r.time}</span>
-                    </div>
-                    <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#18181b]">{r.text}</p>
-                  </div>
-                ))}
-              </div>
-
-              {/* 답글 입력란 (고정) */}
-              <div className="flex shrink-0 min-h-[48px] items-center gap-1.5 overflow-hidden rounded-xl border border-[#e4e4e7] bg-white px-4 py-3">
-                <input
-                  type="text"
-                  value={replyText}
-                  onChange={(e) => setReplyText(e.target.value)}
-                  placeholder="답글 남기기"
-                  className="flex-1 bg-transparent text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] outline-none placeholder:text-gray-500"
-                />
-                <Image
-                  src={replyText.trim() ? "/icons/version-b/comment-send-active.svg" : "/icons/version-b/comment-send.svg"}
-                  alt=""
-                  width={20}
-                  height={20}
-                />
+              <div className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#18181b]">
+                <p>{c.text}</p>
               </div>
             </div>
           </div>
@@ -275,7 +174,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                   <span className="flex-1 text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">{guideTitle}</span>
                   {guideComplete ? (
                     <span className="shrink-0 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#E765BE]">스토어에서 보기</span>
-                  ) : isEnvTab ? (
+                  ) : isEnvTab && !isDeployTab ? (
                     <button type="button" className="flex shrink-0 items-center rounded-lg border border-[#e4e4e7] px-3 py-1.5 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#71717a] transition-colors hover:bg-gray-50">건너뛰기</button>
                   ) : null}
                 </div>
@@ -356,13 +255,21 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 배포 전
               </span>
             ) : appStatus === "열기" ? (
-              <button
-                type="button"
-                className="flex h-8 items-center justify-center overflow-hidden rounded-xl px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white transition-opacity hover:opacity-85"
-                style={{ backgroundColor: primaryColor }}
-              >
-                열기
-              </button>
+              <div className="flex items-start gap-2">
+                <button
+                  type="button"
+                  className="flex h-8 items-center justify-center overflow-hidden rounded-xl px-4 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-85"
+                  style={{ backgroundColor: primaryColor }}
+                >
+                  열기
+                </button>
+                <button
+                  type="button"
+                  className="flex h-8 items-center justify-center overflow-hidden rounded-xl bg-[#f6f6f6] px-4 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#ececec]"
+                >
+                  사용 해제
+                </button>
+              </div>
             ) : appStatus === "승인 대기" ? (
               <button
                 type="button"
@@ -413,7 +320,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
       {activeTab === "앱" ? (
         <div className="flex flex-col">
           {/* Info Table */}
-          <div className="flex items-start border-b border-[rgba(82,82,91,0.08)] pb-5">
+          <div className="flex items-start border-b border-[rgba(82,82,91,0.08)] pb-10">
             <div className="flex flex-1 flex-col items-center gap-5 px-10 py-5">
               <span className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">개발자</span>
               <div className="flex flex-col items-center gap-1">
@@ -449,7 +356,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
           </div>
 
           {/* 앱 설명 */}
-          <div className="flex flex-col gap-5 border-b border-[rgba(82,82,91,0.08)] py-5">
+          <div className="flex flex-col gap-5 border-b border-[rgba(82,82,91,0.08)] py-10">
             <h3 className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">앱 설명</h3>
             <div className="flex items-end justify-between">
               <div
@@ -471,8 +378,45 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
             </div>
           </div>
 
+          {/* 동료들이 남긴 한마디 (비관리자만) */}
+          {!isAdmin && (
+            <div className="flex flex-col gap-6 border-b border-[rgba(82,82,91,0.08)] py-10">
+              <div className="flex flex-col gap-5">
+                <h3 className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">동료들이 남긴 한마디</h3>
+                <div className="relative">
+                <div className="sidebar-scroll grid h-[390px] grid-cols-2 gap-5 overflow-y-auto pb-10 2xl:grid-cols-3">
+                  {comments.slice(0, 12).map((c, i) => (
+                    <div key={i} className="flex h-[140px] cursor-pointer flex-col gap-3 rounded-2xl bg-[#f6f6f6] p-5" onClick={() => setModalComment(i)}>
+                      <div className="flex items-center gap-2.5">
+                        {c.isMine && (
+                          <span className="flex h-6 shrink-0 items-center justify-center rounded-md px-2 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white" style={{ backgroundColor: primaryColor }}>
+                            내 댓글
+                          </span>
+                        )}
+                        <span className="flex-1 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">{c.name}</span>
+                        <span className="text-xs font-normal leading-[1.3] tracking-[-0.12px] text-[#71717a]">{c.time}</span>
+                        {c.isMine && (
+                          <Image src="/icons/version-b/comment-more.svg" alt="" width={18} height={18} />
+                        )}
+                      </div>
+                      <div className="flex-1 overflow-hidden font-normal leading-[1.5] tracking-[-0.15px] text-[#18181b]" style={{ fontSize: "15px" }}>
+                        <p className="line-clamp-3">{c.text}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-[40px] bg-gradient-to-t from-white to-transparent" />
+                </div>
+              </div>
+              <div className="flex min-h-[48px] items-center gap-1.5 overflow-hidden rounded-xl border border-[#e4e4e7] bg-white px-4 py-3">
+                <span className="flex-1 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">이 앱에 대한 한 마디를 남겨주세요</span>
+                <Image src="/icons/version-b/comment-send.svg" alt="" width={20} height={20} />
+              </div>
+            </div>
+          )}
+
           {/* 정보 */}
-          <div className="flex flex-col gap-5 border-b border-[rgba(82,82,91,0.08)] py-5">
+          <div className="flex flex-col gap-5 border-b border-[rgba(82,82,91,0.08)] py-10">
             <h3 className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">정보</h3>
             <div className="flex flex-wrap gap-x-5 gap-y-10">
               <div className="flex w-[464px] flex-col gap-1">
@@ -797,6 +741,331 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 </div>
               </div>
             </div>
+          )}
+        </div>
+      ) : activeTab === "배포" ? (
+        <div className="flex flex-col gap-6">
+          {/* 배포하기 안내 카드 (상세 페이지에서는 숨김) */}
+          {!(gitStep === "connected" && deployStarted && deployDetailId !== null) && (
+            <div className="flex flex-col gap-2 overflow-hidden rounded-xl bg-[#f4f4f5] p-5">
+              <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#3f3f46]">배포하기</p>
+              <div className="text-base leading-[1.5] tracking-[-0.16px] text-[#71717a]">
+                <p>문제없이 배포 가능한 상태인 지 자동으로 검사하고, 앱을 배포해요</p>
+                <p>배포 진행 상태와 결과, CI 기록을 관리할 수 있어요</p>
+              </div>
+            </div>
+          )}
+          {/* CTA 섹션 */}
+          {gitStep === "connected" && deployStarted ? (
+            deployDetailId !== null ? (
+            <>
+              {/* 배포 상세 페이지 */}
+              <div className="flex flex-col gap-6">
+                {/* 목록으로 돌아가기 (sticky) */}
+                <button data-deploy-detail type="button" onClick={() => setDeployDetailId(null)} className="sticky -top-6 z-10 -mx-6 flex items-center gap-2 px-6 py-4 backdrop-blur-[4px]" style={{ backgroundColor: "rgba(255,255,255,0.38)" }}>
+                  <span className="flex items-center justify-center rounded-full border border-[#e4e4e7] bg-white p-2">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12.5 15.833L7.5 10L12.5 4.167" stroke="#3f3f46" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  </span>
+                  <span className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#3f3f46]">목록으로 돌아가기</span>
+                </button>
+
+                {/* 배포 제목 + 실패 사유 */}
+                <div className="flex flex-col gap-5 border-b border-[rgba(82,82,91,0.08)] py-5">
+                  <h2 className="text-2xl font-semibold leading-[1.2] text-[#18181b]">배포 #{deployDetailId}-6a74632</h2>
+                  <div className="flex flex-col gap-2 rounded-xl bg-[#fee8ea] p-5">
+                    <div className="flex items-center gap-1.5">
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z" fill="#f5475c" />
+                        <path d="M10 7v4" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+                        <circle cx="10" cy="13.5" r="0.75" fill="white" />
+                      </svg>
+                      <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#f5475c]">실패 사유</span>
+                    </div>
+                    <p className="text-lg font-normal leading-[1.4] tracking-[-0.18px] text-[#18181b]">nextjs 프리셋을 사용하지만 next.config에 <code className="rounded bg-[rgba(245,71,92,0.1)] px-1 py-0.5 font-mono text-base">output: &apos;standalone&apos;</code> 설정이 없습니다.</p>
+                  </div>
+                </div>
+
+                {/* 정보 */}
+                <div className="flex flex-col gap-5 border-b border-[rgba(82,82,91,0.08)] py-5">
+                  <h3 className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">정보</h3>
+                  <div className="flex flex-wrap gap-x-5 gap-y-10">
+                    <div className="flex w-[464px] flex-col gap-1">
+                      <span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#a1a1aa]">상태</span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="size-2 rounded-full bg-[#f5475c]" />
+                        <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#f5475c]">Failed</span>
+                      </div>
+                    </div>
+                    <div className="flex w-[464px] flex-col gap-1">
+                      <span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#a1a1aa]">브랜치</span>
+                      <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">main</span>
+                    </div>
+                    <div className="flex w-[464px] flex-col gap-1">
+                      <span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#a1a1aa]">시작 시각</span>
+                      <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">2026.04.28 13:30:06</span>
+                    </div>
+                    <div className="flex w-[464px] flex-col gap-1">
+                      <span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#a1a1aa]">완료 시각</span>
+                      <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">2026.04.28 13:30:09</span>
+                    </div>
+                    <div className="flex w-[464px] flex-col gap-1">
+                      <span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#a1a1aa]">실패 시각</span>
+                      <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">2026.04.28 13:30:09</span>
+                    </div>
+                    <div className="flex w-[464px] flex-col gap-1">
+                      <span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#a1a1aa]">배포 시각</span>
+                      <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">-</span>
+                    </div>
+                    <div className="flex w-[464px] flex-col gap-1">
+                      <span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#a1a1aa]">프레임워크</span>
+                      <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">-</span>
+                    </div>
+                    <div className="flex w-[464px] flex-col gap-1">
+                      <span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#a1a1aa]">커밋 메시지</span>
+                      <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">-</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 배포 단계 */}
+                <div className="flex flex-col gap-6 border-b border-[rgba(82,82,91,0.08)] py-5">
+                  <h3 className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">배포 단계</h3>
+                  <div className="w-fit overflow-hidden rounded-xl border-[0.5px] border-[#e4e4e7]">
+                    <div className="flex bg-[#f6f6f6]">
+                      <div className="flex w-[140px] items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#71717a]">단계</span></div>
+                      <div className="flex w-[140px] items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#71717a]">결과</span></div>
+                      <div className="flex w-[140px] items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#71717a]">소요 시간</span></div>
+                    </div>
+                    {[
+                      { step: "Git 연결", result: "완료", color: "#1fa24e", time: "0.5초" },
+                      { step: "GitHub 인증", result: "완료", color: "#1fa24e", time: "0.25초" },
+                      { step: "프로젝트 설정", result: "완료", color: "#1fa24e", time: "2초" },
+                      { step: "환경 준비", result: "완료", color: "#1fa24e", time: "1초" },
+                      { step: "CI 검증", result: "실패", color: "#f5475c", time: "0.3초" },
+                    ].map((s) => (
+                      <div key={s.step} className="flex bg-white">
+                        <div className="flex h-[60px] w-[140px] items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b]">{s.step}</span></div>
+                        <div className="flex h-[60px] w-[140px] items-center gap-1.5 border-[0.5px] border-[#e4e4e7] px-4 py-3">
+                          <span className="size-2 rounded-full" style={{ backgroundColor: s.color }} />
+                          <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px]" style={{ color: s.color }}>{s.result}</span>
+                        </div>
+                        <div className="flex h-[60px] w-[140px] items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b]">{s.time}</span></div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 이 배포의 CI */}
+                <div className="flex flex-col gap-5 border-b border-[rgba(82,82,91,0.08)] py-5">
+                  <h3 className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">이 배포의 CI</h3>
+                  <div className="flex h-[150px] flex-col items-center justify-center gap-2.5">
+                    <span className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#a1a1aa]">최근 20건 중 이 배포에 연결된 CI 이력이 없어요</span>
+                    <div className="flex items-center gap-1">
+                      <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#1571F3]">전체 CI 이력 보기</span>
+                      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M6.75 3.75L12.25 9L6.75 14.25" stroke="#1571F3" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 빌드 로그 */}
+                <div className="flex flex-col gap-5 border-b border-[rgba(82,82,91,0.08)] py-5">
+                  <h3 className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">빌드 로그</h3>
+                  <div className="flex h-[150px] items-center justify-center">
+                    <span className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#a1a1aa]">아직 빌드 로그가 없어요</span>
+                  </div>
+                </div>
+              </div>
+            </>
+            ) : (
+            <>
+              {/* 현재 배포 상태 */}
+              <div className="flex flex-col gap-6 py-5">
+                <div className="flex items-center gap-6">
+                  <span className="flex-1 text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">현재 배포 상태</span>
+                  <button type="button" onClick={() => {}} className="flex h-9 items-center justify-center rounded-lg bg-[#E765BE] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">수동 배포</button>
+                </div>
+                {/* 배포 정보 카드 */}
+                <div className="flex flex-col gap-5 overflow-hidden rounded-xl bg-[#f4f4f5] p-5">
+                  <p className="text-xl font-semibold leading-[1.3] tracking-[-0.2px] text-[#3f3f46]">#420-6a74632</p>
+                  <div className="flex flex-col gap-3">
+                    {/* 상태 */}
+                    <div className="flex items-center gap-1">
+                      <span className="w-[66px] px-3 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">상태</span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="size-2 rounded-full bg-[#f6c205]" />
+                        <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#f6c205]">Pending</span>
+                      </div>
+                    </div>
+                    {/* 시간 */}
+                    <div className="flex items-center gap-1">
+                      <span className="w-[66px] px-3 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">시간</span>
+                      <span className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#3f3f46]">2026.04.28 13:30:06</span>
+                    </div>
+                    {/* 도메인 */}
+                    <div className="flex items-center gap-1">
+                      <span className="w-[66px] px-3 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">도메인</span>
+                      <span className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#3f3f46]">https://jocodingax-ai-jocoding-ax.jocodingax.ai</span>
+                      <button type="button" className="flex size-6 shrink-0 items-center justify-center rounded-md text-[#a1a1aa] transition-colors hover:bg-[#e4e4e7] hover:text-[#71717a]">
+                        <svg width="18" height="18" viewBox="0 0 256 256" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M224,104a8,8,0,0,1-16,0V59.31l-98.34,98.35a8,8,0,0,1-11.32-11.32L196.69,48H152a8,8,0,0,1,0-16h64a8,8,0,0,1,8,8Zm-40,24a8,8,0,0,0-8,8v72H48V80h72a8,8,0,0,0,0-16H48A16,16,0,0,0,32,80V208a16,16,0,0,0,16,16H176a16,16,0,0,0,16-16V136A8,8,0,0,0,184,128Z" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 배포 이력 */}
+              <div className="flex flex-col items-center gap-6 py-5">
+                <div className="flex w-full items-end gap-6">
+                  <div className="flex flex-1 items-start gap-2">
+                    <span className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">배포 이력</span>
+                    <span className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#E765BE]">10건</span>
+                  </div>
+                  <div className="relative">
+                    <button type="button" onClick={() => setDeployFilterOpen(!deployFilterOpen)} className="flex items-center gap-1">
+                      <span className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b]">{deployFilter}</span>
+                      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style={{ transform: "rotate(90deg)" }}><path d="M6.75 3.75L11.25 9L6.75 14.25" stroke="#18181b" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                    </button>
+                    {deployFilterOpen && (
+                      <div className="absolute right-0 top-full z-20 mt-1 flex min-w-[140px] flex-col overflow-hidden rounded-xl bg-white shadow-[0px_4px_16px_rgba(0,0,0,0.12)]">
+                        {["전체 상태", "Pending", "Building", "Running", "Failed", "Stopped"].map((f) => (
+                          <button key={f} type="button" onClick={() => { setDeployFilter(f); setDeployFilterOpen(false); }} className={`flex items-center gap-2 px-4 py-2.5 text-left text-sm leading-[1.5] tracking-[-0.14px] transition-colors hover:bg-gray-50 ${deployFilter === f ? "font-semibold text-[#E765BE]" : "font-normal text-[#3f3f46]"}`}>
+                            {f !== "전체 상태" && <span className="size-2 rounded-full" style={{ backgroundColor: f === "Pending" ? "#f6c205" : f === "Building" ? "#3d8df7" : f === "Running" ? "#1fa24e" : f === "Failed" ? "#f5475c" : "#71717a" }} />}
+                            {f}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                {/* 테이블 */}
+                <div className="w-full overflow-hidden rounded-xl border-[0.5px] border-[#e4e4e7] transition-[max-height] duration-500 ease-in-out" style={{ maxHeight: deployExpanded ? "660px" : "348px" }}>
+                  <div className="flex bg-[#f6f6f6]">
+                    <div className="flex w-[70px] items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#71717a]">#</span></div>
+                    <div className="flex w-[140px] items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#71717a]">커밋</span></div>
+                    <div className="flex w-[110px] items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#71717a]">상태</span></div>
+                    <div className="flex flex-1 items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#71717a]">메시지</span></div>
+                    <div className="flex w-[122px] items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#71717a]">시간</span></div>
+                    <div className="flex w-[112px] items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#71717a]">작업</span></div>
+                  </div>
+                  {(() => {
+                    const allRows = [
+                      { id: 420, commit: "6a74632", status: "Pending", color: "#f6c205", msg: "nextjs 프리셋을 사용하지만 어쩌구저쩌구 어쩌구저쩌구" },
+                      { id: 419, commit: "6a74632", status: "Building", color: "#3d8df7", msg: "nextjs 프리셋을 사용하지만 어쩌구저쩌구 어쩌구저쩌구" },
+                      { id: 418, commit: "6a74632", status: "Running", color: "#1fa24e", msg: "nextjs 프리셋을 사용하지만 어쩌구저쩌구 어쩌구저쩌구" },
+                      { id: 417, commit: "6a74632", status: "Failed", color: "#f5475c", msg: "nextjs 프리셋을 사용하지만 어쩌구저쩌구 어쩌구저쩌구" },
+                      { id: 416, commit: "6a74632", status: "Stopped", color: "#71717a", msg: "nextjs 프리셋을 사용하지만 어쩌구저쩌구 어쩌구저쩌구" },
+                      { id: 415, commit: "3b12a9f", status: "Running", color: "#1fa24e", msg: "API 엔드포인트 수정 및 에러 핸들링 개선" },
+                      { id: 414, commit: "a8f2c1d", status: "Running", color: "#1fa24e", msg: "사용자 인증 로직 리팩토링" },
+                      { id: 413, commit: "e5d7b3a", status: "Failed", color: "#f5475c", msg: "데이터베이스 마이그레이션 스크립트 추가" },
+                      { id: 412, commit: "c9e4f2b", status: "Running", color: "#1fa24e", msg: "캐시 무효화 로직 추가 및 성능 최적화" },
+                      { id: 411, commit: "1a3d5e7", status: "Running", color: "#1fa24e", msg: "초기 프로젝트 세팅 및 CI/CD 파이프라인 구성" },
+                    ];
+                    const filtered = deployFilter === "전체 상태" ? allRows : allRows.filter(r => r.status === deployFilter);
+                    return filtered.map((row, idx) => (
+                      <div key={row.id} className="flex bg-white">
+                        <div className="flex h-[60px] w-[70px] items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b]">{row.id}</span></div>
+                        <div className="flex h-[60px] w-[140px] items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b]">{row.commit}</span></div>
+                        <div className="flex h-[60px] w-[110px] items-center gap-1.5 border-[0.5px] border-[#e4e4e7] px-4 py-3">
+                          <span className="size-2 rounded-full" style={{ backgroundColor: row.color }} />
+                          <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px]" style={{ color: row.color }}>{row.status}</span>
+                        </div>
+                        <div className="flex h-[60px] flex-1 items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="truncate text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b]">{row.msg}</span></div>
+                        <div className="flex h-[60px] w-[122px] items-center justify-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b]">00/00 00:00</span></div>
+                        <div className="flex h-[60px] w-[112px] items-center justify-center border-[0.5px] border-[#e4e4e7] px-4 py-3">
+                          <button type="button" onClick={() => { setDeployDetailId(row.id); requestAnimationFrame(() => { const el = document.querySelector('[data-deploy-detail]'); el?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }); }} className="flex h-9 shrink-0 items-center justify-center whitespace-nowrap rounded-lg bg-[#f6f6f6] px-4 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#3f3f46] transition-colors hover:bg-[#ececec]">상세보기</button>
+                        </div>
+                      </div>
+                    ));
+                  })()}
+                </div>
+                <button type="button" onClick={() => setDeployExpanded(!deployExpanded)} className="flex h-8 items-center justify-center rounded-lg border border-[#e4e4e7] bg-white px-5 text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-gray-50">{deployExpanded ? "접기" : "펼치기"}</button>
+              </div>
+
+              {/* CI 이력 */}
+              <div className="flex flex-col gap-6 py-5">
+                <div className="flex items-start gap-2">
+                  <span className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">CI 이력</span>
+                  <span className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#E765BE]">0건</span>
+                </div>
+                {/* 통계 카드 3열 */}
+                <div className="flex gap-3">
+                  {[
+                    { label: "최근 30일 배포 성공률", value: "0.0%", tooltip: "배포 시도 중 성공한 비율로\n안정적으로 운영되고 있는 지 판단하는 지표예요" },
+                    { label: "평균 실행 시간", value: "0초", tooltip: "배포 완료까지 걸리는 시간으로\n속도가 느리다면 개선이 필요할 수 있어요" },
+                    { label: "캐시 적중률", value: "0.0%", tooltip: "얼마나 빠르고 효율적으로 처리하고 있는 지\n빌드 최적화 상태를 보여줘요" },
+                  ].map((stat) => (
+                    <div key={stat.label} className="flex flex-1 flex-col items-center gap-4 rounded-xl border border-[#e4e4e7] p-4">
+                      <div className="flex items-center gap-1">
+                        <span className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b]">{stat.label}</span>
+                        <div className="relative flex shrink-0 items-center justify-center">
+                          <button type="button" onClick={() => setStatTooltip(statTooltip === stat.label ? null : stat.label)}>
+                            <svg width="20" height="20" viewBox="0 0 256 256" fill="#a1a1aa" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,168a12,12,0,1,1,12-12A12,12,0,0,1,128,192Zm8-48.72V144a8,8,0,0,1-16,0v-8a8,8,0,0,1,8-8,20,20,0,1,0-20-20,8,8,0,0,1-16,0,36,36,0,1,1,44,35.28Z" />
+                            </svg>
+                          </button>
+                          {statTooltip === stat.label && (
+                            <div className="absolute bottom-full left-1/2 z-20 mb-2 -translate-x-1/2 whitespace-pre-line rounded-lg bg-[#27272a] px-2.5 py-1.5 font-medium leading-[1.3] tracking-[-0.13px] text-white shadow-[0px_2px_8px_rgba(0,0,0,0.06),0px_-6px_12px_rgba(0,0,0,0.03),0px_14px_28px_rgba(0,0,0,0.04)] backdrop-blur-[20px]" style={{ width: "max-content", fontSize: "13px" }}>
+                              {stat.tooltip}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <span className="text-[32px] font-bold leading-[1.2] text-[#d4d4d8]">{stat.value}</span>
+                    </div>
+                  ))}
+                </div>
+                {/* 전체 활동 필터 */}
+                <div className="relative flex items-center justify-end">
+                  <button type="button" onClick={() => setCiFilterOpen(!ciFilterOpen)} className="flex items-center gap-1">
+                    <span className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b]">{ciFilter}</span>
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style={{ transform: "rotate(90deg)" }}><path d="M6.75 3.75L11.25 9L6.75 14.25" stroke="#18181b" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  </button>
+                  {ciFilterOpen && (
+                    <div className="absolute right-0 top-full z-20 mt-1 flex min-w-[140px] flex-col overflow-hidden rounded-xl bg-white shadow-[0px_4px_16px_rgba(0,0,0,0.12)]">
+                      {["전체 활동", "자동 배포", "수동 배포"].map((f) => (
+                        <button key={f} type="button" onClick={() => { setCiFilter(f); setCiFilterOpen(false); }} className={`px-4 py-2.5 text-left text-sm leading-[1.5] tracking-[-0.14px] transition-colors hover:bg-gray-50 ${ciFilter === f ? "font-semibold text-[#E765BE]" : "font-normal text-[#3f3f46]"}`}>
+                          {f}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                {/* 빈 상태 */}
+                <div className="flex h-[197px] items-center justify-center py-10">
+                  <span className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#a1a1aa]">아직 CI 실행 기록이 없어요</span>
+                </div>
+              </div>
+            </>
+            )
+          ) : (
+          <div className="flex flex-col items-center gap-6 py-10">
+            {gitStep === "connected" ? (
+              <>
+                <div className="flex flex-col items-center gap-2 text-center">
+                  <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">배포를 시작해 주세요</p>
+                  <div className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">
+                    <p>Git에서 push하여 자동 배포하거나</p>
+                    <p>아래 버튼으로 수동 배포할 수 있어요</p>
+                  </div>
+                </div>
+                <button type="button" onClick={() => setDeployStarted(true)} className="flex h-9 items-center justify-center rounded-lg bg-[#E765BE] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+                  수동 배포
+                </button>
+              </>
+            ) : (
+              <>
+                <div className="flex flex-col items-center gap-2 text-center">
+                  <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">아직 Git 연동이 완료되지 않았어요</p>
+                  <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">앱을 배포하려면 먼저 GitHub 저장소를 연결해 주세요</p>
+                </div>
+                <button type="button" onClick={() => setActiveTab("Git 연동")} className="flex h-9 items-center justify-center rounded-lg bg-[#E765BE] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+                  Git 연동
+                </button>
+              </>
+            )}
+          </div>
           )}
         </div>
       ) : (
