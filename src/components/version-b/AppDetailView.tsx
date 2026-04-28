@@ -37,7 +37,19 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
   const primaryColor = isAdmin ? "#E765BE" : "#FBB03B";
   const [activeTab, setActiveTab] = useState("앱");
   const [expanded, setExpanded] = useState(false);
+  const [gitStep, setGitStep] = useState<"login" | "install" | "repo" | "connected">("login");
+  const [selectedRepo, setSelectedRepo] = useState<string | null>(null);
+  const [branchName, setBranchName] = useState("");
+  const [namingModalOpen, setNamingModalOpen] = useState(false);
+  const [envModalOpen, setEnvModalOpen] = useState(false);
+  const [envAddModalOpen, setEnvAddModalOpen] = useState(false);
+  const [envKey, setEnvKey] = useState("");
+  const [envValue, setEnvValue] = useState("");
+  const [envType, setEnvType] = useState<string | null>(null);
+  const [envVars, setEnvVars] = useState<{ key: string; value: string; type: string }[]>([]);
+  const [guideComplete, setGuideComplete] = useState(false);
   const [guideDismissed, setGuideDismissed] = useState(false);
+  const [guideHidden, setGuideHidden] = useState(false);
   const [modalMoreOpen, setModalMoreOpen] = useState(false);
   const [modalComment, setModalComment] = useState<number | null>(null);
   const [adminMenuOpen, setAdminMenuOpen] = useState(false);
@@ -49,7 +61,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
   });
 
   return (
-    <div className="mx-auto flex w-full flex-col gap-6 pb-6 min-[1281px]:max-w-[1280px]" style={{ animation: "fadeSlideIn 0.4s ease-out" }}>
+    <div className="mx-auto flex w-full flex-col gap-6 pb-[100px] min-[1281px]:max-w-[1280px]" style={{ animation: "fadeSlideIn 0.4s ease-out" }}>
       {/* 댓글 상세 모달 */}
       {modalComment !== null && (() => {
         const c = comments[modalComment];
@@ -188,49 +200,53 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
 
 
       {/* Setup Guide Banner (admin only) */}
-      {isAdmin && (() => {
-        const isDeployTab = activeTab === "배포";
-        const isEnvTab = activeTab === "환경변수";
-        const isTableTab = activeTab === "테이블";
-        const allRequired = isEnvTab;
-        const step3Active = isDeployTab;
-        const tableComplete = isTableTab || isEnvTab;
+      {isAdmin && !guideHidden && (() => {
+        const gitConnected = gitStep === "connected";
+        const envDone = envVars.length > 0;
+        const isEnvTab = activeTab === "환경변수" || gitConnected;
+        const isDeployTab = activeTab === "배포" || envDone;
 
-        const guideTitle = isEnvTab
+        // Steps: 1(앱만들기) 2(Git연결) 3(환경변수등록) 4(배포하기) → 앱공개
+        const step1 = "done";
+        const step2 = guideComplete || isEnvTab || isDeployTab ? "done" : "active";
+        const step3 = guideComplete || isDeployTab ? "done" : isEnvTab ? "active" : "future";
+        const step4 = guideComplete ? "done" : isDeployTab ? "active" : "future";
+        const appPublished = guideComplete;
+
+        const guideTitle = guideComplete
           ? "앱이 스토어에 성공적으로 올라갔어요!"
           : isDeployTab
             ? "동료들이 앱에 접속할 수 있도록 배포해주세요"
-            : "푸시할 때마다 자동 배포되도록 GitHub 저장소를 연결해주세요";
-        const guideSubtitle = isEnvTab
+            : isEnvTab
+              ? "API Key, 설정값을 읽어올 수 있도록 환경변수를 등록해주세요"
+              : "푸시할 때마다 자동 배포되도록 GitHub 저장소를 연결해주세요";
+        const guideSubtitle = guideComplete
           ? "앱의 성격에 따라 테이블, 환경변수를 설정해 주세요"
-          : isDeployTab
-            ? "1단계만 더 완료하면 앱이 공개돼요!"
-            : "2단계만 더 완료하면 앱이 공개돼요!";
-        const fillWidth = isEnvTab ? "300px" : isDeployTab ? "200px" : "100px";
+          : (() => { const r = [step2, step3, step4].filter(s => s !== "done").length; return `${r}단계만 더 완료하면 앱이 공개돼요!`; })();
+        const fillWidth = guideComplete ? "504px" : isDeployTab ? "375px" : isEnvTab ? "250px" : "125px";
 
-        // Step states: "done" | "active" | "future"
-        const step1 = "done";
-        const step2 = (isDeployTab || allRequired) ? "done" : "active";
-        const step3State = allRequired ? "done" : step3Active ? "active" : "future";
-        const appPublished = allRequired;
-
-        const chipStyle = (state: string) => {
-          if (state === "done" || state === "active") return "bg-[#E765BE]";
-          return "";
-        };
+        const chipClass = (state: string) =>
+          state === "done" || state === "active" ? "bg-[#E765BE]" : "";
         const chipBg = (state: string) =>
           state === "future"
             ? { background: "linear-gradient(90deg, rgba(255,255,255,0.7), rgba(255,255,255,0.7)), #E765BE" }
             : undefined;
-        const labelClass = (state: string) => {
-          if (state === "active") return "font-semibold text-[#E765BE]";
-          if (state === "done") return "font-medium text-[rgba(231,101,190,0.5)]";
-          return "font-medium text-[#a1a1aa]";
-        };
+        const labelClass = (state: string) =>
+          state === "active" ? "font-semibold text-[#E765BE]"
+            : state === "done" ? "font-medium text-[rgba(231,101,190,0.5)]"
+            : "font-medium text-[#a1a1aa]";
+
+        const steps = [
+          { num: "1", label: "앱 만들기", state: step1, tab: "앱" as const },
+          { num: "2", label: "Git 연결하기", state: step2, tab: "Git 연동" as const },
+          { num: "3", label: "환경변수 등록", state: step3, tab: "환경변수" as const },
+          { num: "4", label: "배포하기", state: step4, tab: "배포" as const },
+        ];
 
         return (
           <div className="mx-auto flex w-[600px] flex-col gap-2">
-            {isEnvTab && (
+            {/* 다시보지 않기 + 닫기 (완료 상태에서만) */}
+            {guideComplete && (
               <div className="flex items-center gap-2">
                 <div className="flex flex-1 items-center gap-1">
                   <button type="button" onClick={() => setGuideDismissed(!guideDismissed)} className="flex size-6 items-center justify-center p-[3px]">
@@ -246,77 +262,49 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                   </button>
                   <span className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#71717a]">다시보지 않기</span>
                 </div>
-                <button type="button" className="flex size-6 items-center justify-center text-[#71717a] transition-colors hover:text-[#18181b]">
+                <button type="button" onClick={() => setGuideHidden(true)} className="flex size-6 items-center justify-center text-[#71717a] transition-colors hover:text-[#18181b]">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </button>
               </div>
             )}
-          <div className="flex flex-col gap-6 rounded-2xl bg-[#f9f9f9] p-6">
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center gap-1">
-                <span className="flex-1 text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">{guideTitle}</span>
-                {isEnvTab ? (
-                  <span className="shrink-0 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#E765BE]">스토어에서 보기</span>
-                ) : (
-                  <button type="button" className="flex h-7 shrink-0 items-center rounded-lg bg-[#E765BE] px-3 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white transition-opacity hover:opacity-90">바로가기</button>
-                )}
+            <div className="flex h-[177px] flex-col gap-6 rounded-2xl bg-[#f9f9f9] p-6">
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center gap-1">
+                  <span className="flex-1 text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">{guideTitle}</span>
+                  {guideComplete ? (
+                    <span className="shrink-0 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#E765BE]">스토어에서 보기</span>
+                  ) : isEnvTab ? (
+                    <button type="button" className="flex shrink-0 items-center rounded-lg border border-[#e4e4e7] px-3 py-1.5 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#71717a] transition-colors hover:bg-gray-50">건너뛰기</button>
+                  ) : null}
+                </div>
+                <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">{guideSubtitle}</p>
               </div>
-              <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">{guideSubtitle}</p>
+              {/* Step progress */}
+              <div className="relative flex items-start justify-between">
+                <div className="absolute left-[25px] right-[25px] top-[9px] h-1.5 rounded-full bg-[#e4e4e7]" />
+                <div className="absolute left-[26px] top-[9px] h-1.5 overflow-hidden rounded-full bg-[#E765BE] transition-all duration-500" style={{ width: fillWidth }}>
+                  <div className="absolute inset-0" style={{
+                    background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0) 30%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 70%, transparent 100%)",
+                    animation: "guideShimmer 2s ease-in-out infinite",
+                  }} />
+                </div>
+                {steps.map((step) => (
+                  <button key={step.num} type="button" onClick={() => { setGuideComplete(false); setActiveTab(step.tab); }} className="group relative z-10 flex w-[65px] flex-col items-center gap-3 transition hover:scale-110">
+                    <span className={`flex size-6 items-center justify-center rounded-full ${chipClass(step.state)} text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white transition group-hover:bg-[#d454a8]`} style={chipBg(step.state)}>{step.num}</span>
+                    <span className={`whitespace-nowrap text-xs leading-[1.3] tracking-[-0.12px] ${labelClass(step.state)} transition group-hover:text-[#E765BE]`}>{step.label}</span>
+                  </button>
+                ))}
+                {/* 앱 공개 */}
+                <button type="button" onClick={() => setGuideComplete(true)} className="group relative z-10 flex flex-col items-center transition hover:scale-110">
+                  <span
+                    className={`flex items-center justify-center rounded-full px-2 py-1 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white transition ${appPublished ? "bg-[#E765BE]" : "group-hover:brightness-90"}`}
+                    style={!appPublished ? { background: "linear-gradient(90deg, rgba(255,255,255,0.7), rgba(255,255,255,0.7)), #E765BE" } : undefined}
+                  >앱 공개</span>
+                </button>
+              </div>
             </div>
-            {/* Step progress */}
-            <div className="relative flex items-start gap-10">
-              <div className="absolute left-[25px] top-[9px] h-1.5 w-[504px] rounded-full bg-[#e4e4e7]" />
-              <div className="absolute left-[26px] top-[9px] h-1.5 overflow-hidden rounded-full bg-[#E765BE] transition-all duration-500" style={{ width: fillWidth }}>
-                <div className="absolute inset-0" style={{
-                  background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0) 30%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 70%, transparent 100%)",
-                  animation: "guideShimmer 2s ease-in-out infinite",
-                }} />
-              </div>
-              {/* Step 1 */}
-              <button type="button" onClick={() => setActiveTab("앱")} className="group relative z-10 flex w-[52px] flex-col items-center gap-3 transition hover:scale-110">
-                <span className={`flex size-6 items-center justify-center rounded-full ${chipStyle(step1)} text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white transition group-hover:bg-[#d454a8]`}>1</span>
-                <span className={`text-xs leading-[1.3] tracking-[-0.12px] ${labelClass(step1)} transition group-hover:text-[#E765BE]`}>앱 만들기</span>
-              </button>
-              {/* Step 2 */}
-              <button type="button" onClick={() => setActiveTab("Git 연동")} className="group relative z-10 flex flex-col items-center gap-3 transition hover:scale-110">
-                <span className={`flex size-6 items-center justify-center rounded-full ${chipStyle(step2)} text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white transition group-hover:bg-[#d454a8]`}>2</span>
-                <span className={`whitespace-nowrap text-xs leading-[1.3] tracking-[-0.12px] ${labelClass(step2)} transition group-hover:text-[#d454a8]`}>Git 연결하기</span>
-              </button>
-              {/* Step 3 */}
-              <button type="button" onClick={() => setActiveTab("배포")} className="group relative z-10 flex w-[48px] flex-col items-center gap-3 transition hover:scale-110">
-                <span className={`flex size-6 items-center justify-center rounded-full ${chipStyle(step3State)} text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white transition group-hover:bg-[#d454a8]`} style={chipBg(step3State)}>3</span>
-                <span className={`text-xs leading-[1.3] tracking-[-0.12px] ${labelClass(step3State)} transition group-hover:text-[#E765BE]`}>배포하기</span>
-              </button>
-              {/* 앱 공개 */}
-              <div className="relative z-10 flex flex-col items-center">
-                <span
-                  className={`flex items-center justify-center rounded-full px-2 py-1 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white ${appPublished ? "bg-[#E765BE]" : ""}`}
-                  style={!appPublished ? { background: "linear-gradient(90deg, rgba(255,255,255,0.7), rgba(255,255,255,0.7)), #E765BE" } : undefined}
-                >앱 공개</span>
-              </div>
-              {/* 테이블 생성 */}
-              <button type="button" onClick={() => setActiveTab("테이블")} className="group relative z-10 flex w-16 flex-col items-center gap-3 transition hover:scale-110">
-                {tableComplete ? (
-                  <>
-                    <span className="flex h-6 items-center justify-center rounded-full bg-[#1fa24e] px-2 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white">완료</span>
-                    <span className="text-xs font-medium leading-[1.3] tracking-[-0.12px] text-[#1fa24e]">테이블 생성</span>
-                  </>
-                ) : (
-                  <>
-                    <span className="flex h-6 items-center justify-center rounded-full bg-[#e4e4e7] px-2 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#71717a] transition group-hover:bg-[#d4d4d8]">선택</span>
-                    <span className="text-xs font-medium leading-[1.3] tracking-[-0.12px] text-[#a1a1aa] transition group-hover:text-[#71717a]">테이블 생성</span>
-                  </>
-                )}
-              </button>
-              {/* 환경변수 등록 */}
-              <button type="button" onClick={() => setActiveTab("환경변수")} className="group relative z-10 flex w-[76px] flex-col items-center gap-3 transition hover:scale-110">
-                <span className="flex h-6 items-center justify-center rounded-full bg-[#e4e4e7] px-2 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#71717a] transition group-hover:bg-[#d4d4d8]">선택</span>
-                <span className="text-xs font-medium leading-[1.3] tracking-[-0.12px] text-[#a1a1aa] transition group-hover:text-[#71717a]">환경변수 등록</span>
-              </button>
-            </div>
-          </div>
           </div>
         );
       })()}
@@ -364,7 +352,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
           </div>
           <div className="flex items-start gap-2">
             {isAdmin ? (
-              <span className="flex h-8 items-center justify-center overflow-hidden rounded-xl px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white" style={{ background: "linear-gradient(90deg, rgba(255,255,255,0.48), rgba(255,255,255,0.48)), #E765BE" }}>
+              <span className="flex h-8 items-center justify-center overflow-hidden rounded-xl px-4 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white" style={{ background: "linear-gradient(90deg, rgba(255,255,255,0.48), rgba(255,255,255,0.48)), #E765BE" }}>
                 배포 전
               </span>
             ) : appStatus === "열기" ? (
@@ -397,15 +385,15 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
       {/* 섹션 2: Tab Bar */}
       {isAdmin && (
         <div className="flex items-center border-b border-[rgba(82,82,91,0.08)]">
-          {["앱", "Git 연동", "배포", "테이블", "환경변수", "데이터 접근", "멤버", "설정"].map((tab) => {
-            const hasWarning = tab === "Git 연동" || tab === "배포";
+          {["앱", "Git 연동", "배포", "테이블", "환경변수", "데이터 접근", "공유 테이블", "설정"].map((tab) => {
+            const hasWarning = (tab === "Git 연동" && gitStep !== "connected") || tab === "배포" || tab === "환경변수";
             const isActive = activeTab === tab;
             return (
               <button
                 key={tab}
                 type="button"
                 onClick={() => setActiveTab(tab)}
-                className={`relative flex items-center gap-1 px-5 py-2 text-sm leading-[1.5] tracking-[-0.14px] transition-colors ${
+                className={`relative flex items-center gap-1 px-5 py-2 text-base leading-[1.5] tracking-[-0.16px] transition-colors ${
                   isActive
                     ? "font-semibold text-black border-b-[2.5px] border-[#E765BE]"
                     : "font-normal text-[#a1a1aa] hover:text-[#71717a]"
@@ -505,6 +493,311 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
               </div>
             </div>
           </div>
+        </div>
+      ) : activeTab === "Git 연동" ? (
+        <div className="flex flex-col gap-6">
+          {/* 권장 네이밍 구조 모달 */}
+          {namingModalOpen && (
+            <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/20" onClick={() => setNamingModalOpen(false)}>
+              <div
+                className="flex w-[480px] flex-col items-end gap-6 rounded-2xl bg-white p-6"
+                style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)", backdropFilter: "blur(20px)", animation: "modalScaleIn 0.3s ease-out" }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <p className="w-full text-xl font-semibold leading-[1.3] tracking-[-0.2px] text-black">브랜치명은 보통 이렇게 작성해요</p>
+                <div className="flex w-full flex-col gap-4 overflow-hidden rounded-xl bg-[#f4f4f5] p-5 text-base leading-[1.5] tracking-[-0.16px]">
+                  {[
+                    { name: "main/master", desc: "제품으로 출시 가능한 브랜치" },
+                    { name: "develop", desc: "다음 버전 개발을 진행하는 브랜치" },
+                    { name: "feature", desc: "기능 단위로 개발하는 브랜치" },
+                    { name: "release", desc: "배포를 준비하는 브랜치" },
+                    { name: "hotfix", desc: "긴급 수정을 위한 브랜치" },
+                  ].map((item) => (
+                    <div key={item.name} className="flex items-center gap-4">
+                      <span className="w-[92px] shrink-0 font-semibold text-[#3f3f46]">{item.name}</span>
+                      <span className="font-normal text-[#71717a]">{item.desc}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex w-full flex-col gap-2 text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#71717a]">
+                  <p>• 영어 소문자를 사용해요</p>
+                  <p>• 구분이 필요할 때는 공백 대신 - , / 를 사용해요</p>
+                  <p>• 공백, 특수문자, 40자 이상은 사용할 수 없어요</p>
+                  <p>• 구분하기 쉽도록 기능이나 이슈 내용을 짧고 명확하게 작성해요</p>
+                </div>
+                <button type="button" onClick={() => setNamingModalOpen(false)} className="flex h-9 items-center justify-center rounded-lg bg-[#E765BE] px-8 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+                  확인
+                </button>
+              </div>
+            </div>
+          )}
+          {/* GitHub 연결 안내 카드 */}
+          <div className="flex flex-col gap-2 overflow-hidden rounded-xl bg-[#f4f4f5] p-5">
+            <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#3f3f46]">GitHub 연결</p>
+            <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">GitHub 저장소를 연결하면, 앱을 업데이트하고 Push할 때마다 자동으로 배포돼요</p>
+          </div>
+          {gitStep === "login" ? (
+            /* 로그인 섹션 */
+            <div className="flex flex-col items-center gap-6 py-10">
+              <div className="flex flex-col items-center gap-2 text-center">
+                <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">먼저 로그인을 해주세요</p>
+                <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">저장소 내용은 읽지 않으며 계정 식별 정보만 사용할게요</p>
+              </div>
+              <button type="button" onClick={() => setGitStep("install")} className="flex h-9 items-center justify-center rounded-lg bg-[#E765BE] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+                GitHub 로그인
+              </button>
+            </div>
+          ) : gitStep === "install" ? (
+            /* 앱 설치 섹션 */
+            <div className="flex flex-col items-center gap-6 py-10">
+              <div className="flex flex-col items-center gap-2 text-center">
+                <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">계정에 앱을 설치해주세요</p>
+                <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">Github 계정에 앱이 설치되어 있지 않아요</p>
+              </div>
+              <div className="flex w-[350px] flex-col items-center gap-2 overflow-hidden rounded-xl bg-[#f4f4f5] p-5">
+                <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#3f3f46]">minion</p>
+                <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">개인 • 앱 미설치</p>
+              </div>
+              <div className="flex items-start gap-2">
+                <button type="button" onClick={() => setGitStep("login")} className="flex h-9 items-center justify-center rounded-lg border border-[#d4d4d8] px-4 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#71717a] transition-colors hover:bg-gray-50">
+                  다른 아이디로 로그인
+                </button>
+                <button type="button" onClick={() => setGitStep("repo")} className="flex h-9 items-center justify-center rounded-lg bg-[#E765BE] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+                  이 계정에 앱 설치
+                </button>
+              </div>
+            </div>
+          ) : gitStep === "repo" ? (
+            /* 저장소 선택 섹션 */
+            <div className="flex flex-col gap-6 py-5">
+              <div className="flex items-end gap-6">
+                <div className="flex flex-1 flex-col gap-2">
+                  <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">저장소를 선택하고 브랜치명을 적어주세요</p>
+                  <p className="text-base leading-[1.5] tracking-[-0.16px]">
+                    <span className="font-normal text-[#71717a]">브랜치명 작성이 처음이신가요?  </span>
+                    <button type="button" onClick={() => setNamingModalOpen(true)} className="font-semibold text-[#1571F3] underline-offset-2 hover:underline">권장 네이밍 구조</button>
+                    <span className="font-normal text-[#71717a]">를 참고하세요</span>
+                  </p>
+                </div>
+                <div className="flex h-10 w-[240px] shrink-0 items-center gap-1.5 overflow-hidden rounded-xl bg-[#f4f4f5] px-4 py-3">
+                  <Image src="/icons/version-b/search.svg" alt="" width={20} height={20} />
+                  <span className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#a1a1aa]">저장소 이름으로 검색</span>
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                {["minion/AXHub-test", "minion/AXHub-test2", "minion/AXHub-test3"].map((repo) => (
+                  <button key={repo} type="button" onClick={() => setSelectedRepo(selectedRepo === repo ? null : repo)} className={`flex flex-col items-start gap-2 rounded-xl border p-4 text-left transition-colors ${selectedRepo === repo ? "border-[#E765BE] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
+                    <p className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46]">{repo}</p>
+                    <div className="flex items-start gap-2 text-sm leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+                      <span className="font-semibold">기본 브랜치</span>
+                      <span className="font-normal">main • Public</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+              <div className="flex flex-col gap-3">
+                <p className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-black">브랜치명</p>
+                <input
+                  type="text"
+                  value={branchName}
+                  onChange={(e) => setBranchName(e.target.value)}
+                  placeholder="main, master..."
+                  className="min-h-[48px] rounded-xl border border-[#e4e4e7] bg-white px-4 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#E765BE] focus:outline-none"
+                />
+              </div>
+              <button
+                type="button"
+                disabled={!selectedRepo || !branchName.trim()}
+                onClick={() => setGitStep("connected")}
+                className={`flex h-9 w-fit items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] transition-colors ${
+                  selectedRepo && branchName.trim()
+                    ? "bg-[#E765BE] text-white hover:opacity-90"
+                    : "bg-[#e4e4e7] text-[#a1a1aa]"
+                }`}
+              >
+                저장소 연결
+              </button>
+            </div>
+          ) : (
+            /* 연결 완료 섹션 */
+            <div className="flex flex-col items-center gap-6 py-10">
+              <div className="flex flex-col items-center gap-2 text-center">
+                <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">GitHub 저장소가 연결되었습니다!</p>
+                <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">연결된 저장소 정보를 확인하세요</p>
+              </div>
+              <div className="flex w-[350px] flex-col items-center gap-2 overflow-hidden rounded-xl bg-[#f4f4f5] p-5">
+                <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#E765BE]">{selectedRepo}</p>
+                <div className="flex items-center justify-center gap-2 text-base leading-[1.5] tracking-[-0.16px] text-[#71717a]">
+                  <span className="font-semibold">브랜치</span>
+                  <span className="font-normal">{branchName}</span>
+                </div>
+              </div>
+              <button type="button" onClick={() => { setGitStep("repo"); }} className="flex h-9 items-center justify-center rounded-lg border border-[#d4d4d8] px-4 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#71717a] transition-colors hover:bg-gray-50">
+                연결 끊기
+              </button>
+            </div>
+          )}
+        </div>
+      ) : activeTab === "환경변수" ? (
+        <div className="flex flex-col gap-6">
+          {/* 환경변수가 필요한 경우 모달 */}
+          {envModalOpen && (
+            <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/20" onClick={() => setEnvModalOpen(false)}>
+              <div
+                className="flex w-[480px] flex-col items-end gap-6 rounded-2xl bg-white p-6"
+                style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)", backdropFilter: "blur(20px)", animation: "modalScaleIn 0.3s ease-out" }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <p className="w-full text-xl font-semibold leading-[1.3] tracking-[-0.2px] text-black">이런 경우에 환경변수 등록이 필요해요</p>
+                <div className="flex w-full flex-col gap-5 overflow-hidden rounded-xl bg-[#f4f4f5] p-5">
+                  {[
+                    { title: "개발 / 테스트 / 운영 환경이 나뉠 때", desc: "개발과 운영 서버의 주소, 데이터가 달라요" },
+                    { title: "외부 서비스를 붙일 때", desc: "로그인, 결제, 지도 등의 API 키가 필요해요" },
+                    { title: "보안 정보가 있을 때", desc: "비밀번호, 토큰을 코드에 직접 넣으면 위험해요" },
+                    { title: "기능을 켜고 끄고 싶을 때", desc: "특정 기능을 ON/OFF 하거나 A/B 테스트가 필요해요" },
+                    { title: "배포 환경이 달라질 때", desc: "로컬, 서버, 클라우드 등 환경이 달라져요" },
+                  ].map((item) => (
+                    <div key={item.title} className="flex flex-col gap-1">
+                      <p className="text-base leading-[1.5] tracking-[-0.16px]">
+                        <span className="font-normal text-[#3f3f46]">• </span>
+                        <span className="font-semibold text-[#3f3f46]">{item.title}</span>
+                      </p>
+                      <p className="pl-3 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">{item.desc}</p>
+                    </div>
+                  ))}
+                </div>
+                <button type="button" onClick={() => setEnvModalOpen(false)} className="flex h-9 items-center justify-center rounded-lg bg-[#E765BE] px-8 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+                  확인
+                </button>
+              </div>
+            </div>
+          )}
+          {/* 환경변수 등록 안내 카드 */}
+          <div className="flex flex-col gap-2 overflow-hidden rounded-xl bg-[#f4f4f5] p-5">
+            <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#3f3f46]">환경변수 등록</p>
+            <div className="text-base leading-[1.5] tracking-[-0.16px] text-[#71717a]">
+              <p>앱이 어떤 환경에서든 잘 실행되도록 상황에 따라 바뀌는 설정을 따로 관리해요</p>
+              <p className="font-bold">환경변수를 변경했다면, 재배포 해야 앱에 적용돼요</p>
+            </div>
+          </div>
+          {envVars.length === 0 ? (
+          /* CTA 섹션 (빈 상태) */
+          <div className="flex flex-col items-center gap-6 py-10">
+            <div className="flex flex-col items-center gap-2 text-center">
+              <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">환경변수를 등록해 주세요</p>
+              <div className="text-base leading-[1.5] tracking-[-0.16px]">
+                <p className="font-normal text-[#71717a]">앱의 성격에 따라 환경변수 등록이 필요하지 않을 수 있어요</p>
+                <p>
+                  <button type="button" onClick={() => setEnvModalOpen(true)} className="font-semibold text-[#1571F3] underline-offset-2 hover:underline">환경변수가 필요한 경우</button>
+                  <span className="font-normal text-[#71717a]">를 참고하세요</span>
+                </p>
+              </div>
+            </div>
+            <button type="button" onClick={() => { setEnvKey(""); setEnvValue(""); setEnvType(null); setEnvAddModalOpen(true); }} className="flex h-9 items-center justify-center rounded-lg bg-[#E765BE] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+              환경변수 추가
+            </button>
+          </div>
+          ) : (
+          /* 테이블 뷰 (환경변수 추가된 상태) */
+          <div className="flex flex-col gap-6 py-5">
+            <div className="flex items-center justify-between">
+              <div className="flex h-10 w-[240px] items-center gap-1.5 overflow-hidden rounded-xl bg-[#f4f4f5] px-4 py-3">
+                <Image src="/icons/version-b/search.svg" alt="" width={20} height={20} />
+                <span className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#a1a1aa]">키 이름으로 검색</span>
+              </div>
+              <button type="button" onClick={() => { setEnvKey(""); setEnvValue(""); setEnvType(null); setEnvAddModalOpen(true); }} className="flex h-9 items-center justify-center rounded-lg bg-[#E765BE] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+                환경변수 추가
+              </button>
+            </div>
+            <div className="overflow-hidden rounded-xl border-[0.5px] border-[#e4e4e7]">
+              {/* 테이블 헤더 */}
+              <div className="flex bg-[#f6f6f6]">
+                <div className="flex flex-1 items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#71717a]">키</span></div>
+                <div className="flex flex-1 items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#71717a]">값</span></div>
+                <div className="flex w-[156px] items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#71717a]">단계</span></div>
+                <div className="flex w-[156px] items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#71717a]">작업</span></div>
+              </div>
+              {/* 테이블 바디 */}
+              {envVars.map((env, i) => (
+                <div key={i} className="flex bg-white">
+                  <div className="flex h-[60px] flex-1 items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">{env.key}</span></div>
+                  <div className="flex h-[60px] flex-1 items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">********</span></div>
+                  <div className="flex h-[60px] w-[156px] items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">{env.type}</span></div>
+                  <div className="flex h-[60px] w-[156px] items-center gap-2.5 border-[0.5px] border-[#e4e4e7] px-4 py-3">
+                    <button type="button" className="flex h-9 items-center justify-center rounded-lg bg-[#f6f6f6] px-4 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#3f3f46] transition-colors hover:bg-[#ececec]">수정</button>
+                    <button type="button" onClick={() => setEnvVars(envVars.filter((_, j) => j !== i))} className="flex h-9 items-center justify-center rounded-lg bg-[#f6f6f6] px-4 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#f5475c] transition-colors hover:bg-[#ececec]">삭제</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          )}
+          {/* 환경변수 추가 모달 */}
+          {envAddModalOpen && (
+            <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/20" onClick={() => setEnvAddModalOpen(false)}>
+              <div
+                className="flex w-[520px] flex-col items-end gap-6 rounded-2xl bg-white p-6"
+                style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)", backdropFilter: "blur(20px)", animation: "modalScaleIn 0.3s ease-out" }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <p className="w-full text-xl font-semibold leading-[1.3] tracking-[-0.2px] text-black">환경변수 추가하기</p>
+                {/* 키(이름) */}
+                <div className="flex w-full flex-col gap-3">
+                  <p className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-black">키(이름)<span className="text-[#ef1026]">*</span></p>
+                  <div className="flex flex-col gap-2">
+                    <input type="text" value={envKey} onChange={(e) => setEnvKey(e.target.value)} placeholder="DB_URL..." className="min-h-[48px] rounded-xl border border-[#e4e4e7] bg-white px-4 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#E765BE] focus:outline-none" />
+                    <p className="text-sm leading-[1.5] tracking-[-0.14px] text-[#71717a]"><span className="font-semibold">대문자 + 언더스코어</span><span className="font-normal"> 형태로 사용하며, 바로 알아볼 수 있는 이름을 붙여주세요</span></p>
+                  </div>
+                </div>
+                {/* 값 */}
+                <div className="flex w-full flex-col gap-3">
+                  <p className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-black">값<span className="text-[#ef1026]">*</span></p>
+                  <div className="flex flex-col gap-2">
+                    <input type="text" value={envValue} onChange={(e) => setEnvValue(e.target.value)} placeholder="********" className="min-h-[48px] rounded-xl border border-[#e4e4e7] bg-white px-4 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#E765BE] focus:outline-none" />
+                    <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">실제로 들어가는 값으로 발급받거나 생성한 값을 넣어주세요</p>
+                  </div>
+                </div>
+                {/* 환경 */}
+                <div className="flex w-full flex-col gap-3">
+                  <p className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-black">환경<span className="text-[#ef1026]">*</span></p>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex gap-2">
+                      {[
+                        { key: "Runtime", desc: "앱이 실행될 때 사용" },
+                        { key: "Build", desc: "앱을 만들 때 사용" },
+                        { key: "Both", desc: "두 경우 모두 사용" },
+                      ].map((env) => (
+                        <button key={env.key} type="button" onClick={() => setEnvType(envType === env.key ? null : env.key)} className={`flex flex-1 flex-col gap-2 rounded-xl border p-4 text-left transition-colors ${envType === env.key ? "border-[#E765BE] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
+                          <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46]">{env.key}</span>
+                          <span className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">{env.desc}</span>
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">앱을 만들 때 고정되는 값인 지, 실행할 때마다 바뀌는 값인 지 구분해주세요</p>
+                  </div>
+                </div>
+                {/* 버튼 */}
+                <div className="flex items-start gap-2">
+                  <button type="button" onClick={() => setEnvAddModalOpen(false)} className="flex h-9 items-center justify-center rounded-lg bg-[#f6f6f6] px-8 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#3f3f46] transition-colors hover:bg-[#ececec]">
+                    닫기
+                  </button>
+                  <button
+                    type="button"
+                    disabled={!envKey.trim() || !envValue.trim() || !envType}
+                    onClick={() => { setEnvVars([...envVars, { key: envKey, value: envValue, type: envType! }]); setEnvAddModalOpen(false); }}
+                    className="flex h-9 items-center justify-center rounded-lg px-8 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity"
+                    style={{
+                      background: envKey.trim() && envValue.trim() && envType
+                        ? "#E765BE"
+                        : "linear-gradient(90deg, rgba(255,255,255,0.7), rgba(255,255,255,0.7)), #E765BE",
+                    }}
+                  >
+                    추가
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <div className="flex items-center justify-center py-20">

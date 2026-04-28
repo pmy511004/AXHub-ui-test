@@ -294,6 +294,10 @@ export default function MakePageB() {
                 </h1>
               </div>
             </>
+          ) : !isDetail ? (
+            <h1 className="font-bold tracking-[-0.22px] text-black" style={{ fontSize: "22px", lineHeight: "1.3" }}>
+              내 프로젝트
+            </h1>
           ) : null}
 
           {isDetail ? (
