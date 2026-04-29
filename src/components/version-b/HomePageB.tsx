@@ -40,12 +40,13 @@ export default function HomePageB() {
   const [appsExpanded, setAppsExpanded] = useState(false);
   const [homeView, setHomeView] = useState<"data" | "empty">("data");
   const [guideModalOpen, setGuideModalOpen] = useState(false);
-  const [guideModalStep, setGuideModalStep] = useState(1);
+  const [guideModalStep, setGuideModalStep] = useState<"os-select" | "mac" | "windows" | "final">("os-select");
   const [guideModalClosing, setGuideModalClosing] = useState(false);
-  const openGuideModal = () => { setGuideModalStep(1); setGuideModalOpen(true); };
+  const [selectedOS, setSelectedOS] = useState<"mac" | "windows">("mac");
+  const openGuideModal = () => { setGuideModalStep("os-select"); setGuideModalOpen(true); };
   const closeGuideModal = () => {
     setGuideModalClosing(true);
-    setTimeout(() => { setGuideModalOpen(false); setGuideModalClosing(false); setGuideModalStep(1); }, 250);
+    setTimeout(() => { setGuideModalOpen(false); setGuideModalClosing(false); setGuideModalStep("os-select"); }, 250);
   };
 
   const myApps = [
@@ -461,132 +462,221 @@ export default function HomePageB() {
           {/* 초기 시작 가이드 모달 */}
           {guideModalOpen && (
             <div className="absolute inset-0 z-50 flex items-center justify-center overflow-hidden rounded-br-2xl rounded-tr-2xl bg-white/50 transition-opacity duration-250" style={{ opacity: guideModalClosing ? 0 : 1 }} onClick={closeGuideModal}>
-              <div className="flex h-[811px] w-[540px] flex-col overflow-hidden rounded-2xl bg-white" style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)", backdropFilter: "blur(20px)", animation: guideModalClosing ? "modalScaleOut 0.25s ease-in forwards" : "modalScaleIn 0.3s ease-out" }} onClick={(e) => e.stopPropagation()}>
-                {guideModalStep === 1 ? (
-                  <div key="step1" className="flex h-full w-full flex-col items-end gap-8 p-10" style={{ animation: "slideRight 0.35s ease-out" }}>
-                    {/* 제목 */}
-                    <h2 className="w-full text-2xl font-bold leading-[1.2] text-[#18181b]">
-                      안녕하세요
-                      <br />
-                      ClaudeCode 세팅부터 시작할까요?
-                    </h2>
-
-                    {/* Steps with connecting line */}
-                    <div className="relative">
-                    <div className="absolute left-[13px] top-7 bottom-7 w-px bg-[#d4d4d8]" />
-
-                    {/* Step 1 */}
-                    <div className="relative flex gap-3 pb-8">
-                      <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#e7d8f3] text-base font-bold text-[#6D319D]">1</span>
-                      <div className="flex w-[426px] flex-col gap-3">
-                        <h3 className="text-lg font-bold leading-[1.4] text-black">터미널 열기</h3>
-                        <div className="flex flex-col gap-2">
-                          <div className="flex items-center gap-1 text-sm text-[#71717a]">
-                            <span className="rounded-lg border border-[#d4d4d8] bg-white px-3 py-1 text-xs font-medium text-[#18181b]">Cmd</span>
-                            <span className="font-normal">+</span>
-                            <span className="rounded-lg border border-[#d4d4d8] bg-white px-3 py-1 text-xs font-medium text-[#18181b]">Space</span>
-                            <span className="font-normal">를 눌러 Spotlight를 열어주세요</span>
+              <div className="flex h-[724px] w-[546px] flex-col overflow-hidden rounded-2xl bg-white" style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)", backdropFilter: "blur(20px)", animation: guideModalClosing ? "modalScaleOut 0.25s ease-in forwards" : "modalScaleIn 0.3s ease-out" }} onClick={(e) => e.stopPropagation()}>
+                {guideModalStep === "os-select" ? (
+                  /* 첫 번째 모달: OS 선택 */
+                  <div key="os-select" className="flex h-full w-full flex-col items-center justify-center gap-10 p-10" style={{ animation: "slideRight 0.35s ease-out" }}>
+                    <div className="relative flex flex-col items-center justify-center gap-5 py-10">
+                      <Image src="/icons/version-b/home-bg-initial.png" alt="" width={466} height={287} className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
+                      <h2 className="relative z-10 text-center text-2xl font-bold leading-[1.4] text-[#18181b]">
+                        AXHub에 오신 걸 환영합니다
+                        <br />
+                        ClaudeCode 세팅부터 시작해 보세요
+                      </h2>
+                      <p className="relative z-10 text-center text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b]/70">
+                        어떤 PC 환경을 사용 중이신가요?
+                      </p>
+                    </div>
+                    <div className="flex w-full flex-col gap-2 px-10">
+                      <button type="button" onClick={() => { setSelectedOS("mac"); setGuideModalStep("mac"); }} className="flex w-full items-center justify-center rounded-xl border border-[#e4e4e7] bg-white p-4 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f9f9f9]">
+                        Mac OS
+                      </button>
+                      <button type="button" onClick={() => { setSelectedOS("windows"); setGuideModalStep("windows"); }} className="flex w-full items-center justify-center rounded-xl border border-[#e4e4e7] bg-white p-4 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f9f9f9]">
+                        Windows OS
+                      </button>
+                    </div>
+                  </div>
+                ) : guideModalStep === "mac" ? (
+                  /* Mac OS 가이드 (4단계) */
+                  <div key="mac" className="flex h-full w-full flex-col justify-between p-10" style={{ animation: "slideLeft 0.35s ease-out" }}>
+                    <div className="relative w-full">
+                      <div className="absolute left-[13px] top-[14px] bottom-[14px] w-px bg-[#d4d4d8]" />
+                      {/* Step 1: 터미널 열기 */}
+                      <div className="relative flex gap-3 pb-8">
+                        <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#e7d8f3] text-base font-bold text-[#6D319D]">1</span>
+                        <div className="flex flex-col gap-3">
+                          <h3 className="flex h-7 items-center text-lg font-bold leading-[1.4] tracking-[-0.18px] text-black">터미널 열기</h3>
+                          <div className="flex flex-col gap-2">
+                            <div className="flex items-center gap-1 text-sm leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+                              <span className="rounded-lg border border-[#d4d4d8] bg-white px-3 py-1 text-xs font-medium leading-[1.3] tracking-[-0.12px] text-[#18181b]">Cmd</span>
+                              <span>+</span>
+                              <span className="rounded-lg border border-[#d4d4d8] bg-white px-3 py-1 text-xs font-medium leading-[1.3] tracking-[-0.12px] text-[#18181b]">Space</span>
+                              <span>를 눌러 Spotlight를 열어주세요</span>
+                            </div>
+                            <div className="flex items-center gap-1 text-sm leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+                              <span className="font-bold">Terminal</span>
+                              <span>을 입력하고</span>
+                              <span className="rounded-lg border border-[#d4d4d8] bg-white px-3 py-1 text-xs font-medium leading-[1.3] tracking-[-0.12px] text-[#18181b]">Enter</span>
+                              <span>를 눌러주세요</span>
+                            </div>
                           </div>
-                          <div className="flex items-center gap-1 text-sm text-[#71717a]">
-                            <span className="font-bold">Terminal</span>
-                            <span className="font-normal">을 입력하고</span>
-                            <span className="rounded-lg border border-[#d4d4d8] bg-white px-3 py-1 text-xs font-medium text-[#18181b]">Enter</span>
-                            <span className="font-normal">를 눌러주세요</span>
+                        </div>
+                      </div>
+                      {/* Step 2: 플러그인 설치 */}
+                      <div className="relative flex gap-3 pb-8">
+                        <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#e7d8f3] text-base font-bold text-[#6D319D]">2</span>
+                        <div className="flex flex-col gap-3">
+                          <h3 className="flex h-7 items-center text-lg font-bold leading-[1.4] tracking-[-0.18px] text-black">클로드코드 플러그인 설치하기</h3>
+                          <div className="flex items-center gap-1 text-sm leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+                            <span>아래 코드를 복사 후, 터미널에 붙여넣고</span>
+                            <span className="rounded-lg border border-[#d4d4d8] bg-white px-3 py-1 text-xs font-medium leading-[1.3] tracking-[-0.12px] text-[#18181b]">Enter</span>
+                            <span>를 눌러주세요</span>
+                          </div>
+                          <div className="flex items-center gap-2 rounded-xl border border-[#e4e4e7] bg-[#f4f4f5] px-3 py-2.5">
+                            <span className="flex-1 text-xs font-medium leading-[1.3] tracking-[-0.12px] text-[#71717a]">claude plugin marketplace add jocoding-ax-partners/axhub</span>
+                            <button type="button" className="shrink-0" onClick={() => navigator.clipboard.writeText("claude plugin marketplace add jocoding-ax-partners/axhub")}>
+                              <Image src="/icons/version-b/copy-icon.svg" alt="복사" width={20} height={20} />
+                            </button>
+                          </div>
+                          <div className="flex items-center gap-1 text-sm leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+                            <span>한 번 더, 아래 코드를 복사 붙여넣고</span>
+                            <span className="rounded-lg border border-[#d4d4d8] bg-white px-3 py-1 text-xs font-medium leading-[1.3] tracking-[-0.12px] text-[#18181b]">Enter</span>
+                            <span>를 눌러주세요</span>
+                          </div>
+                          <div className="flex items-center gap-2 rounded-xl border border-[#e4e4e7] bg-[#f4f4f5] px-3 py-2.5">
+                            <span className="flex-1 text-xs font-medium leading-[1.3] tracking-[-0.12px] text-[#71717a]">claude plugin install jocoding-ax-partners@axhub</span>
+                            <button type="button" className="shrink-0" onClick={() => navigator.clipboard.writeText("claude plugin install jocoding-ax-partners@axhub")}>
+                              <Image src="/icons/version-b/copy-icon.svg" alt="복사" width={20} height={20} />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      {/* Step 3: 클로드코드 열기 */}
+                      <div className="relative flex gap-3 pb-8">
+                        <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#e7d8f3] text-base font-bold text-[#6D319D]">3</span>
+                        <div className="flex flex-col gap-3">
+                          <h3 className="flex h-7 items-center text-lg font-bold leading-[1.4] tracking-[-0.18px] text-black">클로드코드 열기</h3>
+                          <div className="flex items-center gap-1 text-sm leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+                            <span className="font-bold">Claude</span>
+                            <span>를 입력하고</span>
+                            <span className="rounded-lg border border-[#d4d4d8] bg-white px-3 py-1 text-xs font-medium leading-[1.3] tracking-[-0.12px] text-[#18181b]">Enter</span>
+                            <span>를 눌러주세요</span>
+                          </div>
+                        </div>
+                      </div>
+                      {/* Step 4: 초기화 */}
+                      <div className="relative flex gap-3">
+                        <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#e7d8f3] text-base font-bold text-[#6D319D]">4</span>
+                        <div className="flex flex-col gap-3">
+                          <h3 className="flex h-7 items-center text-lg font-bold leading-[1.4] tracking-[-0.18px] text-black">AXHub 사용을 위해 초기화하기</h3>
+                          <div className="flex items-center gap-1 text-sm leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+                            <span>아래 코드를 복사 후, 클로드코드에 붙여넣고</span>
+                            <span className="rounded-lg border border-[#d4d4d8] bg-white px-3 py-1 text-xs font-medium leading-[1.3] tracking-[-0.12px] text-[#18181b]">Enter</span>
+                            <span>를 눌러주세요</span>
+                          </div>
+                          <div className="flex items-center gap-2 rounded-xl border border-[#e4e4e7] bg-[#f4f4f5] px-3 py-2.5">
+                            <span className="flex-1 text-xs font-medium leading-[1.3] tracking-[-0.12px] text-[#71717a]">/axhub-init</span>
+                            <button type="button" className="shrink-0" onClick={() => navigator.clipboard.writeText("/axhub-init")}>
+                              <Image src="/icons/version-b/copy-icon.svg" alt="복사" width={20} height={20} />
+                            </button>
                           </div>
                         </div>
                       </div>
                     </div>
-
-                    {/* Step 2 */}
-                    <div className="relative flex gap-3 pb-8">
-                      <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#e7d8f3] text-base font-bold text-[#6D319D]">2</span>
-                      <div className="flex w-[426px] flex-col gap-3">
-                        <h3 className="text-lg font-bold leading-[1.4] text-black">클로드코드 플러그인 설치하기</h3>
-                        <div className="flex items-center gap-1 text-sm text-[#71717a]">
-                          <span className="font-normal">아래 코드를 복사 후, 터미널에 붙여넣고</span>
-                          <span className="rounded-lg border border-[#d4d4d8] bg-white px-3 py-1 text-xs font-medium text-[#18181b]">Enter</span>
-                          <span className="font-normal">를 눌러주세요</span>
+                    <div className="flex w-full items-center justify-end gap-2">
+                      <button type="button" onClick={() => setGuideModalStep("os-select")} className="flex h-9 items-center justify-center rounded-lg bg-[#f6f6f6] px-8 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#ececec]">
+                        이전
+                      </button>
+                      <button type="button" onClick={() => setGuideModalStep("final")} className="flex h-9 items-center justify-center rounded-lg bg-[#6D319D] px-8 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+                        다음
+                      </button>
+                    </div>
+                  </div>
+                ) : guideModalStep === "windows" ? (
+                  /* Windows OS 가이드 (3단계) */
+                  <div key="windows" className="flex h-full w-full flex-col items-end gap-8 p-10" style={{ animation: "slideLeft 0.35s ease-out" }}>
+                    <div className="relative w-full">
+                      <div className="absolute left-[13px] top-[14px] bottom-[14px] w-px bg-[#d4d4d8]" />
+                      {/* Step 1: 플러그인 설치 */}
+                      <div className="relative flex gap-3 pb-8">
+                        <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#e7d8f3] text-base font-bold text-[#6D319D]">1</span>
+                        <div className="flex flex-col gap-3">
+                          <h3 className="flex h-7 items-center text-lg font-bold leading-[1.4] tracking-[-0.18px] text-black">클로드코드 플러그인 설치하기</h3>
+                          <div className="flex items-center gap-1 text-sm leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+                            <span>아래 코드를 복사 후, 터미널에 붙여넣고</span>
+                            <span className="rounded-lg border border-[#d4d4d8] bg-white px-3 py-1 text-xs font-medium leading-[1.3] tracking-[-0.12px] text-[#18181b]">Enter</span>
+                            <span>를 눌러주세요</span>
+                          </div>
+                          <div className="flex items-center gap-2 rounded-xl border border-[#e4e4e7] bg-[#f4f4f5] px-3 py-2.5">
+                            <span className="flex-1 text-xs font-medium leading-[1.3] tracking-[-0.12px] text-[#71717a]">claude plugin marketplace add jocoding-ax-partners/axhub</span>
+                            <button type="button" className="shrink-0" onClick={() => navigator.clipboard.writeText("claude plugin marketplace add jocoding-ax-partners/axhub")}>
+                              <Image src="/icons/version-b/copy-icon.svg" alt="복사" width={20} height={20} />
+                            </button>
+                          </div>
+                          <div className="flex items-center gap-1 text-sm leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+                            <span>한 번 더, 아래 코드를 복사 붙여넣고</span>
+                            <span className="rounded-lg border border-[#d4d4d8] bg-white px-3 py-1 text-xs font-medium leading-[1.3] tracking-[-0.12px] text-[#18181b]">Enter</span>
+                            <span>를 눌러주세요</span>
+                          </div>
+                          <div className="flex items-center gap-2 rounded-xl border border-[#e4e4e7] bg-[#f4f4f5] px-3 py-2.5">
+                            <span className="flex-1 text-xs font-medium leading-[1.3] tracking-[-0.12px] text-[#71717a]">claude plugin install jocoding-ax-partners@axhub</span>
+                            <button type="button" className="shrink-0" onClick={() => navigator.clipboard.writeText("claude plugin install jocoding-ax-partners@axhub")}>
+                              <Image src="/icons/version-b/copy-icon.svg" alt="복사" width={20} height={20} />
+                            </button>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2 rounded-xl border border-[#e4e4e7] bg-[#f4f4f5] px-3 py-2.5">
-                          <span className="flex-1 text-xs font-medium leading-[1.3] text-[#71717a]">claude plugin marketplace add jocoding-ax-partners/axhub</span>
-                          <button type="button" className="shrink-0" onClick={() => navigator.clipboard.writeText("claude plugin marketplace add jocoding-ax-partners/axhub")}>
-                            <Image src="/icons/version-b/copy-icon.svg" alt="복사" width={20} height={20} />
-                          </button>
+                      </div>
+                      {/* Step 2: 클로드코드 열기 */}
+                      <div className="relative flex gap-3 pb-8">
+                        <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#e7d8f3] text-base font-bold text-[#6D319D]">2</span>
+                        <div className="flex flex-col gap-3">
+                          <h3 className="flex h-7 items-center text-lg font-bold leading-[1.4] tracking-[-0.18px] text-black">클로드코드 열기</h3>
+                          <div className="flex items-center gap-1 text-sm leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+                            <span className="font-bold">Claude</span>
+                            <span>를 입력하고</span>
+                            <span className="rounded-lg border border-[#d4d4d8] bg-white px-3 py-1 text-xs font-medium leading-[1.3] tracking-[-0.12px] text-[#18181b]">Enter</span>
+                            <span>를 눌러주세요</span>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-1 text-sm text-[#71717a]">
-                          <span className="font-normal">한 번 더, 아래 코드를 복사 붙여넣고</span>
-                          <span className="rounded-lg border border-[#d4d4d8] bg-white px-3 py-1 text-xs font-medium text-[#18181b]">Enter</span>
-                          <span className="font-normal">를 눌러주세요</span>
-                        </div>
-                        <div className="flex items-center gap-2 rounded-xl border border-[#e4e4e7] bg-[#f4f4f5] px-3 py-2.5">
-                          <span className="flex-1 text-xs font-medium leading-[1.3] text-[#71717a]">claude plugin install jocoding-ax-partners@axhub</span>
-                          <button type="button" className="shrink-0" onClick={() => navigator.clipboard.writeText("claude plugin install jocoding-ax-partners@axhub")}>
-                            <Image src="/icons/version-b/copy-icon.svg" alt="복사" width={20} height={20} />
-                          </button>
+                      </div>
+                      {/* Step 3: 초기화 */}
+                      <div className="relative flex gap-3">
+                        <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#e7d8f3] text-base font-bold text-[#6D319D]">3</span>
+                        <div className="flex flex-col gap-3">
+                          <h3 className="flex h-7 items-center text-lg font-bold leading-[1.4] tracking-[-0.18px] text-black">AXHub 사용을 위해 초기화하기</h3>
+                          <div className="flex items-center gap-1 text-sm leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+                            <span>아래 코드를 복사 후, 클로드코드에 붙여넣고</span>
+                            <span className="rounded-lg border border-[#d4d4d8] bg-white px-3 py-1 text-xs font-medium leading-[1.3] tracking-[-0.12px] text-[#18181b]">Enter</span>
+                            <span>를 눌러주세요</span>
+                          </div>
+                          <div className="flex items-center gap-2 rounded-xl border border-[#e4e4e7] bg-[#f4f4f5] px-3 py-2.5">
+                            <span className="flex-1 text-xs font-medium leading-[1.3] tracking-[-0.12px] text-[#71717a]">/axhub-init</span>
+                            <button type="button" className="shrink-0" onClick={() => navigator.clipboard.writeText("/axhub-init")}>
+                              <Image src="/icons/version-b/copy-icon.svg" alt="복사" width={20} height={20} />
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
-
-                    {/* Step 3 */}
-                    <div className="relative flex gap-3 pb-8">
-                      <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#e7d8f3] text-base font-bold text-[#6D319D]">3</span>
-                      <div className="flex w-[426px] flex-col gap-3">
-                        <h3 className="text-lg font-bold leading-[1.4] text-black">클로드코드 열기</h3>
-                        <div className="flex items-center gap-1 text-sm text-[#71717a]">
-                          <span className="font-bold">Claude</span>
-                          <span className="font-normal">를 입력하고</span>
-                          <span className="rounded-lg border border-[#d4d4d8] bg-white px-3 py-1 text-xs font-medium text-[#18181b]">Enter</span>
-                          <span className="font-normal">를 눌러주세요</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Step 4 */}
-                    <div className="relative flex gap-3">
-                      <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#e7d8f3] text-base font-bold text-[#6D319D]">4</span>
-                      <div className="flex w-[426px] flex-col gap-3">
-                        <h3 className="text-lg font-bold leading-[1.4] text-black">AXHub 사용을 위해 초기화하기</h3>
-                        <div className="flex items-center gap-1 text-sm text-[#71717a]">
-                          <span className="font-normal">아래 코드를 복사 후, 클로드코드에 붙여넣고</span>
-                          <span className="rounded-lg border border-[#d4d4d8] bg-white px-3 py-1 text-xs font-medium text-[#18181b]">Enter</span>
-                          <span className="font-normal">를 눌러주세요</span>
-                        </div>
-                        <div className="flex items-center gap-2 rounded-xl border border-[#e4e4e7] bg-[#f4f4f5] px-3 py-2.5">
-                          <span className="flex-1 text-xs font-medium leading-[1.3] text-[#71717a]">/axhub-init</span>
-                          <button type="button" className="shrink-0" onClick={() => navigator.clipboard.writeText("/axhub-init")}>
-                            <Image src="/icons/version-b/copy-icon.svg" alt="복사" width={20} height={20} />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    </div>
-                    {/* 다음 버튼 */}
-                    <div className="flex justify-end">
-                      <button type="button" onClick={() => setGuideModalStep(2)} className="flex h-9 items-center justify-center rounded-lg bg-[#6D319D] px-8 text-sm font-semibold text-white transition-opacity hover:opacity-90">
+                    <div className="flex-1" />
+                    <div className="flex w-full items-center justify-end gap-2">
+                      <button type="button" onClick={() => setGuideModalStep("os-select")} className="flex h-9 items-center justify-center rounded-lg bg-[#f6f6f6] px-8 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#ececec]">
+                        이전
+                      </button>
+                      <button type="button" onClick={() => setGuideModalStep("final")} className="flex h-9 items-center justify-center rounded-lg bg-[#6D319D] px-8 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
                         다음
                       </button>
                     </div>
                   </div>
                 ) : (
-                  /* 두 번째 모달 */
-                  <div key="step2" className="flex h-full w-full flex-col p-10" style={{ animation: "slideLeft 0.35s ease-out" }}>
-                    <div className="relative flex flex-1 flex-col items-center justify-center gap-3">
-                      <Image src="/icons/version-b/home-bg-initial.png" alt="" width={400} height={246} className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
+                  /* 마지막 모달 */
+                  <div key="final" className="flex h-full w-full flex-col items-end gap-8 p-10" style={{ animation: "slideLeft 0.35s ease-out" }}>
+                    <div className="relative flex flex-1 flex-col items-center justify-center gap-5 w-full">
+                      <Image src="/icons/version-b/home-bg-initial.png" alt="" width={466} height={287} className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
                       <h2 className="relative z-10 text-center text-2xl font-bold leading-[1.2] text-[#18181b]">
                         이제 ClaudeCode에서
                         <br />
                         바이브코딩으로 앱을 만들어 보세요
                       </h2>
-                      <p className="relative z-10 text-center text-base font-normal text-[#18181b]/70">
+                      <p className="relative z-10 text-center text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b]/70">
                         사내 구성원이 만든 모든 앱은 AXHub에서 사용할 수 있어요
                       </p>
                     </div>
                     <div className="flex items-center justify-end gap-2">
-                      <button type="button" onClick={() => setGuideModalStep(1)} className="flex h-9 items-center justify-center rounded-lg bg-[#f6f6f6] px-8 text-sm font-semibold text-[#18181b] transition-colors hover:bg-[#ececec]">
+                      <button type="button" onClick={() => setGuideModalStep(selectedOS)} className="flex h-9 items-center justify-center rounded-lg bg-[#f6f6f6] px-8 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#ececec]">
                         이전
                       </button>
-                      <button type="button" onClick={closeGuideModal} className="flex h-9 items-center justify-center rounded-lg bg-[#6D319D] px-8 text-sm font-semibold text-white transition-opacity hover:opacity-90">
+                      <button type="button" onClick={closeGuideModal} className="flex h-9 items-center justify-center rounded-lg bg-[#6D319D] px-8 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
                         시작
                       </button>
                     </div>
