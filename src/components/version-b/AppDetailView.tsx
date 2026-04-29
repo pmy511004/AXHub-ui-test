@@ -125,11 +125,9 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
         const fillWidth = guideComplete ? "504px" : isDeployTab ? "375px" : isEnvTab ? "250px" : "125px";
 
         const chipClass = (state: string) =>
-          state === "done" || state === "active" ? "bg-[#E765BE]" : "";
-        const chipBg = (state: string) =>
-          state === "future"
-            ? { background: "linear-gradient(90deg, rgba(255,255,255,0.7), rgba(255,255,255,0.7)), #E765BE" }
-            : undefined;
+          state === "done" || state === "active" ? "bg-[#E765BE]" : "relative overflow-hidden bg-[#E765BE]";
+        const chipOverlay = (state: string) =>
+          state === "future";
         const labelClass = (state: string) =>
           state === "active" ? "font-semibold text-[#E765BE]"
             : state === "done" ? "font-medium text-[rgba(231,101,190,0.5)]"
@@ -191,16 +189,15 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 </div>
                 {steps.map((step) => (
                   <button key={step.num} type="button" onClick={() => { setGuideComplete(false); setActiveTab(step.tab); }} className="group relative z-10 flex w-[65px] flex-col items-center gap-3 transition hover:scale-110">
-                    <span className={`flex size-6 items-center justify-center rounded-full ${chipClass(step.state)} text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white transition group-hover:bg-[#d454a8]`} style={chipBg(step.state)}>{step.num}</span>
+                    <span className={`flex size-6 items-center justify-center rounded-full ${chipClass(step.state)} text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white transition group-hover:bg-[#d454a8]`}>{step.num}{chipOverlay(step.state) && <span className="absolute inset-0 rounded-full bg-white/70" />}</span>
                     <span className={`whitespace-nowrap text-xs leading-[1.3] tracking-[-0.12px] ${labelClass(step.state)} transition group-hover:text-[#E765BE]`}>{step.label}</span>
                   </button>
                 ))}
                 {/* 앱 공개 */}
                 <button type="button" onClick={() => setGuideComplete(true)} className="group relative z-10 flex flex-col items-center transition hover:scale-110">
                   <span
-                    className={`flex items-center justify-center rounded-full px-2 py-1 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white transition ${appPublished ? "bg-[#E765BE]" : "group-hover:brightness-90"}`}
-                    style={!appPublished ? { background: "linear-gradient(90deg, rgba(255,255,255,0.7), rgba(255,255,255,0.7)), #E765BE" } : undefined}
-                  >앱 공개</span>
+                    className={`flex items-center justify-center rounded-full px-2 py-1 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white transition ${appPublished ? "bg-[#E765BE]" : "relative overflow-hidden bg-[#E765BE] group-hover:brightness-90"}`}
+                  >앱 공개{!appPublished && <span className="absolute inset-0 rounded-full bg-white/70" />}</span>
                 </button>
               </div>
             </div>
@@ -251,8 +248,9 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
           </div>
           <div className="flex items-start gap-2">
             {isAdmin ? (
-              <span className="flex h-8 items-center justify-center overflow-hidden rounded-xl px-4 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white" style={{ background: "linear-gradient(90deg, rgba(255,255,255,0.48), rgba(255,255,255,0.48)), #E765BE" }}>
+              <span className="relative flex h-8 items-center justify-center overflow-hidden rounded-xl bg-[#E765BE] px-4 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white">
                 배포 전
+                <span className="absolute inset-0 rounded-xl bg-white/70" />
               </span>
             ) : appStatus === "열기" ? (
               <div className="flex items-start gap-2">
@@ -729,14 +727,11 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                     type="button"
                     disabled={!envKey.trim() || !envValue.trim() || !envType}
                     onClick={() => { setEnvVars([...envVars, { key: envKey, value: envValue, type: envType! }]); setEnvAddModalOpen(false); }}
-                    className="flex h-9 items-center justify-center rounded-lg px-8 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity"
-                    style={{
-                      background: envKey.trim() && envValue.trim() && envType
-                        ? "#E765BE"
-                        : "linear-gradient(90deg, rgba(255,255,255,0.7), rgba(255,255,255,0.7)), #E765BE",
-                    }}
+                    className="relative flex h-9 items-center justify-center overflow-hidden rounded-lg px-8 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity"
+                    style={{ background: "#E765BE" }}
                   >
                     추가
+                    {(!envKey.trim() || !envValue.trim() || !envType) && <span className="absolute inset-0 rounded-lg bg-white/70" />}
                   </button>
                 </div>
               </div>
