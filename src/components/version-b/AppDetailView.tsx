@@ -551,13 +551,10 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 type="button"
                 disabled={!selectedRepo || !branchName.trim()}
                 onClick={() => setGitStep("connected")}
-                className={`flex h-9 w-fit items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] transition-colors ${
-                  selectedRepo && branchName.trim()
-                    ? "bg-[#E765BE] text-white hover:opacity-90"
-                    : "bg-[#e4e4e7] text-[#a1a1aa]"
-                }`}
+                className="relative flex h-9 w-fit items-center justify-center overflow-hidden rounded-lg bg-[#E765BE] px-4 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
               >
                 저장소 연결
+                {(!selectedRepo || !branchName.trim()) && <span className="absolute inset-0 rounded-lg bg-white/70" />}
               </button>
             </div>
           ) : (
