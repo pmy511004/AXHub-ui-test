@@ -38,6 +38,8 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
   const [namingModalOpen, setNamingModalOpen] = useState(false);
   const [envModalOpen, setEnvModalOpen] = useState(false);
   const [envAddModalOpen, setEnvAddModalOpen] = useState(false);
+  const [envEditIndex, setEnvEditIndex] = useState<number | null>(null);
+  const [envDeleteIndex, setEnvDeleteIndex] = useState<number | null>(null);
   const [envKey, setEnvKey] = useState("");
   const [envValue, setEnvValue] = useState("");
   const [envType, setEnvType] = useState<string | null>(null);
@@ -663,8 +665,8 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                   <div className="flex h-[60px] flex-1 items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">********</span></div>
                   <div className="flex h-[60px] w-[156px] items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">{env.type}</span></div>
                   <div className="flex h-[60px] w-[156px] items-center gap-2.5 border-[0.5px] border-[#e4e4e7] px-4 py-3">
-                    <button type="button" className="flex h-9 items-center justify-center rounded-lg bg-[#f6f6f6] px-4 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#3f3f46] transition-colors hover:bg-[#ececec]">수정</button>
-                    <button type="button" onClick={() => setEnvVars(envVars.filter((_, j) => j !== i))} className="flex h-9 items-center justify-center rounded-lg bg-[#f6f6f6] px-4 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#f5475c] transition-colors hover:bg-[#ececec]">삭제</button>
+                    <button type="button" onClick={() => { setEnvEditIndex(i); setEnvKey(env.key); setEnvValue(env.value); setEnvType(env.type); }} className="flex h-9 items-center justify-center rounded-lg bg-[#f6f6f6] px-4 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#3f3f46] transition-colors hover:bg-[#ececec]">수정</button>
+                    <button type="button" onClick={() => setEnvDeleteIndex(i)} className="flex h-9 items-center justify-center rounded-lg bg-[#f6f6f6] px-4 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#f5475c] transition-colors hover:bg-[#ececec]">삭제</button>
                   </div>
                 </div>
               ))}
@@ -729,6 +731,96 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                   >
                     추가
                     {(!envKey.trim() || !envValue.trim() || !envType) && <span className="absolute inset-0 rounded-lg bg-white/70" />}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+          {/* 환경변수 수정 모달 */}
+          {envEditIndex !== null && (
+            <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/20" onClick={() => { setEnvEditIndex(null); setEnvKey(""); setEnvValue(""); setEnvType(null); }}>
+              <div
+                className="flex w-[520px] flex-col items-end gap-6 rounded-2xl bg-white p-6"
+                style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)", backdropFilter: "blur(20px)", animation: "modalScaleIn 0.3s ease-out" }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <p className="w-full text-xl font-semibold leading-[1.3] tracking-[-0.2px] text-black">환경변수 수정하기</p>
+                {/* 키(이름) */}
+                <div className="flex w-full flex-col gap-3">
+                  <p className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-black">키(이름)<span className="text-[#ef1026]">*</span></p>
+                  <div className="flex flex-col gap-2">
+                    <input type="text" value={envKey} onChange={(e) => setEnvKey(e.target.value)} placeholder="DB_URL..." className="min-h-[48px] rounded-xl border border-[#e4e4e7] bg-white px-4 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#E765BE] focus:outline-none" />
+                    <p className="text-sm leading-[1.5] tracking-[-0.14px] text-[#71717a]"><span className="font-semibold">대문자 + 언더스코어</span><span className="font-normal"> 형태로 사용하며, 바로 알아볼 수 있는 이름을 붙여주세요</span></p>
+                  </div>
+                </div>
+                {/* 값 */}
+                <div className="flex w-full flex-col gap-3">
+                  <p className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-black">값<span className="text-[#ef1026]">*</span></p>
+                  <div className="flex flex-col gap-2">
+                    <input type="text" value={envValue} onChange={(e) => setEnvValue(e.target.value)} placeholder="********" className="min-h-[48px] rounded-xl border border-[#e4e4e7] bg-white px-4 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#E765BE] focus:outline-none" />
+                    <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">실제로 들어가는 값으로 발급받거나 생성한 값을 넣어주세요</p>
+                  </div>
+                </div>
+                {/* 환경 */}
+                <div className="flex w-full flex-col gap-3">
+                  <p className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-black">환경<span className="text-[#ef1026]">*</span></p>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex gap-2">
+                      {[
+                        { key: "Runtime", desc: "앱이 실행될 때 사용" },
+                        { key: "Build", desc: "앱을 만들 때 사용" },
+                        { key: "Both", desc: "두 경우 모두 사용" },
+                      ].map((env) => (
+                        <button key={env.key} type="button" onClick={() => setEnvType(envType === env.key ? null : env.key)} className={`flex flex-1 flex-col gap-2 rounded-xl border p-4 text-left transition-colors ${envType === env.key ? "border-[#E765BE] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
+                          <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46]">{env.key}</span>
+                          <span className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">{env.desc}</span>
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">앱을 만들 때 고정되는 값인 지, 실행할 때마다 바뀌는 값인 지 구분해주세요</p>
+                  </div>
+                </div>
+                {/* 버튼 */}
+                <div className="flex items-start gap-2">
+                  <button type="button" onClick={() => { setEnvEditIndex(null); setEnvKey(""); setEnvValue(""); setEnvType(null); }} className="flex h-9 items-center justify-center rounded-lg bg-[#f6f6f6] px-8 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#3f3f46] transition-colors hover:bg-[#ececec]">
+                    닫기
+                  </button>
+                  <button
+                    type="button"
+                    disabled={!envKey.trim() || !envValue.trim() || !envType}
+                    onClick={() => { const updated = [...envVars]; updated[envEditIndex] = { key: envKey, value: envValue, type: envType! }; setEnvVars(updated); setEnvEditIndex(null); setEnvKey(""); setEnvValue(""); setEnvType(null); }}
+                    className="relative flex h-9 items-center justify-center overflow-hidden rounded-lg px-8 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+                    style={{ background: "#E765BE" }}
+                  >
+                    저장
+                    {(!envKey.trim() || !envValue.trim() || !envType) && <span className="absolute inset-0 rounded-lg bg-white/70" />}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+          {/* 환경변수 삭제 확인 모달 */}
+          {envDeleteIndex !== null && (
+            <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/20" onClick={() => setEnvDeleteIndex(null)}>
+              <div
+                className="flex w-[520px] flex-col items-end gap-6 rounded-2xl bg-white p-6"
+                style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)", backdropFilter: "blur(20px)", animation: "modalScaleIn 0.3s ease-out" }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex w-full flex-col gap-2">
+                  <p className="text-[22px] font-semibold leading-[1.3] tracking-[-0.22px] text-black">이 환경변수를 정말 삭제할까요?</p>
+                  <p className="text-lg font-medium leading-[1.4] tracking-[-0.18px] text-[#71717a]">이 작업은 되돌릴 수 없어요</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <button type="button" onClick={() => setEnvDeleteIndex(null)} className="flex h-9 items-center justify-center rounded-lg bg-[#f6f6f6] px-8 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#3f3f46] transition-colors hover:bg-[#ececec]">
+                    닫기
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setEnvVars(envVars.filter((_, j) => j !== envDeleteIndex)); setEnvDeleteIndex(null); }}
+                    className="flex h-9 items-center justify-center rounded-lg bg-[#E765BE] px-8 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+                  >
+                    삭제
                   </button>
                 </div>
               </div>
