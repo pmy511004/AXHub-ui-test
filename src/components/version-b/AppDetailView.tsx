@@ -40,6 +40,15 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
   const [envAddModalOpen, setEnvAddModalOpen] = useState(false);
   const [envEditIndex, setEnvEditIndex] = useState<number | null>(null);
   const [envDeleteIndex, setEnvDeleteIndex] = useState<number | null>(null);
+  const [memberAddModalOpen, setMemberAddModalOpen] = useState(false);
+  const [memberAddMode, setMemberAddMode] = useState<"user" | "role">("user");
+  const [memberDropdownOpen, setMemberDropdownOpen] = useState(false);
+  const [selectedMemberUser, setSelectedMemberUser] = useState<string | null>(null);
+  const [selectedMemberRole, setSelectedMemberRole] = useState<string | null>(null);
+  const [members, setMembers] = useState<{ name: string; email: string; permission: string; addedAt: string }[]>([]);
+  const [memberSearch, setMemberSearch] = useState("");
+  const [memberDeleteIndex, setMemberDeleteIndex] = useState<number | null>(null);
+  const [memberDropdownSearch, setMemberDropdownSearch] = useState("");
   const [envKey, setEnvKey] = useState("");
   const [envValue, setEnvValue] = useState("");
   const [envType, setEnvType] = useState<string | null>(null);
@@ -292,7 +301,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
       {/* 섹션 2: Tab Bar */}
       {isAdmin && (
         <div className="flex items-center border-b border-[rgba(82,82,91,0.08)]">
-          {["앱", "Git 연동", "배포", "테이블", "환경변수", "데이터 접근", "공유 테이블", "설정"].map((tab) => {
+          {["앱", "Git 연동", "배포", "운영", "테이블", "환경변수", "데이터 접근", "멤버", "설정"].map((tab) => {
             const hasWarning = (tab === "Git 연동" && gitStep !== "connected") || tab === "배포" || tab === "환경변수";
             const isActive = activeTab === tab;
             return (
@@ -808,8 +817,8 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex w-full flex-col gap-2">
-                  <p className="text-[22px] font-semibold leading-[1.3] tracking-[-0.22px] text-black">이 환경변수를 정말 삭제할까요?</p>
-                  <p className="text-lg font-medium leading-[1.4] tracking-[-0.18px] text-[#71717a]">이 작업은 되돌릴 수 없어요</p>
+                  <p className="text-xl font-semibold leading-[1.3] tracking-[-0.2px] text-black">이 환경변수를 정말 삭제할까요?</p>
+                  <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">이 작업은 되돌릴 수 없어요</p>
                 </div>
                 <div className="flex items-start gap-2">
                   <button type="button" onClick={() => setEnvDeleteIndex(null)} className="flex h-9 items-center justify-center rounded-lg bg-[#f6f6f6] px-8 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#3f3f46] transition-colors hover:bg-[#ececec]">
@@ -1150,6 +1159,195 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
               </>
             )}
           </div>
+          )}
+        </div>
+      ) : activeTab === "멤버" ? (
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-2 overflow-hidden rounded-xl bg-[#f4f4f5] p-5">
+            <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#3f3f46]">멤버 관리</p>
+            <p className="text-base leading-[1.5] tracking-[-0.16px] text-[#71717a]">앱 관리페이지에 접근할 수 있는 멤버를 설정해요</p>
+          </div>
+          {members.length === 0 ? (
+          <div className="flex flex-col items-center justify-center gap-6 py-10">
+            <div className="flex flex-col items-center gap-2 text-center">
+              <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">접근할 수 있는 멤버를 추가하세요</p>
+              <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">아직은 멤버가 아무도 없어요</p>
+            </div>
+            <button type="button" onClick={() => { setMemberAddModalOpen(true); setMemberAddMode("user"); setSelectedMemberUser(null); setSelectedMemberRole(null); setMemberDropdownOpen(false); }} className="flex h-9 items-center justify-center rounded-lg bg-[#E765BE] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+              멤버 추가
+            </button>
+          </div>
+          ) : (
+          <div className="flex flex-col gap-6 py-5">
+            <div className="flex items-center justify-between">
+              <div className="flex h-10 w-[240px] items-center gap-1.5 rounded-xl bg-[#f4f4f5] px-4 py-3">
+                <svg className="size-5 shrink-0 text-[#a1a1aa]" fill="none" viewBox="0 0 20 20"><circle cx="9" cy="9" r="5.5" stroke="currentColor" strokeWidth="1.5" /><path d="M13.5 13.5L16.5 16.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
+                <input type="text" value={memberSearch} onChange={(e) => setMemberSearch(e.target.value)} placeholder="이름으로 검색" className="flex-1 bg-transparent text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:outline-none" />
+              </div>
+              <button type="button" onClick={() => { setMemberAddModalOpen(true); setMemberAddMode("user"); setSelectedMemberUser(null); setSelectedMemberRole(null); setMemberDropdownOpen(false); }} className="flex h-9 items-center justify-center rounded-lg bg-[#E765BE] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+                멤버 추가
+              </button>
+            </div>
+            <div className="overflow-hidden rounded-xl border-[0.5px] border-[#e4e4e7]">
+              {/* 테이블 헤더 */}
+              <div className="flex bg-[#f6f6f6]">
+                <div className="flex w-[120px] items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#71717a]">이름</span></div>
+                <div className="flex flex-1 items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#71717a]">이메일</span></div>
+                <div className="flex flex-1 items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#71717a]">권한</span></div>
+                <div className="flex w-[114px] items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#71717a]">추가일</span></div>
+                <div className="flex w-[89px] items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#71717a]">작업</span></div>
+              </div>
+              {/* 테이블 바디 */}
+              {members.filter((m) => !memberSearch || m.name.includes(memberSearch)).map((m, i) => (
+                <div key={i} className="flex bg-white">
+                  <div className="flex h-[60px] w-[120px] items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b]">{m.name}</span></div>
+                  <div className="flex h-[60px] flex-1 items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b]">{m.email}</span></div>
+                  <div className="flex h-[60px] flex-1 items-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="truncate text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b]">{m.permission}</span></div>
+                  <div className="flex h-[60px] w-[114px] items-center justify-center border-[0.5px] border-[#e4e4e7] px-4 py-3"><span className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b]">{m.addedAt}</span></div>
+                  <div className="flex h-[60px] w-[89px] items-center justify-center border-[0.5px] border-[#e4e4e7] px-4 py-3">
+                    <button type="button" onClick={() => setMemberDeleteIndex(i)} className="flex h-9 items-center justify-center rounded-lg bg-[#f6f6f6] px-4 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#f5475c] transition-colors hover:bg-[#ececec]">삭제</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          )}
+          {/* 멤버 추가 모달 */}
+          {memberAddModalOpen && (() => {
+            const mockUsers = [
+              { name: "김민영", email: "minyoung@jocodingax.ai" },
+              { name: "이서준", email: "seojun@jocodingax.ai" },
+              { name: "박지현", email: "jihyun@jocodingax.ai" },
+              { name: "최유진", email: "yujin@jocodingax.ai" },
+              { name: "정하늘", email: "haneul@jocodingax.ai" },
+            ];
+            const roleUsers: Record<string, { name: string; email: string }[]> = {
+              "개발팀": [{ name: "강수빈", email: "sui@jocodingax.ai" }, { name: "한도윤", email: "doyun@jocodingax.ai" }],
+              "디자인팀": [{ name: "오예린", email: "yerin@jocodingax.ai" }, { name: "송민서", email: "minseo@jocodingax.ai" }],
+              "기획팀": [{ name: "윤지우", email: "jiwoo@jocodingax.ai" }],
+              "마케팅팀": [{ name: "임채원", email: "chaewon@jocodingax.ai" }, { name: "홍서아", email: "seoa@jocodingax.ai" }],
+              "운영팀": [{ name: "배준호", email: "junho@jocodingax.ai" }],
+            };
+            const mockRoles = Object.keys(roleUsers);
+            const isUserMode = memberAddMode === "user";
+            const isSelected = isUserMode ? !!selectedMemberUser : !!selectedMemberRole;
+            const today = new Date().toISOString().slice(0, 10).replace(/-/g, ".");
+            const handleAdd = () => {
+              if (isUserMode && selectedMemberUser) {
+                const match = selectedMemberUser.match(/^(.+?) \((.+?)\)$/);
+                if (match) {
+                  const exists = members.some((m) => m.email === match[2]);
+                  if (!exists) setMembers([...members, { name: match[1], email: match[2], permission: "read, write", addedAt: today }]);
+                }
+              } else if (!isUserMode && selectedMemberRole) {
+                const users = roleUsers[selectedMemberRole] || [];
+                const newMembers = users.filter((u) => !members.some((m) => m.email === u.email)).map((u) => ({ name: u.name, email: u.email, permission: "read, write", addedAt: today }));
+                if (newMembers.length > 0) setMembers([...members, ...newMembers]);
+              }
+              setMemberAddModalOpen(false);
+            };
+            return (
+              <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/20" onClick={() => setMemberAddModalOpen(false)}>
+                <div
+                  className="flex w-[520px] flex-col items-end gap-6 rounded-2xl bg-white p-6"
+                  style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)", backdropFilter: "blur(20px)", animation: "modalScaleIn 0.3s ease-out" }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <p className="w-full text-xl font-semibold leading-[1.3] tracking-[-0.2px] text-black">멤버 추가하기</p>
+                  {/* 모드 선택 */}
+                  <div className="flex w-full gap-2">
+                    <button type="button" onClick={() => { setMemberAddMode("user"); setSelectedMemberUser(null); setSelectedMemberRole(null); setMemberDropdownOpen(false); }} className={`flex flex-1 flex-col gap-2 rounded-xl border p-4 text-left transition-colors ${isUserMode ? "border-[#E765BE] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
+                      <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46]">개인 사용자별</span>
+                      <span className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">특정 사내 구성원 찾기</span>
+                    </button>
+                    <button type="button" onClick={() => { setMemberAddMode("role"); setSelectedMemberUser(null); setSelectedMemberRole(null); setMemberDropdownOpen(false); }} className={`flex flex-1 flex-col gap-2 rounded-xl border p-4 text-left transition-colors ${!isUserMode ? "border-[#E765BE] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
+                      <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46]">전체 역할별</span>
+                      <span className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">직무, 부서별로 한 번에 찾기</span>
+                    </button>
+                  </div>
+                  {/* 드롭다운 */}
+                  <div className="relative w-full">
+                    <div className="flex h-12 w-full cursor-pointer items-center justify-between rounded-xl border border-[#e4e4e7] bg-white px-4" onClick={() => { if (!memberDropdownOpen) { setMemberDropdownOpen(true); setMemberDropdownSearch(""); } }}>
+                      {memberDropdownOpen ? (
+                        <input type="text" autoFocus value={memberDropdownSearch} onChange={(e) => setMemberDropdownSearch(e.target.value)} placeholder={isUserMode ? "이름 또는 이메일로 검색" : "역할 검색"} className="flex-1 bg-transparent text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:outline-none" onBlur={() => setTimeout(() => setMemberDropdownOpen(false), 150)} />
+                      ) : (
+                        <span className={`text-base leading-[1.5] tracking-[-0.16px] ${(isUserMode ? selectedMemberUser : selectedMemberRole) ? "font-normal text-[#18181b]" : "font-normal text-[#a1a1aa]"}`}>
+                          {isUserMode ? (selectedMemberUser ?? "사용자 선택") : (selectedMemberRole ?? "역할 선택")}
+                        </span>
+                      )}
+                      <svg className={`size-5 shrink-0 text-[#a1a1aa] transition-transform ${memberDropdownOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 20 20"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                    </div>
+                    {memberDropdownOpen && (() => {
+                      const query = memberDropdownSearch.toLowerCase();
+                      const filteredUsers = mockUsers.filter((u) => u.name.toLowerCase().includes(query) || u.email.toLowerCase().includes(query));
+                      const filteredRoles = mockRoles.filter((r) => r.toLowerCase().includes(query));
+                      return (
+                        <div className="absolute left-0 right-0 top-[calc(100%+4px)] z-10 rounded-xl border border-[#e4e4e7] bg-white shadow-lg">
+                          <div className="max-h-[200px] overflow-y-auto py-1">
+                            {isUserMode ? (filteredUsers.length > 0 ? filteredUsers.map((u) => (
+                              <button key={u.email} type="button" onClick={() => { setSelectedMemberUser(`${u.name} (${u.email})`); setMemberDropdownOpen(false); setMemberDropdownSearch(""); }} className="flex w-full flex-col px-4 py-2.5 text-left transition-colors hover:bg-gray-50">
+                                <span className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b]">{u.name}</span>
+                                <span className="text-xs leading-[1.3] tracking-[-0.12px] text-[#71717a]">{u.email}</span>
+                              </button>
+                            )) : (
+                              <p className="px-4 py-3 text-sm text-[#a1a1aa]">검색 결과가 없어요</p>
+                            )) : (filteredRoles.length > 0 ? filteredRoles.map((role) => (
+                              <button key={role} type="button" onClick={() => { setSelectedMemberRole(role); setMemberDropdownOpen(false); setMemberDropdownSearch(""); }} className="flex w-full px-4 py-2.5 text-left text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-gray-50">
+                                {role}
+                              </button>
+                            )) : (
+                              <p className="px-4 py-3 text-sm text-[#a1a1aa]">검색 결과가 없어요</p>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </div>
+                  {/* 버튼 */}
+                  <div className="flex items-start gap-2">
+                    <button type="button" onClick={() => setMemberAddModalOpen(false)} className="flex h-9 items-center justify-center rounded-lg bg-[#f6f6f6] px-8 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#3f3f46] transition-colors hover:bg-[#ececec]">
+                      닫기
+                    </button>
+                    <button
+                      type="button"
+                      disabled={!isSelected}
+                      onClick={handleAdd}
+                      className="relative flex h-9 items-center justify-center overflow-hidden rounded-lg bg-[#E765BE] px-8 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+                    >
+                      추가
+                      {!isSelected && <span className="absolute inset-0 rounded-lg bg-white/70" />}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+          {/* 멤버 삭제 확인 모달 */}
+          {memberDeleteIndex !== null && (
+            <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/20" onClick={() => setMemberDeleteIndex(null)}>
+              <div
+                className="flex w-[520px] flex-col items-end gap-6 rounded-2xl bg-white p-6"
+                style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)", backdropFilter: "blur(20px)", animation: "modalScaleIn 0.3s ease-out" }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex w-full flex-col gap-2">
+                  <p className="text-xl font-semibold leading-[1.3] tracking-[-0.2px] text-black">이 멤버를 정말 삭제할까요?</p>
+                  <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">이 멤버는 더 이상 관리페이지에 접근할 수 없게 돼요</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <button type="button" onClick={() => setMemberDeleteIndex(null)} className="flex h-9 items-center justify-center rounded-lg bg-[#f6f6f6] px-8 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#3f3f46] transition-colors hover:bg-[#ececec]">
+                    닫기
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setMembers(members.filter((_, j) => j !== memberDeleteIndex)); setMemberDeleteIndex(null); }}
+                    className="flex h-9 items-center justify-center rounded-lg bg-[#E765BE] px-8 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+                  >
+                    삭제
+                  </button>
+                </div>
+              </div>
+            </div>
           )}
         </div>
       ) : (
