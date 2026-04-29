@@ -49,6 +49,8 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
   const [memberSearch, setMemberSearch] = useState("");
   const [memberDeleteIndex, setMemberDeleteIndex] = useState<number | null>(null);
   const [memberDropdownSearch, setMemberDropdownSearch] = useState("");
+  const [memberPermission, setMemberPermission] = useState("구성원 (보기 권한)");
+  const [memberPermDropdownOpen, setMemberPermDropdownOpen] = useState(false);
   const [envKey, setEnvKey] = useState("");
   const [envValue, setEnvValue] = useState("");
   const [envType, setEnvType] = useState<string | null>(null);
@@ -1173,7 +1175,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
               <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">접근할 수 있는 멤버를 추가하세요</p>
               <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">아직은 멤버가 아무도 없어요</p>
             </div>
-            <button type="button" onClick={() => { setMemberAddModalOpen(true); setMemberAddMode("user"); setSelectedMemberUser(null); setSelectedMemberRole(null); setMemberDropdownOpen(false); }} className="flex h-9 items-center justify-center rounded-lg bg-[#E765BE] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+            <button type="button" onClick={() => { setMemberAddModalOpen(true); setMemberAddMode("user"); setSelectedMemberUser(null); setSelectedMemberRole(null); setMemberDropdownOpen(false); setMemberPermission("구성원 (보기 권한)"); setMemberPermDropdownOpen(false); }} className="flex h-9 items-center justify-center rounded-lg bg-[#E765BE] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
               멤버 추가
             </button>
           </div>
@@ -1184,7 +1186,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 <svg className="size-5 shrink-0 text-[#a1a1aa]" fill="none" viewBox="0 0 20 20"><circle cx="9" cy="9" r="5.5" stroke="currentColor" strokeWidth="1.5" /><path d="M13.5 13.5L16.5 16.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
                 <input type="text" value={memberSearch} onChange={(e) => setMemberSearch(e.target.value)} placeholder="이름으로 검색" className="flex-1 bg-transparent text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:outline-none" />
               </div>
-              <button type="button" onClick={() => { setMemberAddModalOpen(true); setMemberAddMode("user"); setSelectedMemberUser(null); setSelectedMemberRole(null); setMemberDropdownOpen(false); }} className="flex h-9 items-center justify-center rounded-lg bg-[#E765BE] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+              <button type="button" onClick={() => { setMemberAddModalOpen(true); setMemberAddMode("user"); setSelectedMemberUser(null); setSelectedMemberRole(null); setMemberDropdownOpen(false); setMemberPermission("구성원 (보기 권한)"); setMemberPermDropdownOpen(false); }} className="flex h-9 items-center justify-center rounded-lg bg-[#E765BE] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
                 멤버 추가
               </button>
             </div>
@@ -1237,11 +1239,11 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 const match = selectedMemberUser.match(/^(.+?) \((.+?)\)$/);
                 if (match) {
                   const exists = members.some((m) => m.email === match[2]);
-                  if (!exists) setMembers([...members, { name: match[1], email: match[2], permission: "read, write", addedAt: today }]);
+                  if (!exists) setMembers([...members, { name: match[1], email: match[2], permission: memberPermission, addedAt: today }]);
                 }
               } else if (!isUserMode && selectedMemberRole) {
                 const users = roleUsers[selectedMemberRole] || [];
-                const newMembers = users.filter((u) => !members.some((m) => m.email === u.email)).map((u) => ({ name: u.name, email: u.email, permission: "read, write", addedAt: today }));
+                const newMembers = users.filter((u) => !members.some((m) => m.email === u.email)).map((u) => ({ name: u.name, email: u.email, permission: memberPermission, addedAt: today }));
                 if (newMembers.length > 0) setMembers([...members, ...newMembers]);
               }
               setMemberAddModalOpen(false);
@@ -1254,54 +1256,95 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                   onClick={(e) => e.stopPropagation()}
                 >
                   <p className="w-full text-xl font-semibold leading-[1.3] tracking-[-0.2px] text-black">멤버 추가하기</p>
-                  {/* 모드 선택 */}
-                  <div className="flex w-full gap-2">
-                    <button type="button" onClick={() => { setMemberAddMode("user"); setSelectedMemberUser(null); setSelectedMemberRole(null); setMemberDropdownOpen(false); }} className={`flex flex-1 flex-col gap-2 rounded-xl border p-4 text-left transition-colors ${isUserMode ? "border-[#E765BE] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
-                      <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46]">개인 사용자별</span>
-                      <span className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">특정 사내 구성원 찾기</span>
-                    </button>
-                    <button type="button" onClick={() => { setMemberAddMode("role"); setSelectedMemberUser(null); setSelectedMemberRole(null); setMemberDropdownOpen(false); }} className={`flex flex-1 flex-col gap-2 rounded-xl border p-4 text-left transition-colors ${!isUserMode ? "border-[#E765BE] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
-                      <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46]">전체 역할별</span>
-                      <span className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">직무, 부서별로 한 번에 찾기</span>
-                    </button>
-                  </div>
-                  {/* 드롭다운 */}
-                  <div className="relative w-full">
-                    <div className="flex h-12 w-full cursor-pointer items-center justify-between rounded-xl border border-[#e4e4e7] bg-white px-4" onClick={() => { if (!memberDropdownOpen) { setMemberDropdownOpen(true); setMemberDropdownSearch(""); } }}>
-                      {memberDropdownOpen ? (
-                        <input type="text" autoFocus value={memberDropdownSearch} onChange={(e) => setMemberDropdownSearch(e.target.value)} placeholder={isUserMode ? "이름 또는 이메일로 검색" : "역할 검색"} className="flex-1 bg-transparent text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:outline-none" onBlur={() => setTimeout(() => setMemberDropdownOpen(false), 150)} />
-                      ) : (
-                        <span className={`text-base leading-[1.5] tracking-[-0.16px] ${(isUserMode ? selectedMemberUser : selectedMemberRole) ? "font-normal text-[#18181b]" : "font-normal text-[#a1a1aa]"}`}>
-                          {isUserMode ? (selectedMemberUser ?? "사용자 선택") : (selectedMemberRole ?? "역할 선택")}
-                        </span>
-                      )}
-                      <svg className={`size-5 shrink-0 text-[#a1a1aa] transition-transform ${memberDropdownOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 20 20"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  {/* 멤버 섹션 */}
+                  <div className="flex w-full flex-col gap-3">
+                    <p className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-black">멤버</p>
+                    {/* 모드 선택 */}
+                    <div className="flex w-full gap-3">
+                      <button type="button" onClick={() => { setMemberAddMode("user"); setSelectedMemberUser(null); setSelectedMemberRole(null); setMemberDropdownOpen(false); }} className={`flex flex-1 flex-col gap-2 rounded-xl border p-4 text-left transition-colors ${isUserMode ? "border-[#E765BE] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
+                        <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46]">개인 사용자별</span>
+                        <span className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">특정 사내 구성원 찾기</span>
+                      </button>
+                      <button type="button" onClick={() => { setMemberAddMode("role"); setSelectedMemberUser(null); setSelectedMemberRole(null); setMemberDropdownOpen(false); }} className={`flex flex-1 flex-col gap-2 rounded-xl border p-4 text-left transition-colors ${!isUserMode ? "border-[#E765BE] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
+                        <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46]">전체 역할별</span>
+                        <span className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">직무, 부서별로 한 번에 찾기</span>
+                      </button>
                     </div>
-                    {memberDropdownOpen && (() => {
-                      const query = memberDropdownSearch.toLowerCase();
-                      const filteredUsers = mockUsers.filter((u) => u.name.toLowerCase().includes(query) || u.email.toLowerCase().includes(query));
-                      const filteredRoles = mockRoles.filter((r) => r.toLowerCase().includes(query));
-                      return (
-                        <div className="absolute left-0 right-0 top-[calc(100%+4px)] z-10 rounded-xl border border-[#e4e4e7] bg-white shadow-lg">
-                          <div className="max-h-[200px] overflow-y-auto py-1">
-                            {isUserMode ? (filteredUsers.length > 0 ? filteredUsers.map((u) => (
-                              <button key={u.email} type="button" onClick={() => { setSelectedMemberUser(`${u.name} (${u.email})`); setMemberDropdownOpen(false); setMemberDropdownSearch(""); }} className="flex w-full flex-col px-4 py-2.5 text-left transition-colors hover:bg-gray-50">
-                                <span className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b]">{u.name}</span>
-                                <span className="text-xs leading-[1.3] tracking-[-0.12px] text-[#71717a]">{u.email}</span>
-                              </button>
-                            )) : (
-                              <p className="px-4 py-3 text-sm text-[#a1a1aa]">검색 결과가 없어요</p>
-                            )) : (filteredRoles.length > 0 ? filteredRoles.map((role) => (
-                              <button key={role} type="button" onClick={() => { setSelectedMemberRole(role); setMemberDropdownOpen(false); setMemberDropdownSearch(""); }} className="flex w-full px-4 py-2.5 text-left text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-gray-50">
-                                {role}
-                              </button>
-                            )) : (
-                              <p className="px-4 py-3 text-sm text-[#a1a1aa]">검색 결과가 없어요</p>
-                            ))}
-                          </div>
+                    {/* 멤버 드롭다운 */}
+                    <div className="relative w-full">
+                      <div className="flex h-12 w-full cursor-pointer items-center gap-3 rounded-xl border border-[#e4e4e7] bg-white pl-4" onClick={() => { if (!memberDropdownOpen) { setMemberDropdownOpen(true); setMemberDropdownSearch(""); } }}>
+                        <div className="flex flex-1 items-center overflow-hidden">
+                          {memberDropdownOpen ? (
+                            <input type="text" autoFocus value={memberDropdownSearch} onChange={(e) => setMemberDropdownSearch(e.target.value)} placeholder={isUserMode ? "이름 또는 이메일로 검색" : "역할 검색"} className="w-full bg-transparent text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:outline-none" onBlur={() => setTimeout(() => setMemberDropdownOpen(false), 150)} />
+                          ) : (
+                            <span className={`text-base leading-[1.5] tracking-[-0.16px] ${(isUserMode ? selectedMemberUser : selectedMemberRole) ? "font-normal text-[#18181b]" : "font-normal text-[#a1a1aa]"}`}>
+                              {isUserMode ? (selectedMemberUser ?? "사용자 선택") : (selectedMemberRole ?? "역할 선택")}
+                            </span>
+                          )}
                         </div>
-                      );
-                    })()}
+                        <div className="flex shrink-0 items-center px-4 py-3">
+                          <svg className={`size-5 text-[#a1a1aa] transition-transform ${memberDropdownOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 20 20"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                        </div>
+                      </div>
+                      {memberDropdownOpen && (() => {
+                        const query = memberDropdownSearch.toLowerCase();
+                        const filteredUsers = mockUsers.filter((u) => u.name.toLowerCase().includes(query) || u.email.toLowerCase().includes(query));
+                        const filteredRoles = mockRoles.filter((r) => r.toLowerCase().includes(query));
+                        return (
+                          <div className="absolute left-0 right-0 top-[calc(100%+4px)] z-10 rounded-xl border border-[#e4e4e7] bg-white shadow-lg">
+                            <div className="max-h-[200px] overflow-y-auto py-1">
+                              {isUserMode ? (filteredUsers.length > 0 ? filteredUsers.map((u) => (
+                                <button key={u.email} type="button" onClick={() => { setSelectedMemberUser(`${u.name} (${u.email})`); setMemberDropdownOpen(false); setMemberDropdownSearch(""); }} className="flex w-full flex-col px-4 py-2.5 text-left transition-colors hover:bg-gray-50">
+                                  <span className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b]">{u.name}</span>
+                                  <span className="text-xs leading-[1.3] tracking-[-0.12px] text-[#71717a]">{u.email}</span>
+                                </button>
+                              )) : (
+                                <p className="px-4 py-3 text-sm text-[#a1a1aa]">검색 결과가 없어요</p>
+                              )) : (filteredRoles.length > 0 ? filteredRoles.map((role) => (
+                                <button key={role} type="button" onClick={() => { setSelectedMemberRole(role); setMemberDropdownOpen(false); setMemberDropdownSearch(""); }} className="flex w-full px-4 py-2.5 text-left text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-gray-50">
+                                  {role}
+                                </button>
+                              )) : (
+                                <p className="px-4 py-3 text-sm text-[#a1a1aa]">검색 결과가 없어요</p>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      })()}
+                    </div>
+                  </div>
+                  {/* 권한 섹션 */}
+                  <div className="flex w-full flex-col gap-3">
+                    <div className="flex items-center gap-1">
+                      <p className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-black">권한</p>
+                      <div className="group relative">
+                        <Image src="/icons/version-b/info-circle.svg" alt="권한 안내" width={18} height={18} className="cursor-help" />
+                        <div className="pointer-events-none absolute left-[calc(100%+8px)] top-1/2 z-20 -translate-y-1/2 whitespace-nowrap rounded-lg bg-[#27272a] px-2.5 py-1.5 text-sm font-medium leading-[1.5] tracking-[-0.14px] text-white opacity-0 shadow-lg backdrop-blur-[20px] transition-opacity group-hover:opacity-100">
+                          <p>구성원 (보기 권한) : 앱 / 테이블 탭을 볼 수 있어요</p>
+                          <p>구성원 (편집 권한) : 앱 / 테이블 탭을 편집할 수 있어요</p>
+                          <p>관리자 : 모든 탭을 편집할 수 있어요</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="relative w-full">
+                      <button type="button" onClick={() => setMemberPermDropdownOpen(!memberPermDropdownOpen)} className="flex h-12 w-full items-center gap-3 rounded-xl border border-[#e4e4e7] bg-white pl-4">
+                        <div className="flex flex-1 items-center overflow-hidden">
+                          <span className="text-base leading-[1.5] tracking-[-0.16px] text-[#18181b]"><span className="font-semibold">{memberPermission.split(" (")[0]} </span><span className="font-normal">{memberPermission.includes("(") ? `(${memberPermission.split("(")[1]}` : ""}</span></span>
+                        </div>
+                        <div className="flex shrink-0 items-center px-4 py-3">
+                          <svg className={`size-5 text-[#a1a1aa] transition-transform ${memberPermDropdownOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 20 20"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                        </div>
+                      </button>
+                      {memberPermDropdownOpen && (
+                        <div className="absolute left-0 right-0 top-[calc(100%+4px)] z-10 rounded-xl border border-[#e4e4e7] bg-white py-1 shadow-lg">
+                          {["구성원 (보기 권한)", "구성원 (편집 권한)", "관리자"].map((perm) => (
+                            <button key={perm} type="button" onClick={() => { setMemberPermission(perm); setMemberPermDropdownOpen(false); }} className={`flex w-full px-4 py-2.5 text-left text-sm leading-[1.5] tracking-[-0.14px] transition-colors hover:bg-gray-50 ${memberPermission === perm ? "font-semibold text-[#E765BE]" : "font-normal text-[#18181b]"}`}>
+                              {perm}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
                   {/* 버튼 */}
                   <div className="flex items-start gap-2">
