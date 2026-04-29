@@ -43,6 +43,7 @@ export default function HomePageB() {
   const [guideModalStep, setGuideModalStep] = useState<"os-select" | "mac" | "windows" | "final">("os-select");
   const [guideModalClosing, setGuideModalClosing] = useState(false);
   const [selectedOS, setSelectedOS] = useState<"mac" | "windows">("mac");
+  const [guideDirection, setGuideDirection] = useState<"forward" | "back">("forward");
   const openGuideModal = () => { setGuideModalStep("os-select"); setGuideModalOpen(true); };
   const closeGuideModal = () => {
     setGuideModalClosing(true);
@@ -465,7 +466,7 @@ export default function HomePageB() {
               <div className="flex h-[724px] w-[546px] flex-col overflow-hidden rounded-2xl bg-white" style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)", backdropFilter: "blur(20px)", animation: guideModalClosing ? "modalScaleOut 0.25s ease-in forwards" : "modalScaleIn 0.3s ease-out" }} onClick={(e) => e.stopPropagation()}>
                 {guideModalStep === "os-select" ? (
                   /* 첫 번째 모달: OS 선택 */
-                  <div key="os-select" className="flex h-full w-full flex-col items-center justify-center gap-10 p-10" style={{ animation: "slideRight 0.35s ease-out" }}>
+                  <div key="os-select" className="flex h-full w-full flex-col items-center justify-center gap-10 p-10" style={{ animation: `${guideDirection === "back" ? "slideRight" : "slideRight"} 0.35s ease-out` }}>
                     <div className="relative flex flex-col items-center justify-center gap-5 py-10">
                       <Image src="/icons/version-b/home-bg-initial.png" alt="" width={466} height={287} className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
                       <h2 className="relative z-10 text-center text-2xl font-bold leading-[1.4] text-[#18181b]">
@@ -478,17 +479,17 @@ export default function HomePageB() {
                       </p>
                     </div>
                     <div className="flex w-full flex-col gap-2 px-10">
-                      <button type="button" onClick={() => { setSelectedOS("mac"); setGuideModalStep("mac"); }} className="flex w-full items-center justify-center rounded-xl border border-[#e4e4e7] bg-white p-4 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f9f9f9]">
+                      <button type="button" onClick={() => { setSelectedOS("mac"); setGuideDirection("forward"); setGuideModalStep("mac"); }} className="flex w-full items-center justify-center rounded-xl border border-[#e4e4e7] bg-white p-4 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f9f9f9]">
                         Mac OS
                       </button>
-                      <button type="button" onClick={() => { setSelectedOS("windows"); setGuideModalStep("windows"); }} className="flex w-full items-center justify-center rounded-xl border border-[#e4e4e7] bg-white p-4 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f9f9f9]">
+                      <button type="button" onClick={() => { setSelectedOS("windows"); setGuideDirection("forward"); setGuideModalStep("windows"); }} className="flex w-full items-center justify-center rounded-xl border border-[#e4e4e7] bg-white p-4 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f9f9f9]">
                         Windows OS
                       </button>
                     </div>
                   </div>
                 ) : guideModalStep === "mac" ? (
                   /* Mac OS 가이드 (4단계) */
-                  <div key="mac" className="flex h-full w-full flex-col justify-between p-10" style={{ animation: "slideLeft 0.35s ease-out" }}>
+                  <div key="mac" className="flex h-full w-full flex-col justify-between p-10" style={{ animation: `${guideDirection === "back" ? "slideRight" : "slideLeft"} 0.35s ease-out` }}>
                     <div className="relative w-full">
                       <div className="absolute left-[13px] top-[14px] bottom-[14px] w-px bg-[#d4d4d8]" />
                       {/* Step 1: 터미널 열기 */}
@@ -574,17 +575,17 @@ export default function HomePageB() {
                       </div>
                     </div>
                     <div className="flex w-full items-center justify-end gap-2">
-                      <button type="button" onClick={() => setGuideModalStep("os-select")} className="flex h-9 items-center justify-center rounded-lg bg-[#f6f6f6] px-8 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#ececec]">
+                      <button type="button" onClick={() => { setGuideDirection("back"); setGuideModalStep("os-select"); }} className="flex h-9 items-center justify-center rounded-lg bg-[#f6f6f6] px-8 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#ececec]">
                         이전
                       </button>
-                      <button type="button" onClick={() => setGuideModalStep("final")} className="flex h-9 items-center justify-center rounded-lg bg-[#6D319D] px-8 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+                      <button type="button" onClick={() => { setGuideDirection("forward"); setGuideModalStep("final"); }} className="flex h-9 items-center justify-center rounded-lg bg-[#6D319D] px-8 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
                         다음
                       </button>
                     </div>
                   </div>
                 ) : guideModalStep === "windows" ? (
                   /* Windows OS 가이드 (3단계) */
-                  <div key="windows" className="flex h-full w-full flex-col items-end gap-8 p-10" style={{ animation: "slideLeft 0.35s ease-out" }}>
+                  <div key="windows" className="flex h-full w-full flex-col items-end gap-8 p-10" style={{ animation: `${guideDirection === "back" ? "slideRight" : "slideLeft"} 0.35s ease-out` }}>
                     <div className="relative w-full">
                       <div className="absolute left-[13px] top-[14px] bottom-[14px] w-px bg-[#d4d4d8]" />
                       {/* Step 1: 플러그인 설치 */}
@@ -650,17 +651,17 @@ export default function HomePageB() {
                     </div>
                     <div className="flex-1" />
                     <div className="flex w-full items-center justify-end gap-2">
-                      <button type="button" onClick={() => setGuideModalStep("os-select")} className="flex h-9 items-center justify-center rounded-lg bg-[#f6f6f6] px-8 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#ececec]">
+                      <button type="button" onClick={() => { setGuideDirection("back"); setGuideModalStep("os-select"); }} className="flex h-9 items-center justify-center rounded-lg bg-[#f6f6f6] px-8 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#ececec]">
                         이전
                       </button>
-                      <button type="button" onClick={() => setGuideModalStep("final")} className="flex h-9 items-center justify-center rounded-lg bg-[#6D319D] px-8 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+                      <button type="button" onClick={() => { setGuideDirection("forward"); setGuideModalStep("final"); }} className="flex h-9 items-center justify-center rounded-lg bg-[#6D319D] px-8 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
                         다음
                       </button>
                     </div>
                   </div>
                 ) : (
                   /* 마지막 모달 */
-                  <div key="final" className="flex h-full w-full flex-col items-end gap-8 p-10" style={{ animation: "slideLeft 0.35s ease-out" }}>
+                  <div key="final" className="flex h-full w-full flex-col items-end gap-8 p-10" style={{ animation: `${guideDirection === "back" ? "slideRight" : "slideLeft"} 0.35s ease-out` }}>
                     <div className="relative flex flex-1 flex-col items-center justify-center gap-5 w-full">
                       <Image src="/icons/version-b/home-bg-initial.png" alt="" width={466} height={287} className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
                       <h2 className="relative z-10 text-center text-2xl font-bold leading-[1.2] text-[#18181b]">
@@ -673,7 +674,7 @@ export default function HomePageB() {
                       </p>
                     </div>
                     <div className="flex items-center justify-end gap-2">
-                      <button type="button" onClick={() => setGuideModalStep(selectedOS)} className="flex h-9 items-center justify-center rounded-lg bg-[#f6f6f6] px-8 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#ececec]">
+                      <button type="button" onClick={() => { setGuideDirection("back"); setGuideModalStep(selectedOS); }} className="flex h-9 items-center justify-center rounded-lg bg-[#f6f6f6] px-8 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#ececec]">
                         이전
                       </button>
                       <button type="button" onClick={closeGuideModal} className="flex h-9 items-center justify-center rounded-lg bg-[#6D319D] px-8 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
