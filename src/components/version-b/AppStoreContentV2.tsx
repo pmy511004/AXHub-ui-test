@@ -124,15 +124,15 @@ export default function AppStoreContentV2({ onAppClick }: Props) {
                   type="button"
                   onClick={() => setActiveCategory(cat.name)}
                   className={`flex shrink-0 items-center gap-1 whitespace-nowrap border-b-2 px-3 py-2 transition-colors ${
-                    isActive ? "border-[#FBB03B]" : "border-transparent"
+                    isActive ? "border-[#B88539]" : "border-transparent"
                   }`}
                 >
                   <span style={{
-                    color: isActive ? "#FBB03B" : "rgba(24,24,27,0.9)",
+                    color: isActive ? "#B88539" : "rgba(24,24,27,0.9)",
                     fontWeight: isActive ? 600 : 400,
                   }}>{cat.name}</span>
                   <span style={{
-                    color: isActive ? "#FBB03B" : "rgba(24,24,27,0.48)",
+                    color: isActive ? "#B88539" : "rgba(24,24,27,0.48)",
                     fontWeight: 400,
                   }}>
                     {isActive ? filteredApps.length : cat.count}
@@ -173,7 +173,7 @@ export default function AppStoreContentV2({ onAppClick }: Props) {
                   {/* Star + recommends */}
                   <div className="flex items-center gap-1">
                     <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                      <path d="M7 1.167L8.802 4.818L12.833 5.407L9.917 8.248L10.604 12.262L7 10.365L3.396 12.262L4.083 8.248L1.167 5.407L5.198 4.818L7 1.167Z" fill="#FBB03B" />
+                      <path d="M7 1.167L8.802 4.818L12.833 5.407L9.917 8.248L10.604 12.262L7 10.365L3.396 12.262L4.083 8.248L1.167 5.407L5.198 4.818L7 1.167Z" fill="#B88539" />
                     </svg>
                     <span className="text-[14px] font-normal leading-[1.3] tracking-[-0.14px] text-black">
                       {app.recommends}
@@ -188,7 +188,7 @@ export default function AppStoreContentV2({ onAppClick }: Props) {
                   <button
                     type="button"
                     className="flex h-[28px] w-[66px] items-center justify-center rounded-[12px] text-sm font-semibold leading-[1.3] tracking-[-0.12px] text-white transition-opacity hover:opacity-85"
-                    style={{ backgroundColor: "#FBB03B" }}
+                    style={{ backgroundColor: "#B88539" }}
                     onClick={(e) => e.stopPropagation()}
                   >
                     열기
@@ -210,7 +210,7 @@ export default function AppStoreContentV2({ onAppClick }: Props) {
                   <>
                     <button
                       type="button"
-                      className="flex h-[28px] w-[66px] items-center justify-center rounded-[12px] text-sm font-semibold leading-[1.3] tracking-[-0.12px] text-[#FBB03B] bg-[rgba(251,176,59,0.1)] hover:bg-[rgba(251,176,59,0.2)] transition-colors"
+                      className="flex h-[28px] w-[66px] items-center justify-center rounded-[12px] text-sm font-semibold leading-[1.3] tracking-[-0.12px] text-[#B88539] bg-[rgba(251,176,59,0.1)] hover:bg-[rgba(251,176,59,0.2)] transition-colors"
                       onClick={(e) => e.stopPropagation()}
                     >
                       받기

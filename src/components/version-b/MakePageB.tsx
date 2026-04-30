@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import TeamColumn from "./TeamColumn";
 import AppDetailView from "./AppDetailView";
 
@@ -18,6 +18,13 @@ import AppDetailView from "./AppDetailView";
 export default function MakePageB() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const pathname = usePathname();
+  const navItems = [
+    { href: "/", label: "홈", activeIcon: "/icons/version-b/nav-home-active-new.svg", inactiveIcon: "/icons/version-b/nav-home-inactive.svg" },
+    { href: "/make", label: "프로젝트", activeIcon: "/icons/version-b/nav-project-active.svg", inactiveIcon: "/icons/version-b/nav-project-inactive.svg" },
+    { href: "/browse", label: "스토어", activeIcon: "/icons/version-b/nav-store-active.svg", inactiveIcon: "/icons/version-b/nav-store-new.svg" },
+    { href: "/admin", label: "설정", activeIcon: "/icons/version-b/nav-settings-active.svg", inactiveIcon: "/icons/version-b/nav-settings-new.svg" },
+  ];
   const view = searchParams.get("view");
   const isArchive = view === "archive";
   const isCreate = view === "create";
@@ -25,6 +32,10 @@ export default function MakePageB() {
   const detailApp = searchParams.get("app") || "";
   const detailCategory = searchParams.get("category") || "";
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+  const [showTeamProfile, setShowTeamProfile] = useState(true);
+  const [profileOpen, setProfileOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
   const [sortBy, setSortBy] = useState("최근 생성순");
   const [isEmpty, setIsEmpty] = useState(false);
@@ -50,177 +61,86 @@ export default function MakePageB() {
   return (
     <div
       className="flex h-screen w-full items-start overflow-hidden"
-      style={{ backgroundColor: "#3F1C5C", "--page-primary": "#E765BE" } as React.CSSProperties}
+      style={{ backgroundColor: "#3F1C5C", "--page-primary": "#B86397" } as React.CSSProperties}
       data-node-id="2471:1262"
     >
       {/* Team Column */}
       <TeamColumn expanded={sidebarExpanded} bgColor="#2f1546" />
 
-      {/* L. Global Nav ─ 2471:1278 */}
-      <div
-        className="flex h-full w-[76px] shrink-0 flex-col items-center justify-between"
-        data-node-id="2471:1278"
-      >
-        {/* 상단: 팀 아이콘 + 네비 */}
-        <div className="flex w-full flex-col items-start" data-node-id="2471:1531">
-          {/* Team icon "JO" ─ collapsed only */}
-          {!sidebarExpanded && (<div
-            className="flex w-full flex-col items-center justify-center px-5 py-4"
-            data-node-id="2471:1521"
-          >
-            <div
-              className="flex size-11 items-center justify-center overflow-hidden rounded-xl border border-white bg-[#E765BE] p-1 shadow-[0px_0px_0px_1px_#6d319d]"
-              data-node-id="2471:1522"
-            >
-              <p className="text-base font-bold leading-[1.5] tracking-[-0.16px] text-white">
-                JO
-              </p>
+      {/* L. Global Nav */}
+      <div className="flex h-full w-[76px] shrink-0 flex-col items-center justify-between">
+        <div className="flex w-full flex-col items-start">
+          <div className="flex w-full flex-col items-center justify-center px-5 py-4">
+            <div className="flex size-11 items-center justify-center overflow-hidden rounded-xl bg-[#6d319d] p-1">
+              <p className="flex-1 text-center text-base font-bold leading-[1.5] tracking-[-0.16px] text-white">JO</p>
             </div>
           </div>
-          )}
-
-          {/* Nav items ─ 2471:1279 */}
-          <nav
-            className={`flex w-full flex-col items-center gap-4 px-5 ${sidebarExpanded ? "py-4" : ""}`}
-            data-node-id="2471:1279"
-          >
-            {/* 홈 (inactive) */}
-            <Link
-              href="/"
-              className="flex flex-col items-center gap-1"
-            >
-              <div className="relative size-11">
-                <Image src="/icons/version-b/nav-home.svg" alt="홈" fill sizes="44px" />
-              </div>
-              <p className="whitespace-nowrap text-center text-xs font-normal leading-[1.3] tracking-[-0.12px]" style={{ color: "rgba(255,255,255,0.7)" }}>
-                홈
-              </p>
-            </Link>
-
-            {/* 만들기 (active) ─ 2471:1515 */}
-            <Link
-              href="/make"
-              className="flex w-[44px] flex-col items-center gap-1"
-              data-node-id="2471:1515"
-            >
-              <div className="relative size-11" data-node-id="2471:1519">
-                <Image
-                  src="/icons/version-b/nav-make.svg"
-                  alt="만들기"
-                  fill
-                  sizes="44px"
-                />
-              </div>
-              <p className="text-center text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white">
-                프로젝트
-              </p>
-            </Link>
-
-            {/* 둘러보기 ─ 2471:1533 */}
-            <Link
-              href="/browse"
-              className="flex flex-col items-center gap-1"
-              data-node-id="2471:1533"
-            >
-              <div className="relative size-11" data-node-id="2471:1537">
-                <Image
-                  src="/icons/version-b/nav-store.svg"
-                  alt="둘러보기"
-                  fill
-                  sizes="44px"
-                />
-              </div>
-              <p
-                className="whitespace-nowrap text-center text-xs font-normal leading-[1.3] tracking-[-0.12px]"
-                style={{ color: "rgba(255,255,255,0.7)" }}
-              >
-                스토어
-              </p>
-            </Link>
-
-            {/* 관리하기 ─ 2471:1539 */}
-            <Link
-              href="/admin"
-              className="flex w-[44px] flex-col items-center gap-1"
-              data-node-id="2471:1539"
-            >
-              <div className="relative size-11" data-node-id="2471:1543">
-                <Image
-                  src="/icons/version-b/nav-admin.svg"
-                  alt="관리하기"
-                  fill
-                  sizes="44px"
-                />
-              </div>
-              <p
-                className="whitespace-nowrap text-center text-xs font-normal leading-[1.3] tracking-[-0.12px]"
-                style={{ color: "rgba(255,255,255,0.7)" }}
-              >
-                설정
-              </p>
-            </Link>
+          <nav className="flex w-full flex-col items-center gap-4 px-5">
+            {navItems.map((item) => {
+              const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+              return (
+                <Link key={item.href} href={item.href} className="flex flex-col items-center gap-1">
+                  <div className={`relative size-11 rounded-xl transition-colors ${isActive ? "" : "hover:bg-white/10"}`}>
+                    <Image src={isActive ? item.activeIcon : item.inactiveIcon} alt={item.label} fill sizes="44px" />
+                  </div>
+                  <p className={`whitespace-nowrap text-center text-xs leading-[1.3] tracking-[-0.12px] ${isActive ? "font-semibold text-white" : "font-normal text-white/70"}`}>{item.label}</p>
+                </Link>
+              );
+            })}
           </nav>
         </div>
-
-        {/* 하단: 검색/알림/프로필 카드 ─ 2471:1532 */}
-        <div
-          className="flex w-full items-center justify-center px-3 py-4"
-          data-node-id="2471:1532"
-        >
-          <div
-            className="flex flex-col items-center gap-2"
-            data-node-id="2471:1283"
-          >
-            {/* 사이드바 토글 */}
-            <button
-              type="button"
-              onClick={() => setSidebarExpanded(!sidebarExpanded)}
-              className="relative size-11 rounded-xl bg-gray-100 hover:bg-gray-200"
-              aria-label={sidebarExpanded ? "사이드바 접기" : "사이드바 펼치기"}
-            >
-              <span className="absolute left-1/2 top-1/2 flex size-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center overflow-hidden rounded-lg p-1">
-                {sidebarExpanded ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#18181B" fillOpacity="0.48" viewBox="0 0 256 256">
-                    <path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,160H88V56H216V200Z" />
-                  </svg>
-                ) : (
-                  <Image src="/icons/version-b/toggle-panel.svg" alt="" width={24} height={24} />
-                )}
-              </span>
+        <div className="flex w-full flex-col items-center gap-2 py-4">
+          <div className="relative">
+            <button type="button" onClick={() => setSettingsOpen(!settingsOpen)} className="flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10" aria-label="설정">
+              <Image src="/icons/version-b/nav-search.svg" alt="" width={24} height={24} />
             </button>
-
-            {/* 알림 ─ 2471:1545 */}
-            <button
-              type="button"
-              className="relative size-11 rounded-xl bg-gray-100 hover:bg-gray-200"
-              aria-label="알림"
-              data-node-id="2471:1545"
-            >
-              <span className="absolute left-1/2 top-1/2 flex size-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center overflow-hidden rounded-lg p-1">
-                <Image
-                  src="/icons/version-b/bell.svg"
-                  alt=""
-                  width={18}
-                  height={20}
-                />
-              </span>
+            {settingsOpen && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setSettingsOpen(false)} />
+                <div className="absolute bottom-0 left-[calc(100%+8px)] z-50 w-[220px] rounded-xl bg-white p-5 shadow-lg" style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)" }}>
+                  <div className="flex flex-col gap-5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-base font-normal text-[#3f3f46]">다크모드</span>
+                      <button type="button" onClick={() => setDarkMode(!darkMode)} className={`relative h-6 w-10 rounded-full transition-colors ${darkMode ? "bg-[#5B3D7A]" : "bg-[#d4d4d8]"}`}>
+                        <span className={`absolute top-[3px] h-[18px] w-[18px] rounded-full bg-white transition-all ${darkMode ? "left-[19px]" : "left-[3px]"}`} />
+                      </button>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-base font-normal text-[#3f3f46]">팀 프로필 표시</span>
+                      <button type="button" onClick={() => setShowTeamProfile(!showTeamProfile)} className={`relative h-6 w-10 rounded-full transition-colors ${showTeamProfile ? "bg-[#5B3D7A]" : "bg-[#d4d4d8]"}`}>
+                        <span className={`absolute top-[3px] h-[18px] w-[18px] rounded-full bg-white transition-all ${showTeamProfile ? "left-[19px]" : "left-[3px]"}`} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+          <button type="button" className="flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10" aria-label="알림">
+            <Image src="/icons/version-b/nav-bell.svg" alt="" width={44} height={44} />
+          </button>
+          <div className="relative">
+            <button type="button" onClick={() => setProfileOpen(!profileOpen)} className="relative size-11 overflow-hidden rounded-xl transition-opacity hover:opacity-80" aria-label="프로필">
+              <Image src="/icons/version-b/profile-new.png" alt="" fill sizes="44px" className="rounded-xl object-cover" />
             </button>
-
-            {/* 프로필 ─ 2471:1286 */}
-            <button
-              type="button"
-              className="relative size-11 overflow-hidden rounded-xl"
-              aria-label="프로필"
-              data-node-id="2471:1286"
-            >
-              <Image
-                src="/icons/version-b/profile.png"
-                alt=""
-                fill
-                sizes="44px"
-                className="object-cover"
-              />
-            </button>
+            {profileOpen && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setProfileOpen(false)} />
+                <div className="absolute bottom-0 left-[calc(100%+8px)] z-50 w-[220px] rounded-2xl bg-white p-3 shadow-lg" style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)" }}>
+                  <div className="flex flex-col gap-3">
+                    <div className="flex flex-col gap-1 rounded-2xl px-3 py-2">
+                      <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">박민영</p>
+                      <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">minion@jocodingax.ai</p>
+                    </div>
+                    <div className="h-px w-full bg-[#e4e4e7]" />
+                    <div className="flex flex-col">
+                      <button type="button" className="w-full rounded-lg px-3 py-2 text-left text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f4f4f5]">내 정보</button>
+                      <button type="button" className="w-full rounded-lg px-3 py-2 text-left text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f4f4f5]">로그아웃</button>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -238,7 +158,7 @@ export default function MakePageB() {
             <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 py-2">
               <button type="button" className="menu-active flex w-full items-center gap-2 rounded-lg px-3 py-2">
                 <Image src="/icons/version-b/make-menu-project.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#E765BE]">내 프로젝트</span>
+                <span className="whitespace-nowrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#B86397]">내 프로젝트</span>
               </button>
               <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
                 <Image src="/icons/version-b/make-menu-insight-v2.svg" alt="" width={18} height={18} />
@@ -267,7 +187,7 @@ export default function MakePageB() {
                   </p>
                 </div>
                 <div className="flex justify-end">
-                  <button type="button" onClick={closeExample} className="rounded-lg bg-[#E765BE] px-8 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90">
+                  <button type="button" onClick={closeExample} className="rounded-lg bg-[#B86397] px-8 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90">
                     확인
                   </button>
                 </div>
@@ -314,14 +234,14 @@ export default function MakePageB() {
               {/* Step sidebar */}
               <div className="sticky top-6 flex w-[237px] shrink-0 flex-col rounded-xl bg-[#f9f9f9] p-2">
                 <button type="button" onClick={() => setCreateStep(1)} className="flex items-center gap-2 rounded-lg p-3 transition-colors hover:bg-[#f0f0f0]">
-                  <span className={`flex size-5 items-center justify-center rounded-full text-sm font-semibold ${createStep === 1 ? "bg-[rgba(231,101,190,0.2)] text-[#E765BE]" : "bg-[#e4e4e7] text-[#a1a1aa]"}`}>1</span>
-                  <span className={`flex-1 text-left text-base font-semibold ${createStep === 1 ? "text-[#E765BE]" : "text-[#71717a]"}`}>기본 정보</span>
-                  <span className={`rounded-full px-3 py-1 text-sm font-semibold ${step1Valid ? "bg-[#E765BE] text-white" : "bg-[#e4e4e7] text-[#a1a1aa]"}`}>{step1Valid ? "완료" : "미완료"}</span>
+                  <span className={`flex size-5 items-center justify-center rounded-full text-sm font-semibold ${createStep === 1 ? "bg-[rgba(231,101,190,0.2)] text-[#B86397]" : "bg-[#e4e4e7] text-[#a1a1aa]"}`}>1</span>
+                  <span className={`flex-1 text-left text-base font-semibold ${createStep === 1 ? "text-[#B86397]" : "text-[#71717a]"}`}>기본 정보</span>
+                  <span className={`rounded-full px-3 py-1 text-sm font-semibold ${step1Valid ? "bg-[#B86397] text-white" : "bg-[#e4e4e7] text-[#a1a1aa]"}`}>{step1Valid ? "완료" : "미완료"}</span>
                 </button>
                 <button type="button" onClick={() => setCreateStep(2)} className="flex items-center gap-2 rounded-lg p-3 transition-colors hover:bg-[#f0f0f0]">
-                  <span className={`flex size-5 items-center justify-center rounded-full text-sm font-semibold ${createStep === 2 ? "bg-[rgba(231,101,190,0.2)] text-[#E765BE]" : "bg-[#e4e4e7] text-[#a1a1aa]"}`}>2</span>
-                  <span className={`flex-1 text-left text-base font-semibold ${createStep === 2 ? "text-[#E765BE]" : "text-[#71717a]"}`}>배포 설정</span>
-                  <span className={`rounded-full px-3 py-1 text-sm font-semibold ${step2Valid ? "bg-[#E765BE] text-white" : "bg-[#e4e4e7] text-[#a1a1aa]"}`}>{step2Valid ? "완료" : "미완료"}</span>
+                  <span className={`flex size-5 items-center justify-center rounded-full text-sm font-semibold ${createStep === 2 ? "bg-[rgba(231,101,190,0.2)] text-[#B86397]" : "bg-[#e4e4e7] text-[#a1a1aa]"}`}>2</span>
+                  <span className={`flex-1 text-left text-base font-semibold ${createStep === 2 ? "text-[#B86397]" : "text-[#71717a]"}`}>배포 설정</span>
+                  <span className={`rounded-full px-3 py-1 text-sm font-semibold ${step2Valid ? "bg-[#B86397] text-white" : "bg-[#e4e4e7] text-[#a1a1aa]"}`}>{step2Valid ? "완료" : "미완료"}</span>
                 </button>
               </div>
 
@@ -357,7 +277,7 @@ export default function MakePageB() {
                       <div className="flex gap-5 pb-5">
                         <div className="flex flex-1 flex-col gap-3">
                           <p className="text-base font-semibold text-black">앱 이름<span className="text-[#ef1026]">*</span></p>
-                          <input type="text" value={appName} onChange={(e) => setAppName(e.target.value)} placeholder="이름 입력" className="min-h-[48px] rounded-xl border border-[#e4e4e7] bg-white px-4 text-base text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#E765BE] focus:outline-none" />
+                          <input type="text" value={appName} onChange={(e) => setAppName(e.target.value)} placeholder="이름 입력" className="min-h-[48px] rounded-xl border border-[#e4e4e7] bg-white px-4 text-base text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#B86397] focus:outline-none" />
                         </div>
                         <div className="flex flex-1 flex-col gap-3">
                           <p className="text-base font-semibold text-black">카테고리<span className="text-[#ef1026]">*</span></p>
@@ -377,7 +297,7 @@ export default function MakePageB() {
                                     key={cat}
                                     type="button"
                                     onClick={() => { setSelectedCategory(cat); setCategoryOpen(false); }}
-                                    className={`px-4 py-2.5 text-left text-base transition-colors hover:bg-[#f6f6f6] ${selectedCategory === cat ? "font-semibold text-[#E765BE]" : "font-normal text-[#18181b]"}`}
+                                    className={`px-4 py-2.5 text-left text-base transition-colors hover:bg-[#f6f6f6] ${selectedCategory === cat ? "font-semibold text-[#B86397]" : "font-normal text-[#18181b]"}`}
                                   >
                                     {cat}
                                   </button>
@@ -392,16 +312,16 @@ export default function MakePageB() {
                           <p className="flex-1 text-base font-semibold text-black">상세 설명</p>
                           <button type="button" onClick={() => setExampleOpen(true)} className="rounded-lg bg-[#f6f6f6] px-3 py-2 text-xs font-semibold text-[#3f3f46] transition-colors hover:bg-[#ececec]">예시 보기</button>
                         </div>
-                        <textarea placeholder="어떤 업무를 자동화할 수 있는 지 동료들에게 설명해주세요" className="min-h-[96px] resize-none rounded-xl border border-[#e4e4e7] bg-white p-4 text-base text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#E765BE] focus:outline-none" />
+                        <textarea placeholder="어떤 업무를 자동화할 수 있는 지 동료들에게 설명해주세요" className="min-h-[96px] resize-none rounded-xl border border-[#e4e4e7] bg-white p-4 text-base text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#B86397] focus:outline-none" />
                       </div>
                       <div className="flex flex-col gap-3 pb-5">
                         <p className="text-base font-semibold text-black">앱 사용방법<span className="text-[#ef1026]">*</span></p>
                         <div className="flex gap-3">
-                          <button type="button" onClick={() => setUseMethod(useMethod === "direct" ? null : "direct")} className={`flex shrink-0 flex-col items-start gap-2 rounded-xl border p-4 text-left transition-colors ${useMethod === "direct" ? "border-[#E765BE] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
+                          <button type="button" onClick={() => setUseMethod(useMethod === "direct" ? null : "direct")} className={`flex shrink-0 flex-col items-start gap-2 rounded-xl border p-4 text-left transition-colors ${useMethod === "direct" ? "border-[#B86397] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
                             <span className="text-base font-semibold text-[#3f3f46]">바로 사용</span>
                             <span className="text-sm font-normal leading-[1.3] text-[#71717a]">모든 동료가 승인없이 바로 사용할 수 있어요</span>
                           </button>
-                          <button type="button" onClick={() => setUseMethod(useMethod === "approval" ? null : "approval")} className={`flex shrink-0 flex-col items-start gap-2 rounded-xl border p-4 text-left transition-colors ${useMethod === "approval" ? "border-[#E765BE] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
+                          <button type="button" onClick={() => setUseMethod(useMethod === "approval" ? null : "approval")} className={`flex shrink-0 flex-col items-start gap-2 rounded-xl border p-4 text-left transition-colors ${useMethod === "approval" ? "border-[#B86397] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
                             <span className="text-base font-semibold text-[#3f3f46]">승인 후 사용</span>
                             <span className="text-sm font-normal leading-[1.3] text-[#71717a]">관리자 승인을 받은 동료만 사용할 수 있어요</span>
                           </button>
@@ -411,7 +331,7 @@ export default function MakePageB() {
                     <button
                       type="button"
                       onClick={() => step1Valid && setCreateStep(2)}
-                      className={`flex h-9 items-center rounded-lg px-4 text-sm font-semibold transition-colors ${step1Valid ? "bg-[#E765BE] text-white hover:opacity-90" : "bg-[#e4e4e7] text-[#a1a1aa] cursor-not-allowed"}`}
+                      className={`flex h-9 items-center rounded-lg px-4 text-sm font-semibold transition-colors ${step1Valid ? "bg-[#B86397] text-white hover:opacity-90" : "bg-[#e4e4e7] text-[#a1a1aa] cursor-not-allowed"}`}
                     >
                       다음
                     </button>
@@ -425,11 +345,11 @@ export default function MakePageB() {
                       <div className="flex flex-col gap-3 pb-5">
                         <p className="text-base font-semibold text-black">배포 방식<span className="text-[#ef1026]">*</span></p>
                         <div className="flex gap-3">
-                          <button type="button" onClick={() => setDeployMethod(deployMethod === "docker" ? null : "docker")} className={`flex flex-col items-start gap-2 rounded-xl border p-4 text-left transition-colors ${deployMethod === "docker" ? "border-[#E765BE] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
+                          <button type="button" onClick={() => setDeployMethod(deployMethod === "docker" ? null : "docker")} className={`flex flex-col items-start gap-2 rounded-xl border p-4 text-left transition-colors ${deployMethod === "docker" ? "border-[#B86397] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
                             <span className="text-base font-semibold text-[#3f3f46]">Docker</span>
                             <span className="text-sm font-normal text-[#71717a]">Dockerfile 기반 빌드 후 K8s 배포</span>
                           </button>
-                          <button type="button" onClick={() => setDeployMethod(deployMethod === "compose" ? null : "compose")} className={`flex flex-col items-start gap-2 rounded-xl border p-4 text-left transition-colors ${deployMethod === "compose" ? "border-[#E765BE] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
+                          <button type="button" onClick={() => setDeployMethod(deployMethod === "compose" ? null : "compose")} className={`flex flex-col items-start gap-2 rounded-xl border p-4 text-left transition-colors ${deployMethod === "compose" ? "border-[#B86397] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
                             <span className="text-base font-semibold text-[#3f3f46]">Docker Compose</span>
                             <span className="text-sm font-normal text-[#71717a]">docker-compose.yml 기반 배포</span>
                           </button>
@@ -449,7 +369,7 @@ export default function MakePageB() {
                             { key: "large" as const, name: "Large", desc: "트래픽이 많은 앱용", cpu: "1000 ~ 3000m", mem: "1536 ~ 2560Mi" },
                             { key: "xlarge" as const, name: "XLarge", desc: "고부하 전용", cpu: "2000 ~ 4000m", mem: "3 ~ 5Gi" },
                           ]).map((pod) => (
-                            <button key={pod.key} type="button" onClick={() => setPodSize(podSize === pod.key ? null : pod.key)} className={`flex w-[calc(50%-6px)] flex-col items-start gap-2 rounded-xl border p-4 text-left transition-colors ${podSize === pod.key ? "border-[#E765BE] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
+                            <button key={pod.key} type="button" onClick={() => setPodSize(podSize === pod.key ? null : pod.key)} className={`flex w-[calc(50%-6px)] flex-col items-start gap-2 rounded-xl border p-4 text-left transition-colors ${podSize === pod.key ? "border-[#B86397] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
                               <div className="flex items-center gap-2">
                                 <span className="text-base font-semibold text-[#3f3f46]">{pod.name}</span>
                                 <span className="text-sm font-normal text-[#18181b]">{pod.desc}</span>
@@ -470,7 +390,7 @@ export default function MakePageB() {
                           <p className="text-sm font-normal text-[#71717a]">url 가장 앞에 쓰일 고유 ID를 만들어주세요</p>
                         </div>
                         <div className="flex gap-3">
-                          <input type="text" value={accessId} onChange={(e) => setAccessId(e.target.value)} placeholder="3~63자의 영문 소문자, 숫자,-만 가능해요" className="min-h-[48px] flex-[6] rounded-xl border border-[#e4e4e7] bg-white px-4 text-base text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#E765BE] focus:outline-none" />
+                          <input type="text" value={accessId} onChange={(e) => setAccessId(e.target.value)} placeholder="3~63자의 영문 소문자, 숫자,-만 가능해요" className="min-h-[48px] flex-[6] rounded-xl border border-[#e4e4e7] bg-white px-4 text-base text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#B86397] focus:outline-none" />
                           <div className="relative flex-[4]">
                             <button
                               type="button"
@@ -487,7 +407,7 @@ export default function MakePageB() {
                                     key={domain}
                                     type="button"
                                     onClick={() => { setSelectedDomain(domain); setDomainOpen(false); }}
-                                    className={`px-4 py-2.5 text-left text-base transition-colors hover:bg-[#f6f6f6] ${selectedDomain === domain ? "font-semibold text-[#E765BE]" : "font-normal text-[#18181b]"}`}
+                                    className={`px-4 py-2.5 text-left text-base transition-colors hover:bg-[#f6f6f6] ${selectedDomain === domain ? "font-semibold text-[#B86397]" : "font-normal text-[#18181b]"}`}
                                   >
                                     {domain}
                                   </button>
@@ -506,7 +426,7 @@ export default function MakePageB() {
 
                     <button
                       type="button"
-                      className={`flex h-9 items-center rounded-lg px-4 text-sm font-semibold transition-colors ${step1Valid && step2Valid ? "bg-[#E765BE] text-white hover:opacity-90" : "bg-[#e4e4e7] text-[#a1a1aa] cursor-not-allowed"}`}
+                      className={`flex h-9 items-center rounded-lg px-4 text-sm font-semibold transition-colors ${step1Valid && step2Valid ? "bg-[#B86397] text-white hover:opacity-90" : "bg-[#e4e4e7] text-[#a1a1aa] cursor-not-allowed"}`}
                     >
                       생성
                     </button>
@@ -536,7 +456,7 @@ export default function MakePageB() {
                           key={option}
                           type="button"
                           onClick={() => { setSortBy(option); setSortOpen(false); }}
-                          className={`px-4 py-2.5 text-left text-sm transition-colors hover:bg-[#f6f6f6] ${sortBy === option ? "font-semibold text-[#E765BE]" : "font-normal text-[#18181b]"}`}
+                          className={`px-4 py-2.5 text-left text-sm transition-colors hover:bg-[#f6f6f6] ${sortBy === option ? "font-semibold text-[#B86397]" : "font-normal text-[#18181b]"}`}
                         >
                           {option}
                         </button>
@@ -551,7 +471,7 @@ export default function MakePageB() {
                   <button type="button" onClick={() => router.push("/make?view=archive")} className="flex h-9 items-center gap-2 rounded-lg border border-[#e4e4e7] bg-white px-4 text-sm font-normal text-[#18181b] transition-colors hover:bg-gray-50">
                     앱 보관함
                   </button>
-                  <button type="button" onClick={() => router.push("/make?view=create")} className="flex h-9 items-center gap-2 rounded-lg bg-[#E765BE] px-4 text-sm font-semibold text-white transition-opacity hover:opacity-90">
+                  <button type="button" onClick={() => router.push("/make?view=create")} className="flex h-9 items-center gap-2 rounded-lg bg-[#B86397] px-4 text-sm font-semibold text-white transition-opacity hover:opacity-90">
                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 3.75V14.25M3.75 9H14.25" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
                     앱 만들기
                   </button>
@@ -568,7 +488,7 @@ export default function MakePageB() {
                           key={option}
                           type="button"
                           onClick={() => { setSortBy(option); setSortOpen(false); }}
-                          className={`px-4 py-2.5 text-left text-sm transition-colors hover:bg-[#f6f6f6] ${sortBy === option ? "font-semibold text-[#E765BE]" : "font-normal text-[#18181b]"}`}
+                          className={`px-4 py-2.5 text-left text-sm transition-colors hover:bg-[#f6f6f6] ${sortBy === option ? "font-semibold text-[#B86397]" : "font-normal text-[#18181b]"}`}
                         >
                           {option}
                         </button>
@@ -601,7 +521,7 @@ export default function MakePageB() {
                         <span className="text-base font-semibold text-black">{app.name}</span>
                         <span className="text-sm font-normal text-[#71717a]">{app.category}</span>
                         <div className="flex items-center gap-1">
-                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z" fill="#FBB03B" /></svg>
+                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z" fill="#B88539" /></svg>
                           <span className="text-xs font-normal text-black">{app.stars}</span>
                         </div>
                       </div>
@@ -609,7 +529,7 @@ export default function MakePageB() {
                     <div className="h-px bg-[#e4e4e7]" />
                     <div className="flex items-center">
                       <span className="flex-1 text-sm font-normal text-[#71717a]">{app.date} 보관</span>
-                      <button type="button" className="rounded-lg bg-[#E765BE] px-3 py-1 text-xs font-semibold text-white transition-opacity hover:opacity-90">
+                      <button type="button" className="rounded-lg bg-[#B86397] px-3 py-1 text-xs font-semibold text-white transition-opacity hover:opacity-90">
                         보관 해제
                       </button>
                     </div>
@@ -638,7 +558,7 @@ export default function MakePageB() {
                       <span className="text-base font-semibold text-black">{app.name}</span>
                       <span className="text-sm font-normal text-[#71717a]">{app.category}</span>
                       <div className="flex items-center gap-1">
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z" fill="#FBB03B" /></svg>
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z" fill="#B88539" /></svg>
                         <span className="text-xs font-normal text-black">{app.stars}</span>
                       </div>
                     </div>
@@ -657,8 +577,8 @@ export default function MakePageB() {
                   ) : (
                     <div className="flex items-center">
                       <div className="flex flex-1 items-center gap-1">
-                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#E765BE" /><path d="M5.5 9L8 11.5L12.5 6.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                        <span className="text-sm font-medium text-[#E765BE]">앱 활성중</span>
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#B86397" /><path d="M5.5 9L8 11.5L12.5 6.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                        <span className="text-sm font-medium text-[#B86397]">앱 활성중</span>
                       </div>
                       <span className="text-sm font-medium text-[#71717a]">{app.date}</span>
                     </div>
@@ -676,7 +596,7 @@ export default function MakePageB() {
             <button
               type="button"
               onClick={() => setIsEmpty(!isEmpty)}
-              className="fixed bottom-6 right-6 z-50 rounded-lg bg-[#E765BE] px-4 py-2 text-sm font-semibold text-white shadow-lg transition-opacity hover:opacity-90"
+              className="fixed bottom-6 right-6 z-50 rounded-lg bg-[#B86397] px-4 py-2 text-sm font-semibold text-white shadow-lg transition-opacity hover:opacity-90"
             >
               {isEmpty ? "데이터 있을 때" : "데이터 없을 때"}
             </button>

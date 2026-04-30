@@ -83,7 +83,7 @@ export default function PopularChartContent({ onAppClick }: Props = {}) {
       <div
         className="flex items-start gap-6 rounded-2xl px-8 py-6"
         style={{
-          background: "linear-gradient(135deg, #FBB03B 0%, #F7931E 50%, #FBB03B 100%)",
+          background: "linear-gradient(135deg, #B88539 0%, #F7931E 50%, #B88539 100%)",
         }}
       >
         {/* Banner title */}
@@ -143,7 +143,7 @@ export default function PopularChartContent({ onAppClick }: Props = {}) {
                 type="button"
                 onClick={() => setIsGridView(true)}
                 className="flex size-8 items-center justify-center rounded-lg transition-colors"
-                style={{ backgroundColor: isGridView ? "#FBB03B" : "transparent" }}
+                style={{ backgroundColor: isGridView ? "#B88539" : "transparent" }}
                 aria-label="그리드 보기"
               >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -158,7 +158,7 @@ export default function PopularChartContent({ onAppClick }: Props = {}) {
                 type="button"
                 onClick={() => setIsGridView(false)}
                 className="flex size-8 items-center justify-center rounded-lg transition-colors"
-                style={{ backgroundColor: !isGridView ? "#FBB03B" : "transparent" }}
+                style={{ backgroundColor: !isGridView ? "#B88539" : "transparent" }}
                 aria-label="리스트 보기"
               >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -174,7 +174,7 @@ export default function PopularChartContent({ onAppClick }: Props = {}) {
           {isGridView ? (
           <div className="popular-chart-grid grid gap-y-6">
             {popularApps.map((app, i) => {
-              const rankColor = i < 3 ? "#FBB03B" : "#a1a1aa";
+              const rankColor = i < 3 ? "#B88539" : "#a1a1aa";
               return (
                 <div
                   key={i}
@@ -200,7 +200,7 @@ export default function PopularChartContent({ onAppClick }: Props = {}) {
                       </p>
                       <div className="flex items-center gap-1">
                         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z" fill="#FBB03B" />
+                          <path d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z" fill="#B88539" />
                         </svg>
                         <span className="text-xs font-normal leading-[1.3] tracking-[-0.12px] text-black">
                           {app.recommends}
@@ -216,7 +216,7 @@ export default function PopularChartContent({ onAppClick }: Props = {}) {
           /* App list - List view */
           <div className="flex flex-col">
             {popularApps.map((app, i) => {
-              const rankColor = i < 3 ? "#FBB03B" : "#a1a1aa";
+              const rankColor = i < 3 ? "#B88539" : "#a1a1aa";
               return (
                 <div
                   key={i}
@@ -241,7 +241,7 @@ export default function PopularChartContent({ onAppClick }: Props = {}) {
                     </div>
                     <div className="flex shrink-0 items-center gap-1">
                       <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z" fill="#FBB03B" />
+                        <path d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z" fill="#B88539" />
                       </svg>
                       <span className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-black">
                         {app.recommends}
@@ -252,7 +252,7 @@ export default function PopularChartContent({ onAppClick }: Props = {}) {
                     <button
                       type="button"
                       className="flex h-7 w-[66px] shrink-0 items-center justify-center overflow-hidden rounded-xl px-3 text-sm font-semibold leading-[1.3] tracking-[-0.12px] text-white transition-opacity hover:opacity-85"
-                      style={{ backgroundColor: "#FBB03B" }}
+                      style={{ backgroundColor: "#B88539" }}
                     >
                       열기
                     </button>
@@ -266,7 +266,7 @@ export default function PopularChartContent({ onAppClick }: Props = {}) {
                   ) : (
                     <button
                       type="button"
-                      className="flex h-7 w-[66px] shrink-0 items-center justify-center overflow-hidden rounded-xl text-sm font-semibold leading-[1.3] tracking-[-0.12px] text-[#FBB03B] bg-[rgba(251,176,59,0.1)] hover:bg-[rgba(251,176,59,0.2)] transition-colors"
+                      className="flex h-7 w-[66px] shrink-0 items-center justify-center overflow-hidden rounded-xl text-sm font-semibold leading-[1.3] tracking-[-0.12px] text-[#B88539] bg-[rgba(251,176,59,0.1)] hover:bg-[rgba(251,176,59,0.2)] transition-colors"
                     >
                       받기
                     </button>
@@ -291,7 +291,7 @@ export default function PopularChartContent({ onAppClick }: Props = {}) {
                 onClick={() => setActiveCategory(cat)}
                 className={`w-full rounded-lg px-3 py-2 text-left text-sm leading-[1.5] tracking-[-0.14px] ${
                   activeCategory === cat
-                    ? "font-semibold text-[#FBB03B]"
+                    ? "font-semibold text-[#B88539]"
                     : "font-normal text-gray-500 hover:bg-gray-100"
                 }`}
               >

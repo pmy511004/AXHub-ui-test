@@ -3,108 +3,107 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import TeamColumn from "./TeamColumn";
 
 // 피그마 versionB-2 (node 2530:1480) — /admin 페이지 Version B 전체 레이아웃
 export default function AdminPageB() {
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+  const [showTeamProfile, setShowTeamProfile] = useState(true);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const pathname = usePathname();
+  const navItems = [
+    { href: "/", label: "홈", activeIcon: "/icons/version-b/nav-home-active-new.svg", inactiveIcon: "/icons/version-b/nav-home-inactive.svg" },
+    { href: "/make", label: "프로젝트", activeIcon: "/icons/version-b/nav-project-active.svg", inactiveIcon: "/icons/version-b/nav-project-inactive.svg" },
+    { href: "/browse", label: "스토어", activeIcon: "/icons/version-b/nav-store-active.svg", inactiveIcon: "/icons/version-b/nav-store-new.svg" },
+    { href: "/admin", label: "설정", activeIcon: "/icons/version-b/nav-settings-active.svg", inactiveIcon: "/icons/version-b/nav-settings-new.svg" },
+  ];
 
   return (
     <div
       className="flex h-screen w-full items-start overflow-hidden"
-      style={{ backgroundColor: "#3F1C5C", "--page-primary": "#348AE5" } as React.CSSProperties}
+      style={{ backgroundColor: "#3F1C5C", "--page-primary": "#4A78B8" } as React.CSSProperties}
       data-node-id="2530:1480"
     >
       {/* Team Column */}
       <TeamColumn expanded={sidebarExpanded} bgColor="#2f1546" />
 
-      {/* L. Global Nav ─ 2530:1481 */}
+      {/* L. Global Nav */}
       <div className="flex h-full w-[76px] shrink-0 flex-col items-center justify-between">
-        {/* 상단: 팀 아이콘 + 네비 */}
         <div className="flex w-full flex-col items-start">
-          {/* Team icon "JO" — collapsed only */}
-          {!sidebarExpanded && (
-            <div className="flex w-full flex-col items-center justify-center px-5 py-4">
-              <div className="flex size-11 items-center justify-center overflow-hidden rounded-xl border border-white bg-primary-500 p-1 shadow-[0px_0px_0px_1px_#6d319d]">
-                <p className="text-base font-bold leading-[1.5] tracking-[-0.16px] text-white">
-                  JO
-                </p>
-              </div>
+          <div className="flex w-full flex-col items-center justify-center px-5 py-4">
+            <div className="flex size-11 items-center justify-center overflow-hidden rounded-xl bg-[#6d319d] p-1">
+              <p className="flex-1 text-center text-base font-bold leading-[1.5] tracking-[-0.16px] text-white">JO</p>
             </div>
-          )}
-
-          {/* Nav items */}
-          <nav className={`flex w-full flex-col items-center gap-4 px-5 ${sidebarExpanded ? "py-4" : ""}`}>
-            {/* 홈 (inactive) */}
-            <Link href="/" className="flex flex-col items-center gap-1">
-              <div className="relative size-11">
-                <Image src="/icons/version-b/nav-home.svg" alt="홈" fill sizes="44px" />
-              </div>
-              <p className="whitespace-nowrap text-center text-xs font-normal leading-[1.3] tracking-[-0.12px]" style={{ color: "rgba(255,255,255,0.7)" }}>
-                홈
-              </p>
-            </Link>
-
-            {/* 만들기 (inactive) */}
-            <Link href="/make" className="flex flex-col items-center gap-1">
-              <div className="relative size-11">
-                <Image src="/icons/version-b/nav-make-inactive.svg" alt="만들기" fill sizes="44px" />
-              </div>
-              <p className="whitespace-nowrap text-center text-xs font-normal leading-[1.3] tracking-[-0.12px]" style={{ color: "rgba(255,255,255,0.7)" }}>
-                프로젝트
-              </p>
-            </Link>
-
-            {/* 둘러보기 (inactive) */}
-            <Link href="/browse" className="flex flex-col items-center gap-1">
-              <div className="relative size-11">
-                <Image src="/icons/version-b/nav-store.svg" alt="둘러보기" fill sizes="44px" />
-              </div>
-              <p className="whitespace-nowrap text-center text-xs font-normal leading-[1.3] tracking-[-0.12px]" style={{ color: "rgba(255,255,255,0.7)" }}>
-                스토어
-              </p>
-            </Link>
-
-            {/* 관리하기 (active) */}
-            <Link href="/admin" className="flex w-[44px] flex-col items-center gap-1">
-              <div className="relative size-11">
-                <Image src="/icons/version-b/nav-admin-active.svg" alt="관리하기" fill sizes="44px" />
-              </div>
-              <p className="text-center text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white">
-                설정
-              </p>
-            </Link>
+          </div>
+          <nav className="flex w-full flex-col items-center gap-4 px-5">
+            {navItems.map((item) => {
+              const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+              return (
+                <Link key={item.href} href={item.href} className="flex flex-col items-center gap-1">
+                  <div className={`relative size-11 rounded-xl transition-colors ${isActive ? "" : "hover:bg-white/10"}`}>
+                    <Image src={isActive ? item.activeIcon : item.inactiveIcon} alt={item.label} fill sizes="44px" />
+                  </div>
+                  <p className={`whitespace-nowrap text-center text-xs leading-[1.3] tracking-[-0.12px] ${isActive ? "font-semibold text-white" : "font-normal text-white/70"}`}>{item.label}</p>
+                </Link>
+              );
+            })}
           </nav>
         </div>
-
-        {/* 하단: 검색/알림/프로필 카드 */}
-        <div className="flex w-full items-center justify-center px-3 py-4">
-          <div className="flex flex-col items-center gap-2">
-            {/* 사이드바 토글 */}
-            <button
-              type="button"
-              onClick={() => setSidebarExpanded(!sidebarExpanded)}
-              className="relative size-11 rounded-xl bg-gray-100 hover:bg-gray-200"
-              aria-label={sidebarExpanded ? "사이드바 접기" : "사이드바 펼치기"}
-            >
-              <span className="absolute left-1/2 top-1/2 flex size-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center overflow-hidden rounded-lg p-1">
-                {sidebarExpanded ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#18181B" fillOpacity="0.48" viewBox="0 0 256 256">
-                    <path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,160H88V56H216V200Z" />
-                  </svg>
-                ) : (
-                  <Image src="/icons/version-b/toggle-panel.svg" alt="" width={24} height={24} />
-                )}
-              </span>
+        <div className="flex w-full flex-col items-center gap-2 py-4">
+          <div className="relative">
+            <button type="button" onClick={() => setSettingsOpen(!settingsOpen)} className="flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10" aria-label="설정">
+              <Image src="/icons/version-b/nav-search.svg" alt="" width={24} height={24} />
             </button>
-            <button type="button" className="relative size-11 rounded-xl bg-gray-100 hover:bg-gray-200" aria-label="알림">
-              <span className="absolute left-1/2 top-1/2 flex size-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center overflow-hidden rounded-lg p-1">
-                <Image src="/icons/version-b/bell.svg" alt="" width={18} height={20} />
-              </span>
+            {settingsOpen && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setSettingsOpen(false)} />
+                <div className="absolute bottom-0 left-[calc(100%+8px)] z-50 w-[220px] rounded-xl bg-white p-5 shadow-lg" style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)" }}>
+                  <div className="flex flex-col gap-5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-base font-normal text-[#3f3f46]">다크모드</span>
+                      <button type="button" onClick={() => setDarkMode(!darkMode)} className={`relative h-6 w-10 rounded-full transition-colors ${darkMode ? "bg-[#5B3D7A]" : "bg-[#d4d4d8]"}`}>
+                        <span className={`absolute top-[3px] h-[18px] w-[18px] rounded-full bg-white transition-all ${darkMode ? "left-[19px]" : "left-[3px]"}`} />
+                      </button>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-base font-normal text-[#3f3f46]">팀 프로필 표시</span>
+                      <button type="button" onClick={() => setShowTeamProfile(!showTeamProfile)} className={`relative h-6 w-10 rounded-full transition-colors ${showTeamProfile ? "bg-[#5B3D7A]" : "bg-[#d4d4d8]"}`}>
+                        <span className={`absolute top-[3px] h-[18px] w-[18px] rounded-full bg-white transition-all ${showTeamProfile ? "left-[19px]" : "left-[3px]"}`} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+          <button type="button" className="flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10" aria-label="알림">
+            <Image src="/icons/version-b/nav-bell.svg" alt="" width={44} height={44} />
+          </button>
+          <div className="relative">
+            <button type="button" onClick={() => setProfileOpen(!profileOpen)} className="relative size-11 overflow-hidden rounded-xl transition-opacity hover:opacity-80" aria-label="프로필">
+              <Image src="/icons/version-b/profile-new.png" alt="" fill sizes="44px" className="rounded-xl object-cover" />
             </button>
-            <button type="button" className="relative size-11 overflow-hidden rounded-xl" aria-label="프로필">
-              <Image src="/icons/version-b/profile.png" alt="" fill sizes="44px" className="object-cover" />
-            </button>
+            {profileOpen && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setProfileOpen(false)} />
+                <div className="absolute bottom-0 left-[calc(100%+8px)] z-50 w-[220px] rounded-2xl bg-white p-3 shadow-lg" style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)" }}>
+                  <div className="flex flex-col gap-3">
+                    <div className="flex flex-col gap-1 rounded-2xl px-3 py-2">
+                      <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">박민영</p>
+                      <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">minion@jocodingax.ai</p>
+                    </div>
+                    <div className="h-px w-full bg-[#e4e4e7]" />
+                    <div className="flex flex-col">
+                      <button type="button" className="w-full rounded-lg px-3 py-2 text-left text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f4f4f5]">내 정보</button>
+                      <button type="button" className="w-full rounded-lg px-3 py-2 text-left text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f4f4f5]">로그아웃</button>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -122,7 +121,7 @@ export default function AdminPageB() {
             <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 py-2">
               <button type="button" className="menu-active flex w-full items-center gap-2 rounded-lg px-3 py-2">
                 <Image src="/icons/version-b/admin-menu-apps.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#348AE5]">전체 앱 현황</span>
+                <span className="whitespace-nowrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#4A78B8]">전체 앱 현황</span>
               </button>
               <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
                 <Image src="/icons/version-b/admin-menu-api.svg" alt="" width={18} height={18} />

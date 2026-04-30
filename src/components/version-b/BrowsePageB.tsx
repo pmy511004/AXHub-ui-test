@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import TeamColumn from "./TeamColumn";
 import NewUpdateChartContent from "./NewUpdateChartContent";
 import PopularChartContent from "./PopularChartContent";
@@ -23,7 +23,18 @@ import AppDetailView from "./AppDetailView";
 export default function BrowsePageB() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const pathname = usePathname();
+  const navItems = [
+    { href: "/", label: "홈", activeIcon: "/icons/version-b/nav-home-active-new.svg", inactiveIcon: "/icons/version-b/nav-home-inactive.svg" },
+    { href: "/make", label: "프로젝트", activeIcon: "/icons/version-b/nav-project-active.svg", inactiveIcon: "/icons/version-b/nav-project-inactive.svg" },
+    { href: "/browse", label: "스토어", activeIcon: "/icons/version-b/nav-store-active.svg", inactiveIcon: "/icons/version-b/nav-store-new.svg" },
+    { href: "/admin", label: "설정", activeIcon: "/icons/version-b/nav-settings-active.svg", inactiveIcon: "/icons/version-b/nav-settings-new.svg" },
+  ];
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+  const [showTeamProfile, setShowTeamProfile] = useState(true);
+  const [profileOpen, setProfileOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string>("인기 • 신규 앱");
   const [selectedApp, setSelectedApp] = useState<{ name: string; category: string; isAdmin?: boolean; status?: string } | null>(null);
   const [hotAppsExpanded, setHotAppsExpanded] = useState(true);
@@ -89,190 +100,86 @@ export default function BrowsePageB() {
   return (
     <div
       className="flex h-screen w-full items-start overflow-hidden"
-      style={{ backgroundColor: "#3F1C5C", "--page-primary": "#FBB03B" } as React.CSSProperties}
+      style={{ backgroundColor: "#3F1C5C", "--page-primary": "#B88539" } as React.CSSProperties}
       data-node-id="2504:1034"
     >
       {/* Team Column */}
       <TeamColumn expanded={sidebarExpanded} bgColor="#2f1546" />
 
-      {/* L. Global Nav ─ 2504:1035 */}
-      <div
-        className="flex h-full w-[76px] shrink-0 flex-col items-center justify-between"
-        data-node-id="2504:1035"
-      >
-        {/* 상단: 팀 아이콘 + 네비 */}
-        <div className="flex w-full flex-col items-start" data-node-id="2504:1036">
-          {/* Team icon "JO" ─ collapsed only */}
-          {!sidebarExpanded && (
-            <div
-              className="flex w-full flex-col items-center justify-center px-5 py-4"
-              data-node-id="2504:1037"
-            >
-              <div
-                className="flex size-11 items-center justify-center overflow-hidden rounded-xl border border-white p-1"
-                style={{ backgroundColor: "#6d319d", boxShadow: "0px 0px 0px 1px #6d319d" }}
-                data-node-id="2504:1038"
-              >
-                <p className="text-base font-bold leading-[1.5] tracking-[-0.16px] text-white">
-                  JO
-                </p>
-              </div>
+      {/* L. Global Nav */}
+      <div className="flex h-full w-[76px] shrink-0 flex-col items-center justify-between">
+        <div className="flex w-full flex-col items-start">
+          <div className="flex w-full flex-col items-center justify-center px-5 py-4">
+            <div className="flex size-11 items-center justify-center overflow-hidden rounded-xl bg-[#6d319d] p-1">
+              <p className="flex-1 text-center text-base font-bold leading-[1.5] tracking-[-0.16px] text-white">JO</p>
             </div>
-          )}
-
-          {/* Nav items ─ 2504:1040 */}
-          <nav
-            className={`flex w-full flex-col items-center gap-4 px-5 ${sidebarExpanded ? "py-4" : ""}`}
-            data-node-id="2504:1040"
-          >
-            {/* 홈 (inactive) */}
-            <Link
-              href="/"
-              className="flex flex-col items-center gap-1"
-            >
-              <div className="relative size-11">
-                <Image
-                  src="/icons/version-b/nav-home.svg"
-                  alt="홈"
-                  fill
-                  sizes="44px"
-                />
-              </div>
-              <p
-                className="whitespace-nowrap text-center text-xs font-normal leading-[1.3] tracking-[-0.12px]"
-                style={{ color: "rgba(255,255,255,0.7)" }}
-              >
-                홈
-              </p>
-            </Link>
-
-            {/* 만들기 (inactive) ─ 2504:1045 */}
-            <Link
-              href="/make"
-              className="flex flex-col items-center gap-1"
-              data-node-id="2504:1045"
-            >
-              <div className="relative size-11" data-node-id="2504:1046">
-                <Image
-                  src="/icons/version-b/nav-make-inactive.svg"
-                  alt="만들기"
-                  fill
-                  sizes="44px"
-                />
-              </div>
-              <p
-                className="whitespace-nowrap text-center text-xs font-normal leading-[1.3] tracking-[-0.12px]"
-                style={{ color: "rgba(255,255,255,0.7)" }}
-              >
-                프로젝트
-              </p>
-            </Link>
-
-            {/* 둘러보기 (active) ─ 2504:1041 */}
-            <Link
-              href="/browse"
-              className="flex w-[44px] flex-col items-center gap-1"
-              data-node-id="2504:1041"
-            >
-              <div className="relative size-11" data-node-id="2504:1042">
-                <Image
-                  src="/icons/version-b/nav-browse-active.svg"
-                  alt="둘러보기"
-                  fill
-                  sizes="44px"
-                />
-              </div>
-              <p
-                className="text-center text-xs font-semibold leading-[1.3] tracking-[-0.12px]"
-                style={{ color: "#ffffff" }}
-              >
-                스토어
-              </p>
-            </Link>
-
-            {/* 관리하기 ─ 2504:1049 */}
-            <Link
-              href="/admin"
-              className="flex w-[44px] flex-col items-center gap-1"
-              data-node-id="2504:1049"
-            >
-              <div className="relative size-11" data-node-id="2504:1050">
-                <Image
-                  src="/icons/version-b/nav-admin.svg"
-                  alt="관리하기"
-                  fill
-                  sizes="44px"
-                />
-              </div>
-              <p
-                className="whitespace-nowrap text-center text-xs font-normal leading-[1.3] tracking-[-0.12px]"
-                style={{ color: "rgba(255,255,255,0.7)" }}
-              >
-                설정
-              </p>
-            </Link>
+          </div>
+          <nav className="flex w-full flex-col items-center gap-4 px-5">
+            {navItems.map((item) => {
+              const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+              return (
+                <Link key={item.href} href={item.href} className="flex flex-col items-center gap-1">
+                  <div className={`relative size-11 rounded-xl transition-colors ${isActive ? "" : "hover:bg-white/10"}`}>
+                    <Image src={isActive ? item.activeIcon : item.inactiveIcon} alt={item.label} fill sizes="44px" />
+                  </div>
+                  <p className={`whitespace-nowrap text-center text-xs leading-[1.3] tracking-[-0.12px] ${isActive ? "font-semibold text-white" : "font-normal text-white/70"}`}>{item.label}</p>
+                </Link>
+              );
+            })}
           </nav>
         </div>
-
-        {/* 하단: 검색/알림/프로필 카드 ─ 2504:1053 */}
-        <div
-          className="flex w-full items-center justify-center px-3 py-4"
-          data-node-id="2504:1053"
-        >
-          <div
-            className="flex flex-col items-center gap-2"
-            data-node-id="2504:1054"
-          >
-            {/* 사이드바 토글 */}
-            <button
-              type="button"
-              onClick={() => setSidebarExpanded(!sidebarExpanded)}
-              className="relative size-11 rounded-xl bg-gray-100 hover:bg-gray-200"
-              aria-label={sidebarExpanded ? "사이드바 접기" : "사이드바 펼치기"}
-            >
-              <span className="absolute left-1/2 top-1/2 flex size-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center overflow-hidden rounded-lg p-1">
-                {sidebarExpanded ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#18181B" fillOpacity="0.48" viewBox="0 0 256 256">
-                    <path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,160H88V56H216V200Z" />
-                  </svg>
-                ) : (
-                  <Image src="/icons/version-b/toggle-panel.svg" alt="" width={24} height={24} />
-                )}
-              </span>
+        <div className="flex w-full flex-col items-center gap-2 py-4">
+          <div className="relative">
+            <button type="button" onClick={() => setSettingsOpen(!settingsOpen)} className="flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10" aria-label="설정">
+              <Image src="/icons/version-b/nav-search.svg" alt="" width={24} height={24} />
             </button>
-
-            {/* 알림 ─ 2504:1057 */}
-            <button
-              type="button"
-              className="relative size-11 rounded-xl bg-gray-100 hover:bg-gray-200"
-              aria-label="알림"
-              data-node-id="2504:1057"
-            >
-              <span className="absolute left-1/2 top-1/2 flex size-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center overflow-hidden rounded-lg p-1">
-                <Image
-                  src="/icons/version-b/bell.svg"
-                  alt=""
-                  width={18}
-                  height={20}
-                />
-              </span>
+            {settingsOpen && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setSettingsOpen(false)} />
+                <div className="absolute bottom-0 left-[calc(100%+8px)] z-50 w-[220px] rounded-xl bg-white p-5 shadow-lg" style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)" }}>
+                  <div className="flex flex-col gap-5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-base font-normal text-[#3f3f46]">다크모드</span>
+                      <button type="button" onClick={() => setDarkMode(!darkMode)} className={`relative h-6 w-10 rounded-full transition-colors ${darkMode ? "bg-[#5B3D7A]" : "bg-[#d4d4d8]"}`}>
+                        <span className={`absolute top-[3px] h-[18px] w-[18px] rounded-full bg-white transition-all ${darkMode ? "left-[19px]" : "left-[3px]"}`} />
+                      </button>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-base font-normal text-[#3f3f46]">팀 프로필 표시</span>
+                      <button type="button" onClick={() => setShowTeamProfile(!showTeamProfile)} className={`relative h-6 w-10 rounded-full transition-colors ${showTeamProfile ? "bg-[#5B3D7A]" : "bg-[#d4d4d8]"}`}>
+                        <span className={`absolute top-[3px] h-[18px] w-[18px] rounded-full bg-white transition-all ${showTeamProfile ? "left-[19px]" : "left-[3px]"}`} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+          <button type="button" className="flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10" aria-label="알림">
+            <Image src="/icons/version-b/nav-bell.svg" alt="" width={44} height={44} />
+          </button>
+          <div className="relative">
+            <button type="button" onClick={() => setProfileOpen(!profileOpen)} className="relative size-11 overflow-hidden rounded-xl transition-opacity hover:opacity-80" aria-label="프로필">
+              <Image src="/icons/version-b/profile-new.png" alt="" fill sizes="44px" className="rounded-xl object-cover" />
             </button>
-
-            {/* 프로필 ─ 2504:1059 */}
-            <button
-              type="button"
-              className="relative size-11 overflow-hidden rounded-xl"
-              aria-label="프로필"
-              data-node-id="2504:1059"
-            >
-              <Image
-                src="/icons/version-b/profile.png"
-                alt=""
-                fill
-                sizes="44px"
-                className="object-cover"
-              />
-            </button>
+            {profileOpen && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setProfileOpen(false)} />
+                <div className="absolute bottom-0 left-[calc(100%+8px)] z-50 w-[220px] rounded-2xl bg-white p-3 shadow-lg" style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)" }}>
+                  <div className="flex flex-col gap-3">
+                    <div className="flex flex-col gap-1 rounded-2xl px-3 py-2">
+                      <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">박민영</p>
+                      <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">minion@jocodingax.ai</p>
+                    </div>
+                    <div className="h-px w-full bg-[#e4e4e7]" />
+                    <div className="flex flex-col">
+                      <button type="button" className="w-full rounded-lg px-3 py-2 text-left text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f4f4f5]">내 정보</button>
+                      <button type="button" className="w-full rounded-lg px-3 py-2 text-left text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f4f4f5]">로그아웃</button>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -300,10 +207,10 @@ export default function BrowsePageB() {
                   style={{
                     maskImage: "url(/icons/version-b/menu-my-apps.svg)",
                     WebkitMaskImage: "url(/icons/version-b/menu-my-apps.svg)",
-                    color: activeMenu === "내가 이용중인 앱" ? "#FBB03B" : "rgba(24,24,27,0.48)",
+                    color: activeMenu === "내가 이용중인 앱" ? "#B88539" : "rgba(24,24,27,0.48)",
                   }}
                 />
-                <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "내가 이용중인 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>
+                <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "내가 이용중인 앱" ? "font-semibold text-[#B88539]" : "font-normal text-gray-900"}`}>
                   내가 이용중인 앱
                 </span>
               </button>
@@ -321,10 +228,10 @@ export default function BrowsePageB() {
                     style={{
                       maskImage: "url(/icons/version-b/menu-hot-apps.svg)",
                       WebkitMaskImage: "url(/icons/version-b/menu-hot-apps.svg)",
-                      color: activeMenu === "인기 • 신규 앱" ? "#FBB03B" : "rgba(24,24,27,0.48)",
+                      color: activeMenu === "인기 • 신규 앱" ? "#B88539" : "rgba(24,24,27,0.48)",
                     }}
                   />
-                  <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>
+                  <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#B88539]" : "font-normal text-gray-900"}`}>
                     인기 • 신규 앱
                   </span>
                   <svg width="16" height="16" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className={`ml-auto shrink-0 transition-transform duration-200 ${hotAppsExpanded ? "rotate-90" : ""}`}>
@@ -339,7 +246,7 @@ export default function BrowsePageB() {
                       className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeSubMenu === "인기 차트" && activeMenu === "인기 • 신규 앱" ? "bg-black/[0.03]" : "hover:bg-gray-100"}`}
                     >
                       <span className="size-[18px] shrink-0" />
-                      <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeSubMenu === "인기 차트" && activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>
+                      <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeSubMenu === "인기 차트" && activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#B88539]" : "font-normal text-gray-900"}`}>
                         인기 차트
                       </span>
                     </button>
@@ -349,7 +256,7 @@ export default function BrowsePageB() {
                       className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeSubMenu === "신규/업데이트 차트" && activeMenu === "인기 • 신규 앱" ? "bg-black/[0.03]" : "hover:bg-gray-100"}`}
                     >
                       <span className="size-[18px] shrink-0" />
-                      <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeSubMenu === "신규/업데이트 차트" && activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>
+                      <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeSubMenu === "신규/업데이트 차트" && activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#B88539]" : "font-normal text-gray-900"}`}>
                         신규/업데이트 차트
                       </span>
                     </button>
@@ -379,10 +286,10 @@ export default function BrowsePageB() {
                   style={{
                     maskImage: "url(/icons/version-b/menu-store-app.svg)",
                     WebkitMaskImage: "url(/icons/version-b/menu-store-app.svg)",
-                    color: activeMenu === "앱" ? "#FBB03B" : "rgba(24,24,27,0.48)",
+                    color: activeMenu === "앱" ? "#B88539" : "rgba(24,24,27,0.48)",
                   }}
                 />
-                <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>
+                <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "앱" ? "font-semibold text-[#B88539]" : "font-normal text-gray-900"}`}>
                   앱
                 </span>
               </button>
@@ -490,7 +397,7 @@ export default function BrowsePageB() {
                 <div className="flex flex-col">
                   <button type="button" onClick={() => { setHotAppsExpanded((v) => !v); }} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "인기 • 신규 앱" ? "menu-active" : "hover:bg-gray-200"}`}>
                     <Image src={activeMenu === "인기 • 신규 앱" ? "/icons/version-b/browse-menu-hot-apps.svg" : "/icons/version-b/browse-menu-hot-apps-inactive.svg"} alt="" width={18} height={18} />
-                    <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>인기 • 신규 앱</span>
+                    <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#B88539]" : "font-normal text-gray-900"}`}>인기 • 신규 앱</span>
                     <svg width="16" height="16" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className={`ml-auto shrink-0 transition-transform duration-200 ${hotAppsExpanded ? "rotate-90" : ""}`}>
                       <path d="M4.5 2.5L7.5 6L4.5 9.5" stroke="#a1a1aa" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
@@ -499,18 +406,18 @@ export default function BrowsePageB() {
                     <>
                       <button type="button" onClick={() => navigateTab("인기 • 신규 앱", "인기 차트")} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeSubMenu === "인기 차트" && activeMenu === "인기 • 신규 앱" ? "bg-black/[0.03]" : "hover:bg-gray-200"}`}>
                         <span className="size-[18px] shrink-0" />
-                        <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeSubMenu === "인기 차트" && activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>인기 차트</span>
+                        <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeSubMenu === "인기 차트" && activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#B88539]" : "font-normal text-gray-900"}`}>인기 차트</span>
                       </button>
                       <button type="button" onClick={() => navigateTab("인기 • 신규 앱", "신규/업데이트 차트")} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeSubMenu === "신규/업데이트 차트" && activeMenu === "인기 • 신규 앱" ? "bg-black/[0.03]" : "hover:bg-gray-200"}`}>
                         <span className="size-[18px] shrink-0" />
-                        <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeSubMenu === "신규/업데이트 차트" && activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>신규/업데이트 차트</span>
+                        <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeSubMenu === "신규/업데이트 차트" && activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#B88539]" : "font-normal text-gray-900"}`}>신규/업데이트 차트</span>
                       </button>
                     </>
                   )}
                 </div>
                 <button type="button" onClick={() => navigateTab("앱", "")} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "앱" ? "menu-active" : "hover:bg-gray-200"}`}>
                   <Image src={activeMenu === "앱" ? "/icons/version-b/browse-menu-app-store-active.svg" : "/icons/version-b/browse-menu-app-store.svg"} alt="" width={18} height={18} />
-                  <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>앱 스토어</span>
+                  <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "앱" ? "font-semibold text-[#B88539]" : "font-normal text-gray-900"}`}>앱 스토어</span>
                 </button>
                 <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
                   <Image src="/icons/version-b/browse-menu-api-store.svg" alt="" width={18} height={18} />
@@ -548,7 +455,7 @@ export default function BrowsePageB() {
                 <div className="flex flex-col">
                   <button type="button" onClick={() => { setHotAppsExpanded((v) => !v); navigateTab("인기 • 신규 앱", activeSubMenu); }} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "인기 • 신규 앱" ? "menu-active" : "hover:bg-gray-200"}`}>
                     <Image src={activeMenu === "인기 • 신규 앱" ? "/icons/version-b/browse-menu-hot-apps.svg" : "/icons/version-b/browse-menu-hot-apps-inactive.svg"} alt="" width={18} height={18} />
-                    <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>인기 • 신규 앱</span>
+                    <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#B88539]" : "font-normal text-gray-900"}`}>인기 • 신규 앱</span>
                     <svg width="16" height="16" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className={`ml-auto shrink-0 transition-transform duration-200 ${hotAppsExpanded ? "rotate-90" : ""}`}>
                       <path d="M4.5 2.5L7.5 6L4.5 9.5" stroke="#a1a1aa" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
@@ -557,18 +464,18 @@ export default function BrowsePageB() {
                     <>
                       <button type="button" onClick={() => navigateTab("인기 • 신규 앱", "인기 차트")} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeSubMenu === "인기 차트" && activeMenu === "인기 • 신규 앱" ? "bg-black/[0.03]" : "hover:bg-gray-200"}`}>
                         <span className="size-[18px] shrink-0" />
-                        <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeSubMenu === "인기 차트" && activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>인기 차트</span>
+                        <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeSubMenu === "인기 차트" && activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#B88539]" : "font-normal text-gray-900"}`}>인기 차트</span>
                       </button>
                       <button type="button" onClick={() => navigateTab("인기 • 신규 앱", "신규/업데이트 차트")} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeSubMenu === "신규/업데이트 차트" && activeMenu === "인기 • 신규 앱" ? "bg-black/[0.03]" : "hover:bg-gray-200"}`}>
                         <span className="size-[18px] shrink-0" />
-                        <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeSubMenu === "신규/업데이트 차트" && activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>신규/업데이트 차트</span>
+                        <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeSubMenu === "신규/업데이트 차트" && activeMenu === "인기 • 신규 앱" ? "font-semibold text-[#B88539]" : "font-normal text-gray-900"}`}>신규/업데이트 차트</span>
                       </button>
                     </>
                   )}
                 </div>
                 <button type="button" onClick={() => navigateTab("앱", "")} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 ${activeMenu === "앱" ? "menu-active" : "hover:bg-gray-200"}`}>
                   <Image src={activeMenu === "앱" ? "/icons/version-b/browse-menu-app-store-active.svg" : "/icons/version-b/browse-menu-app-store.svg"} alt="" width={18} height={18} />
-                  <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "앱" ? "font-semibold text-[#FBB03B]" : "font-normal text-gray-900"}`}>앱 스토어</span>
+                  <span className={`whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${activeMenu === "앱" ? "font-semibold text-[#B88539]" : "font-normal text-gray-900"}`}>앱 스토어</span>
                 </button>
                 <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
                   <Image src="/icons/version-b/browse-menu-api-store.svg" alt="" width={18} height={18} />

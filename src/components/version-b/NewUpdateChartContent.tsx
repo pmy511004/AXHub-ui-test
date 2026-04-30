@@ -59,7 +59,7 @@ function AppCard({
             <svg width="12" height="12" viewBox="0 0 12 12">
               <path
                 d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z"
-                fill="#FBB03B"
+                fill="#B88539"
               />
             </svg>
             <span className="text-xs font-normal text-black">{app.recommends}</span>
@@ -67,7 +67,7 @@ function AppCard({
         </div>
         <button
           type="button"
-          className="flex h-7 w-[66px] shrink-0 items-center justify-center rounded-xl text-sm font-semibold leading-[1.3] tracking-[-0.12px] text-[#FBB03B] bg-[rgba(251,176,59,0.1)] hover:bg-[rgba(251,176,59,0.2)] transition-colors"
+          className="flex h-7 w-[66px] shrink-0 items-center justify-center rounded-xl text-sm font-semibold leading-[1.3] tracking-[-0.12px] text-[#B88539] bg-[rgba(251,176,59,0.1)] hover:bg-[rgba(251,176,59,0.2)] transition-colors"
           onClick={(e) => {
             e.stopPropagation();
             onAppClick?.(app.name, app.category);
@@ -115,7 +115,7 @@ function AppCarouselSection({
     <div className="flex flex-col gap-4">
       <div className="flex items-end justify-between">
         <div className="flex flex-col gap-1">
-          <span className="text-sm font-bold leading-[1.5] tracking-[-0.14px] text-[#FBB03B]">{label}</span>
+          <span className="text-sm font-bold leading-[1.5] tracking-[-0.14px] text-[#B88539]">{label}</span>
           <h2 className="font-medium text-black" style={{ fontSize: "20px", lineHeight: "1.3" }}>
             {title}
           </h2>
