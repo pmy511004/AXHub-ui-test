@@ -29,7 +29,7 @@ const comments = [
 ];
 
 export default function AppDetailView({ appName, category, onBack, fromMenu, isAdmin, appStatus }: AppDetailViewProps) {
-  const primaryColor = isAdmin ? "#B86397" : "#B88539";
+  const primaryColor = isAdmin ? "#5B3D7A" : "#5B3D7A";
   const [activeTab, setActiveTab] = useState("앱");
   const [expanded, setExpanded] = useState(false);
   const [gitStep, setGitStep] = useState<"login" | "install" | "repo" | "connected">("login");
@@ -138,11 +138,11 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
         const fillWidth = guideComplete ? "504px" : isDeployTab ? "375px" : isEnvTab ? "250px" : "125px";
 
         const chipClass = (state: string) =>
-          state === "done" || state === "active" ? "bg-[#B86397]" : "relative overflow-hidden bg-[#B86397]";
+          state === "done" || state === "active" ? "bg-[#5B3D7A]" : "relative overflow-hidden bg-[#5B3D7A]";
         const chipOverlay = (state: string) =>
           state === "future";
         const labelClass = (state: string) =>
-          state === "active" ? "font-semibold text-[#B86397]"
+          state === "active" ? "font-semibold text-[#5B3D7A]"
             : state === "done" ? "font-medium text-[rgba(231,101,190,0.5)]"
             : "font-medium text-[#a1a1aa]";
 
@@ -161,7 +161,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 <div className="flex flex-1 items-center gap-1">
                   <button type="button" onClick={() => setGuideDismissed(!guideDismissed)} className="flex size-6 items-center justify-center p-[3px]">
                     {guideDismissed ? (
-                      <span className="flex size-full items-center justify-center rounded border-[1.5px] border-[#B86397] bg-[#B86397]">
+                      <span className="flex size-full items-center justify-center rounded border-[1.5px] border-[#5B3D7A] bg-[#5B3D7A]">
                         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M2.917 7L5.833 9.917L11.083 4.083" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
@@ -184,7 +184,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 <div className="flex items-center gap-1">
                   <span className="flex-1 text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">{guideTitle}</span>
                   {guideComplete ? (
-                    <span className="shrink-0 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#B86397]">스토어에서 보기</span>
+                    <span className="shrink-0 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#5B3D7A]">스토어에서 보기</span>
                   ) : isEnvTab && !isDeployTab ? (
                     <button type="button" className="flex shrink-0 items-center rounded-lg border border-[#e4e4e7] px-3 py-1.5 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#71717a] transition-colors hover:bg-gray-50">건너뛰기</button>
                   ) : null}
@@ -194,7 +194,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
               {/* Step progress */}
               <div className="relative flex items-start justify-between">
                 <div className="absolute left-[25px] right-[25px] top-[9px] h-1.5 rounded-full bg-[#e4e4e7]" />
-                <div className="absolute left-[26px] top-[9px] h-1.5 overflow-hidden rounded-full bg-[#B86397] transition-all duration-500" style={{ width: fillWidth }}>
+                <div className="absolute left-[26px] top-[9px] h-1.5 overflow-hidden rounded-full bg-[#5B3D7A] transition-all duration-500" style={{ width: fillWidth }}>
                   <div className="absolute inset-0" style={{
                     background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0) 30%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 70%, transparent 100%)",
                     animation: "guideShimmer 2s ease-in-out infinite",
@@ -203,13 +203,13 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 {steps.map((step) => (
                   <button key={step.num} type="button" onClick={() => { setGuideComplete(false); setActiveTab(step.tab); }} className="group relative z-10 flex w-[65px] flex-col items-center gap-3 transition hover:scale-110">
                     <span className={`flex size-6 items-center justify-center rounded-full ${chipClass(step.state)} text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white transition group-hover:bg-[#d454a8]`}>{step.num}{chipOverlay(step.state) && <span className="absolute inset-0 rounded-full bg-white/70" />}</span>
-                    <span className={`whitespace-nowrap text-xs leading-[1.3] tracking-[-0.12px] ${labelClass(step.state)} transition group-hover:text-[#B86397]`}>{step.label}</span>
+                    <span className={`whitespace-nowrap text-xs leading-[1.3] tracking-[-0.12px] ${labelClass(step.state)} transition group-hover:text-[#5B3D7A]`}>{step.label}</span>
                   </button>
                 ))}
                 {/* 앱 공개 */}
                 <button type="button" onClick={() => setGuideComplete(true)} className="group relative z-10 flex flex-col items-center transition hover:scale-110">
                   <span
-                    className={`flex items-center justify-center rounded-full px-2 py-1 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white transition ${appPublished ? "bg-[#B86397]" : "relative overflow-hidden bg-[#B86397] group-hover:brightness-90"}`}
+                    className={`flex items-center justify-center rounded-full px-2 py-1 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white transition ${appPublished ? "bg-[#5B3D7A]" : "relative overflow-hidden bg-[#5B3D7A] group-hover:brightness-90"}`}
                   >앱 공개{!appPublished && <span className="absolute inset-0 rounded-full bg-white/70" />}</span>
                 </button>
               </div>
@@ -261,7 +261,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
           </div>
           <div className="flex items-start gap-2">
             {isAdmin ? (
-              <span className="relative flex h-8 items-center justify-center overflow-hidden rounded-xl bg-[#B86397] px-4 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white">
+              <span className="relative flex h-8 items-center justify-center overflow-hidden rounded-xl bg-[#5B3D7A] px-4 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white">
                 배포 전
                 <span className="absolute inset-0 rounded-xl bg-white/70" />
               </span>
@@ -291,7 +291,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
             ) : (
               <button
                 type="button"
-                className="flex h-8 items-center justify-center overflow-hidden rounded-xl px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#B88539] bg-[rgba(251,176,59,0.1)] hover:bg-[rgba(251,176,59,0.2)] transition-colors"
+                className="flex h-8 items-center justify-center overflow-hidden rounded-xl px-4 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#5B3D7A] bg-[rgba(251,176,59,0.1)] hover:bg-[rgba(251,176,59,0.2)] transition-colors"
               >
                 받기
               </button>
@@ -313,7 +313,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 onClick={() => setActiveTab(tab)}
                 className={`relative flex items-center gap-1 px-5 py-2 text-base leading-[1.5] tracking-[-0.16px] transition-colors ${
                   isActive
-                    ? "font-semibold text-black border-b-[2.5px] border-[#B86397]"
+                    ? "font-semibold text-black border-b-[2.5px] border-[#5B3D7A]"
                     : "font-normal text-[#a1a1aa] hover:text-[#71717a]"
                 }`}
               >
@@ -382,7 +382,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
               <button
                 type="button"
                 onClick={() => setExpanded(!expanded)}
-                className="shrink-0 px-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#B86397]"
+                className="shrink-0 px-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#5B3D7A]"
               >
                 {expanded ? "접기" : "더보기"}
               </button>
@@ -480,7 +480,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                   <p>• 공백, 특수문자, 40자 이상은 사용할 수 없어요</p>
                   <p>• 구분하기 쉽도록 기능이나 이슈 내용을 짧고 명확하게 작성해요</p>
                 </div>
-                <button type="button" onClick={() => setNamingModalOpen(false)} className="flex h-9 items-center justify-center rounded-lg bg-[#B86397] px-8 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+                <button type="button" onClick={() => setNamingModalOpen(false)} className="flex h-9 items-center justify-center rounded-lg bg-[#5B3D7A] px-8 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
                   확인
                 </button>
               </div>
@@ -498,7 +498,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">먼저 로그인을 해주세요</p>
                 <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">저장소 내용은 읽지 않으며 계정 식별 정보만 사용할게요</p>
               </div>
-              <button type="button" onClick={() => setGitStep("install")} className="flex h-9 items-center justify-center rounded-lg bg-[#B86397] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+              <button type="button" onClick={() => setGitStep("install")} className="flex h-9 items-center justify-center rounded-lg bg-[#5B3D7A] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
                 GitHub 로그인
               </button>
             </div>
@@ -517,7 +517,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 <button type="button" onClick={() => setGitStep("login")} className="flex h-9 items-center justify-center rounded-lg border border-[#d4d4d8] px-4 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#71717a] transition-colors hover:bg-gray-50">
                   다른 아이디로 로그인
                 </button>
-                <button type="button" onClick={() => setGitStep("repo")} className="flex h-9 items-center justify-center rounded-lg bg-[#B86397] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+                <button type="button" onClick={() => setGitStep("repo")} className="flex h-9 items-center justify-center rounded-lg bg-[#5B3D7A] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
                   이 계정에 앱 설치
                 </button>
               </div>
@@ -541,7 +541,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
               </div>
               <div className="flex flex-col gap-2">
                 {["minion/AXHub-test", "minion/AXHub-test2", "minion/AXHub-test3"].map((repo) => (
-                  <button key={repo} type="button" onClick={() => setSelectedRepo(selectedRepo === repo ? null : repo)} className={`flex flex-col items-start gap-2 rounded-xl border p-4 text-left transition-colors ${selectedRepo === repo ? "border-[#B86397] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
+                  <button key={repo} type="button" onClick={() => setSelectedRepo(selectedRepo === repo ? null : repo)} className={`flex flex-col items-start gap-2 rounded-xl border p-4 text-left transition-colors ${selectedRepo === repo ? "border-[#5B3D7A] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
                     <p className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46]">{repo}</p>
                     <div className="flex items-start gap-2 text-sm leading-[1.5] tracking-[-0.14px] text-[#71717a]">
                       <span className="font-semibold">기본 브랜치</span>
@@ -557,14 +557,14 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                   value={branchName}
                   onChange={(e) => setBranchName(e.target.value)}
                   placeholder="main, master..."
-                  className="min-h-[48px] rounded-xl border border-[#e4e4e7] bg-white px-4 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#B86397] focus:outline-none"
+                  className="min-h-[48px] rounded-xl border border-[#e4e4e7] bg-white px-4 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#5B3D7A] focus:outline-none"
                 />
               </div>
               <button
                 type="button"
                 disabled={!selectedRepo || !branchName.trim()}
                 onClick={() => setGitStep("connected")}
-                className="relative flex h-9 w-fit items-center justify-center overflow-hidden rounded-lg bg-[#B86397] px-4 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+                className="relative flex h-9 w-fit items-center justify-center overflow-hidden rounded-lg bg-[#5B3D7A] px-4 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
               >
                 저장소 연결
                 {(!selectedRepo || !branchName.trim()) && <span className="absolute inset-0 rounded-lg bg-white/70" />}
@@ -578,7 +578,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">연결된 저장소 정보를 확인하세요</p>
               </div>
               <div className="flex w-[350px] flex-col items-center gap-2 overflow-hidden rounded-xl bg-[#f4f4f5] p-5">
-                <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#B86397]">{selectedRepo}</p>
+                <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#5B3D7A]">{selectedRepo}</p>
                 <div className="flex items-center justify-center gap-2 text-base leading-[1.5] tracking-[-0.16px] text-[#71717a]">
                   <span className="font-semibold">브랜치</span>
                   <span className="font-normal">{branchName}</span>
@@ -618,7 +618,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                     </div>
                   ))}
                 </div>
-                <button type="button" onClick={() => setEnvModalOpen(false)} className="flex h-9 items-center justify-center rounded-lg bg-[#B86397] px-8 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+                <button type="button" onClick={() => setEnvModalOpen(false)} className="flex h-9 items-center justify-center rounded-lg bg-[#5B3D7A] px-8 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
                   확인
                 </button>
               </div>
@@ -645,7 +645,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 </p>
               </div>
             </div>
-            <button type="button" onClick={() => { setEnvKey(""); setEnvValue(""); setEnvType(null); setEnvAddModalOpen(true); }} className="flex h-9 items-center justify-center rounded-lg bg-[#B86397] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+            <button type="button" onClick={() => { setEnvKey(""); setEnvValue(""); setEnvType(null); setEnvAddModalOpen(true); }} className="flex h-9 items-center justify-center rounded-lg bg-[#5B3D7A] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
               환경변수 추가
             </button>
           </div>
@@ -657,7 +657,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 <Image src="/icons/version-b/search.svg" alt="" width={20} height={20} />
                 <span className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#a1a1aa]">키 이름으로 검색</span>
               </div>
-              <button type="button" onClick={() => { setEnvKey(""); setEnvValue(""); setEnvType(null); setEnvAddModalOpen(true); }} className="flex h-9 items-center justify-center rounded-lg bg-[#B86397] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+              <button type="button" onClick={() => { setEnvKey(""); setEnvValue(""); setEnvType(null); setEnvAddModalOpen(true); }} className="flex h-9 items-center justify-center rounded-lg bg-[#5B3D7A] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
                 환경변수 추가
               </button>
             </div>
@@ -697,7 +697,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 <div className="flex w-full flex-col gap-3">
                   <p className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-black">키(이름)<span className="text-[#ef1026]">*</span></p>
                   <div className="flex flex-col gap-2">
-                    <input type="text" value={envKey} onChange={(e) => setEnvKey(e.target.value)} placeholder="DB_URL..." className="min-h-[48px] rounded-xl border border-[#e4e4e7] bg-white px-4 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#B86397] focus:outline-none" />
+                    <input type="text" value={envKey} onChange={(e) => setEnvKey(e.target.value)} placeholder="DB_URL..." className="min-h-[48px] rounded-xl border border-[#e4e4e7] bg-white px-4 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#5B3D7A] focus:outline-none" />
                     <p className="text-sm leading-[1.5] tracking-[-0.14px] text-[#71717a]"><span className="font-semibold">대문자 + 언더스코어</span><span className="font-normal"> 형태로 사용하며, 바로 알아볼 수 있는 이름을 붙여주세요</span></p>
                   </div>
                 </div>
@@ -705,7 +705,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 <div className="flex w-full flex-col gap-3">
                   <p className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-black">값<span className="text-[#ef1026]">*</span></p>
                   <div className="flex flex-col gap-2">
-                    <input type="text" value={envValue} onChange={(e) => setEnvValue(e.target.value)} placeholder="********" className="min-h-[48px] rounded-xl border border-[#e4e4e7] bg-white px-4 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#B86397] focus:outline-none" />
+                    <input type="text" value={envValue} onChange={(e) => setEnvValue(e.target.value)} placeholder="********" className="min-h-[48px] rounded-xl border border-[#e4e4e7] bg-white px-4 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#5B3D7A] focus:outline-none" />
                     <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">실제로 들어가는 값으로 발급받거나 생성한 값을 넣어주세요</p>
                   </div>
                 </div>
@@ -719,7 +719,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                         { key: "Build", desc: "앱을 만들 때 사용" },
                         { key: "Both", desc: "두 경우 모두 사용" },
                       ].map((env) => (
-                        <button key={env.key} type="button" onClick={() => setEnvType(envType === env.key ? null : env.key)} className={`flex flex-1 flex-col gap-2 rounded-xl border p-4 text-left transition-colors ${envType === env.key ? "border-[#B86397] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
+                        <button key={env.key} type="button" onClick={() => setEnvType(envType === env.key ? null : env.key)} className={`flex flex-1 flex-col gap-2 rounded-xl border p-4 text-left transition-colors ${envType === env.key ? "border-[#5B3D7A] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
                           <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46]">{env.key}</span>
                           <span className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">{env.desc}</span>
                         </button>
@@ -738,7 +738,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                     disabled={!envKey.trim() || !envValue.trim() || !envType}
                     onClick={() => { setEnvVars([...envVars, { key: envKey, value: envValue, type: envType! }]); setEnvAddModalOpen(false); }}
                     className="relative flex h-9 items-center justify-center overflow-hidden rounded-lg px-8 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity"
-                    style={{ background: "#B86397" }}
+                    style={{ background: "#5B3D7A" }}
                   >
                     추가
                     {(!envKey.trim() || !envValue.trim() || !envType) && <span className="absolute inset-0 rounded-lg bg-white/70" />}
@@ -760,7 +760,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 <div className="flex w-full flex-col gap-3">
                   <p className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-black">키(이름)<span className="text-[#ef1026]">*</span></p>
                   <div className="flex flex-col gap-2">
-                    <input type="text" value={envKey} onChange={(e) => setEnvKey(e.target.value)} placeholder="DB_URL..." className="min-h-[48px] rounded-xl border border-[#e4e4e7] bg-white px-4 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#B86397] focus:outline-none" />
+                    <input type="text" value={envKey} onChange={(e) => setEnvKey(e.target.value)} placeholder="DB_URL..." className="min-h-[48px] rounded-xl border border-[#e4e4e7] bg-white px-4 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#5B3D7A] focus:outline-none" />
                     <p className="text-sm leading-[1.5] tracking-[-0.14px] text-[#71717a]"><span className="font-semibold">대문자 + 언더스코어</span><span className="font-normal"> 형태로 사용하며, 바로 알아볼 수 있는 이름을 붙여주세요</span></p>
                   </div>
                 </div>
@@ -768,7 +768,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 <div className="flex w-full flex-col gap-3">
                   <p className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-black">값<span className="text-[#ef1026]">*</span></p>
                   <div className="flex flex-col gap-2">
-                    <input type="text" value={envValue} onChange={(e) => setEnvValue(e.target.value)} placeholder="********" className="min-h-[48px] rounded-xl border border-[#e4e4e7] bg-white px-4 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#B86397] focus:outline-none" />
+                    <input type="text" value={envValue} onChange={(e) => setEnvValue(e.target.value)} placeholder="********" className="min-h-[48px] rounded-xl border border-[#e4e4e7] bg-white px-4 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#5B3D7A] focus:outline-none" />
                     <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">실제로 들어가는 값으로 발급받거나 생성한 값을 넣어주세요</p>
                   </div>
                 </div>
@@ -782,7 +782,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                         { key: "Build", desc: "앱을 만들 때 사용" },
                         { key: "Both", desc: "두 경우 모두 사용" },
                       ].map((env) => (
-                        <button key={env.key} type="button" onClick={() => setEnvType(envType === env.key ? null : env.key)} className={`flex flex-1 flex-col gap-2 rounded-xl border p-4 text-left transition-colors ${envType === env.key ? "border-[#B86397] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
+                        <button key={env.key} type="button" onClick={() => setEnvType(envType === env.key ? null : env.key)} className={`flex flex-1 flex-col gap-2 rounded-xl border p-4 text-left transition-colors ${envType === env.key ? "border-[#5B3D7A] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
                           <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46]">{env.key}</span>
                           <span className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">{env.desc}</span>
                         </button>
@@ -801,7 +801,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                     disabled={!envKey.trim() || !envValue.trim() || !envType}
                     onClick={() => { const updated = [...envVars]; updated[envEditIndex] = { key: envKey, value: envValue, type: envType! }; setEnvVars(updated); setEnvEditIndex(null); setEnvKey(""); setEnvValue(""); setEnvType(null); }}
                     className="relative flex h-9 items-center justify-center overflow-hidden rounded-lg px-8 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
-                    style={{ background: "#B86397" }}
+                    style={{ background: "#5B3D7A" }}
                   >
                     저장
                     {(!envKey.trim() || !envValue.trim() || !envType) && <span className="absolute inset-0 rounded-lg bg-white/70" />}
@@ -829,7 +829,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                   <button
                     type="button"
                     onClick={() => { setEnvVars(envVars.filter((_, j) => j !== envDeleteIndex)); setEnvDeleteIndex(null); }}
-                    className="flex h-9 items-center justify-center rounded-lg bg-[#B86397] px-8 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+                    className="flex h-9 items-center justify-center rounded-lg bg-[#5B3D7A] px-8 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
                   >
                     삭제
                   </button>
@@ -977,7 +977,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
               <div className="flex flex-col gap-6 py-5">
                 <div className="flex items-center gap-6">
                   <span className="flex-1 text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">현재 배포 상태</span>
-                  <button type="button" onClick={() => {}} className="flex h-9 items-center justify-center rounded-lg bg-[#B86397] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">수동 배포</button>
+                  <button type="button" onClick={() => {}} className="flex h-9 items-center justify-center rounded-lg bg-[#5B3D7A] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">수동 배포</button>
                 </div>
                 {/* 배포 정보 카드 */}
                 <div className="flex flex-col gap-5 overflow-hidden rounded-xl bg-[#f4f4f5] p-5">
@@ -1015,7 +1015,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 <div className="flex w-full items-end gap-6">
                   <div className="flex flex-1 items-start gap-2">
                     <span className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">배포 이력</span>
-                    <span className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#B86397]">10건</span>
+                    <span className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#5B3D7A]">10건</span>
                   </div>
                   <div className="relative">
                     <button type="button" onClick={() => setDeployFilterOpen(!deployFilterOpen)} className="flex items-center gap-1">
@@ -1025,7 +1025,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                     {deployFilterOpen && (
                       <div className="absolute right-0 top-full z-20 mt-1 flex min-w-[140px] flex-col overflow-hidden rounded-xl bg-white shadow-[0px_4px_16px_rgba(0,0,0,0.12)]">
                         {["전체 상태", "Pending", "Building", "Running", "Failed", "Stopped"].map((f) => (
-                          <button key={f} type="button" onClick={() => { setDeployFilter(f); setDeployFilterOpen(false); }} className={`flex items-center gap-2 px-4 py-2.5 text-left text-sm leading-[1.5] tracking-[-0.14px] transition-colors hover:bg-gray-50 ${deployFilter === f ? "font-semibold text-[#B86397]" : "font-normal text-[#3f3f46]"}`}>
+                          <button key={f} type="button" onClick={() => { setDeployFilter(f); setDeployFilterOpen(false); }} className={`flex items-center gap-2 px-4 py-2.5 text-left text-sm leading-[1.5] tracking-[-0.14px] transition-colors hover:bg-gray-50 ${deployFilter === f ? "font-semibold text-[#5B3D7A]" : "font-normal text-[#3f3f46]"}`}>
                             {f !== "전체 상태" && <span className="size-2 rounded-full" style={{ backgroundColor: f === "Pending" ? "#f6c205" : f === "Building" ? "#3d8df7" : f === "Running" ? "#1fa24e" : f === "Failed" ? "#f5475c" : "#71717a" }} />}
                             {f}
                           </button>
@@ -1082,7 +1082,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
               <div className="flex flex-col gap-6 py-5">
                 <div className="flex items-start gap-2">
                   <span className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">CI 이력</span>
-                  <span className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#B86397]">0건</span>
+                  <span className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#5B3D7A]">0건</span>
                 </div>
                 {/* 통계 카드 3열 */}
                 <div className="flex gap-3">
@@ -1120,7 +1120,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                   {ciFilterOpen && (
                     <div className="absolute right-0 top-full z-20 mt-1 flex min-w-[140px] flex-col overflow-hidden rounded-xl bg-white shadow-[0px_4px_16px_rgba(0,0,0,0.12)]">
                       {["전체 활동", "자동 배포", "수동 배포"].map((f) => (
-                        <button key={f} type="button" onClick={() => { setCiFilter(f); setCiFilterOpen(false); }} className={`px-4 py-2.5 text-left text-sm leading-[1.5] tracking-[-0.14px] transition-colors hover:bg-gray-50 ${ciFilter === f ? "font-semibold text-[#B86397]" : "font-normal text-[#3f3f46]"}`}>
+                        <button key={f} type="button" onClick={() => { setCiFilter(f); setCiFilterOpen(false); }} className={`px-4 py-2.5 text-left text-sm leading-[1.5] tracking-[-0.14px] transition-colors hover:bg-gray-50 ${ciFilter === f ? "font-semibold text-[#5B3D7A]" : "font-normal text-[#3f3f46]"}`}>
                           {f}
                         </button>
                       ))}
@@ -1145,7 +1145,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                     <p>아래 버튼으로 수동 배포할 수 있어요</p>
                   </div>
                 </div>
-                <button type="button" onClick={() => setDeployStarted(true)} className="flex h-9 items-center justify-center rounded-lg bg-[#B86397] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+                <button type="button" onClick={() => setDeployStarted(true)} className="flex h-9 items-center justify-center rounded-lg bg-[#5B3D7A] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
                   수동 배포
                 </button>
               </>
@@ -1155,7 +1155,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                   <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">아직 Git 연동이 완료되지 않았어요</p>
                   <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">앱을 배포하려면 먼저 GitHub 저장소를 연결해 주세요</p>
                 </div>
-                <button type="button" onClick={() => setActiveTab("Git 연동")} className="flex h-9 items-center justify-center rounded-lg bg-[#B86397] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+                <button type="button" onClick={() => setActiveTab("Git 연동")} className="flex h-9 items-center justify-center rounded-lg bg-[#5B3D7A] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
                   Git 연동
                 </button>
               </>
@@ -1175,7 +1175,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
               <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">접근할 수 있는 멤버를 추가하세요</p>
               <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">아직은 멤버가 아무도 없어요</p>
             </div>
-            <button type="button" onClick={() => { setMemberAddModalOpen(true); setMemberAddMode("user"); setSelectedMemberUser(null); setSelectedMemberRole(null); setMemberDropdownOpen(false); setMemberPermission("구성원 (보기 권한)"); setMemberPermDropdownOpen(false); }} className="flex h-9 items-center justify-center rounded-lg bg-[#B86397] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+            <button type="button" onClick={() => { setMemberAddModalOpen(true); setMemberAddMode("user"); setSelectedMemberUser(null); setSelectedMemberRole(null); setMemberDropdownOpen(false); setMemberPermission("구성원 (보기 권한)"); setMemberPermDropdownOpen(false); }} className="flex h-9 items-center justify-center rounded-lg bg-[#5B3D7A] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
               멤버 추가
             </button>
           </div>
@@ -1186,7 +1186,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 <svg className="size-5 shrink-0 text-[#a1a1aa]" fill="none" viewBox="0 0 20 20"><circle cx="9" cy="9" r="5.5" stroke="currentColor" strokeWidth="1.5" /><path d="M13.5 13.5L16.5 16.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
                 <input type="text" value={memberSearch} onChange={(e) => setMemberSearch(e.target.value)} placeholder="이름으로 검색" className="flex-1 bg-transparent text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:outline-none" />
               </div>
-              <button type="button" onClick={() => { setMemberAddModalOpen(true); setMemberAddMode("user"); setSelectedMemberUser(null); setSelectedMemberRole(null); setMemberDropdownOpen(false); setMemberPermission("구성원 (보기 권한)"); setMemberPermDropdownOpen(false); }} className="flex h-9 items-center justify-center rounded-lg bg-[#B86397] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+              <button type="button" onClick={() => { setMemberAddModalOpen(true); setMemberAddMode("user"); setSelectedMemberUser(null); setSelectedMemberRole(null); setMemberDropdownOpen(false); setMemberPermission("구성원 (보기 권한)"); setMemberPermDropdownOpen(false); }} className="flex h-9 items-center justify-center rounded-lg bg-[#5B3D7A] px-4 py-2 text-sm font-bold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
                 멤버 추가
               </button>
             </div>
@@ -1261,11 +1261,11 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                     <p className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-black">멤버</p>
                     {/* 모드 선택 */}
                     <div className="flex w-full gap-3">
-                      <button type="button" onClick={() => { setMemberAddMode("user"); setSelectedMemberUser(null); setSelectedMemberRole(null); setMemberDropdownOpen(false); }} className={`flex flex-1 flex-col gap-2 rounded-xl border p-4 text-left transition-colors ${isUserMode ? "border-[#B86397] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
+                      <button type="button" onClick={() => { setMemberAddMode("user"); setSelectedMemberUser(null); setSelectedMemberRole(null); setMemberDropdownOpen(false); }} className={`flex flex-1 flex-col gap-2 rounded-xl border p-4 text-left transition-colors ${isUserMode ? "border-[#5B3D7A] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
                         <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46]">개인 사용자별</span>
                         <span className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">특정 사내 구성원 찾기</span>
                       </button>
-                      <button type="button" onClick={() => { setMemberAddMode("role"); setSelectedMemberUser(null); setSelectedMemberRole(null); setMemberDropdownOpen(false); }} className={`flex flex-1 flex-col gap-2 rounded-xl border p-4 text-left transition-colors ${!isUserMode ? "border-[#B86397] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
+                      <button type="button" onClick={() => { setMemberAddMode("role"); setSelectedMemberUser(null); setSelectedMemberRole(null); setMemberDropdownOpen(false); }} className={`flex flex-1 flex-col gap-2 rounded-xl border p-4 text-left transition-colors ${!isUserMode ? "border-[#5B3D7A] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
                         <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46]">전체 역할별</span>
                         <span className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">직무, 부서별로 한 번에 찾기</span>
                       </button>
@@ -1338,7 +1338,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                       {memberPermDropdownOpen && (
                         <div className="absolute left-0 right-0 top-[calc(100%+4px)] z-10 rounded-xl border border-[#e4e4e7] bg-white py-1 shadow-lg">
                           {["구성원 (보기 권한)", "구성원 (편집 권한)", "관리자"].map((perm) => (
-                            <button key={perm} type="button" onClick={() => { setMemberPermission(perm); setMemberPermDropdownOpen(false); }} className={`flex w-full px-4 py-2.5 text-left text-sm leading-[1.5] tracking-[-0.14px] transition-colors hover:bg-gray-50 ${memberPermission === perm ? "font-semibold text-[#B86397]" : "font-normal text-[#18181b]"}`}>
+                            <button key={perm} type="button" onClick={() => { setMemberPermission(perm); setMemberPermDropdownOpen(false); }} className={`flex w-full px-4 py-2.5 text-left text-sm leading-[1.5] tracking-[-0.14px] transition-colors hover:bg-gray-50 ${memberPermission === perm ? "font-semibold text-[#5B3D7A]" : "font-normal text-[#18181b]"}`}>
                               {perm}
                             </button>
                           ))}
@@ -1355,7 +1355,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                       type="button"
                       disabled={!isSelected}
                       onClick={handleAdd}
-                      className="relative flex h-9 items-center justify-center overflow-hidden rounded-lg bg-[#B86397] px-8 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+                      className="relative flex h-9 items-center justify-center overflow-hidden rounded-lg bg-[#5B3D7A] px-8 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
                     >
                       추가
                       {!isSelected && <span className="absolute inset-0 rounded-lg bg-white/70" />}
@@ -1384,7 +1384,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                   <button
                     type="button"
                     onClick={() => { setMembers(members.filter((_, j) => j !== memberDeleteIndex)); setMemberDeleteIndex(null); }}
-                    className="flex h-9 items-center justify-center rounded-lg bg-[#B86397] px-8 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+                    className="flex h-9 items-center justify-center rounded-lg bg-[#5B3D7A] px-8 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
                   >
                     삭제
                   </button>

@@ -1,0 +1,12 @@
+<svg preserveAspectRatio="none" width="100%" height="100%" overflow="visible" style="display: block;" viewBox="0 0 90 66.9039" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Frame 1948758816">
+<path id="Rectangle 40" d="M0 7.2C0 3.22355 3.22355 0 7.2 0L82.8 0C86.7764 0 90 3.22355 90 7.2V12.6C90 14.5882 88.3882 16.2 86.4 16.2H3.6C1.61177 16.2 0 14.5882 0 12.6L0 7.2Z" fill="var(--fill-0, #A1A1AA)"/>
+<path id="Subtract" d="M80.4971 61.1861C80.1168 64.4455 77.3557 66.9039 74.0742 66.9039H15.9258C12.6444 66.9037 9.88318 64.4455 9.50293 61.1861L4.5 18.3033H85.5L80.4971 61.1861ZM32.0332 26.4039C30.2477 26.404 28.8 27.8577 28.7998 29.6432C28.7998 31.4288 30.2475 32.8833 32.0332 32.8834H57.9668C59.7525 32.8834 61.2002 31.4289 61.2002 29.6432C61.2 27.8576 59.7524 26.4039 57.9668 26.4039H32.0332Z" fill="url(#paint0_linear_0_320)"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_0_320" x1="45" y1="18.3033" x2="45" y2="66.9039" gradientUnits="userSpaceOnUse">
+<stop stop-color="#E4E4E7"/>
+<stop offset="1" stop-color="#D4D4D8"/>
+</linearGradient>
+</defs>
+</svg>

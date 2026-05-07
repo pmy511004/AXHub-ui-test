@@ -135,6 +135,17 @@
     background-color: rgba(0, 0, 0, 0.2);
   }
 
+  /* 스크롤은 유지하되 스크롤바만 시각적으로 숨김 */
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+  }
+
   @keyframes slideLeft {
     from {
       opacity: 0;

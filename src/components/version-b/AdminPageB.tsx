@@ -2,57 +2,47 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import TeamColumn from "./TeamColumn";
+import PageSidebar from "./PageSidebar";
 
 // 피그마 versionB-2 (node 2530:1480) — /admin 페이지 Version B 전체 레이아웃
 export default function AdminPageB() {
-  const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  const [activeTeam, setActiveTeam] = useState<"JO" | "DE">("JO");
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [showTeamProfile, setShowTeamProfile] = useState(true);
   const [profileOpen, setProfileOpen] = useState(false);
-  const pathname = usePathname();
-  const navItems = [
-    { href: "/", label: "홈", activeIcon: "/icons/version-b/nav-home-active-new.svg", inactiveIcon: "/icons/version-b/nav-home-inactive.svg" },
-    { href: "/make", label: "프로젝트", activeIcon: "/icons/version-b/nav-project-active.svg", inactiveIcon: "/icons/version-b/nav-project-inactive.svg" },
-    { href: "/browse", label: "스토어", activeIcon: "/icons/version-b/nav-store-active.svg", inactiveIcon: "/icons/version-b/nav-store-new.svg" },
-    { href: "/admin", label: "설정", activeIcon: "/icons/version-b/nav-settings-active.svg", inactiveIcon: "/icons/version-b/nav-settings-new.svg" },
-  ];
 
   return (
     <div
       className="flex h-screen w-full items-start overflow-hidden"
-      style={{ backgroundColor: "#3F1C5C", "--page-primary": "#4A78B8" } as React.CSSProperties}
+      style={{ backgroundColor: "#130321", "--page-primary": "#5B3D7A" } as React.CSSProperties}
       data-node-id="2530:1480"
     >
-      {/* Team Column */}
-      <TeamColumn expanded={sidebarExpanded} bgColor="#2f1546" />
-
-      {/* L. Global Nav */}
+      {/* L. Global Nav (팀 프로필 셀렉터) */}
       <div className="flex h-full w-[76px] shrink-0 flex-col items-center justify-between">
-        <div className="flex w-full flex-col items-start">
-          <div className="flex w-full flex-col items-center justify-center px-5 py-4">
-            <div className="flex size-11 items-center justify-center overflow-hidden rounded-xl bg-[#6d319d] p-1">
-              <p className="flex-1 text-center text-base font-bold leading-[1.5] tracking-[-0.16px] text-white">JO</p>
-            </div>
-          </div>
-          <nav className="flex w-full flex-col items-center gap-4 px-5">
-            {navItems.map((item) => {
-              const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
-              return (
-                <Link key={item.href} href={item.href} className="flex flex-col items-center gap-1">
-                  <div className={`relative size-11 rounded-xl transition-colors ${isActive ? "" : "hover:bg-white/10"}`}>
-                    <Image src={isActive ? item.activeIcon : item.inactiveIcon} alt={item.label} fill sizes="44px" />
-                  </div>
-                  <p className={`whitespace-nowrap text-center text-xs leading-[1.3] tracking-[-0.12px] ${isActive ? "font-semibold text-white" : "font-normal text-white/70"}`}>{item.label}</p>
-                </Link>
-              );
-            })}
-          </nav>
+        <div className="flex w-full flex-col items-center gap-4 px-3 py-4">
+          {(["JO", "DE"] as const).map((team) => {
+            const isActive = activeTeam === team;
+            return (
+              <button
+                key={team}
+                type="button"
+                onClick={() => setActiveTeam(team)}
+                className={`relative flex size-11 items-center justify-center overflow-hidden rounded-xl bg-[#5B3D7A] p-1 transition-shadow ${isActive ? "shadow-[0px_0px_0px_1px_white]" : ""}`}
+                aria-label={`팀 ${team}`}
+              >
+                <p className="flex-1 text-center text-base font-bold leading-[1.5] tracking-[-0.16px] text-white">{team}</p>
+                {!isActive && <span className="pointer-events-none absolute inset-0 rounded-xl bg-[rgba(24,24,27,0.48)]" />}
+              </button>
+            );
+          })}
+          <button type="button" aria-label="팀 추가" className="flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M12 5v14M5 12h14" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </button>
         </div>
-        <div className="flex w-full flex-col items-center gap-2 py-4">
+        <div className="flex w-full flex-col items-center gap-2 px-3 py-4">
           <div className="relative">
             <button type="button" onClick={() => setSettingsOpen(!settingsOpen)} className="flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10" aria-label="설정">
               <Image src="/icons/version-b/nav-search.svg" alt="" width={24} height={24} />
@@ -83,8 +73,8 @@ export default function AdminPageB() {
             <Image src="/icons/version-b/nav-bell.svg" alt="" width={44} height={44} />
           </button>
           <div className="relative">
-            <button type="button" onClick={() => setProfileOpen(!profileOpen)} className="relative size-11 overflow-hidden rounded-xl transition-opacity hover:opacity-80" aria-label="프로필">
-              <Image src="/icons/version-b/profile-new.png" alt="" fill sizes="44px" className="rounded-xl object-cover" />
+            <button type="button" onClick={() => setProfileOpen(!profileOpen)} className="relative size-10 overflow-hidden rounded-full transition-opacity hover:opacity-80" aria-label="프로필">
+              <Image src="/icons/version-b/profile-new.png" alt="" fill sizes="40px" className="rounded-full object-cover" />
             </button>
             {profileOpen && (
               <>
@@ -110,75 +100,9 @@ export default function AdminPageB() {
 
       {/* M + R. Sidebar + Main area (통합) */}
       <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden pr-2 py-2">
-        {/* Left sidebar */}
-        <div className="flex h-full w-[200px] shrink-0 flex-col">
-          <div className="flex h-[44px] items-center overflow-hidden rounded-tl-xl border-r px-3" style={{ backgroundColor: "#f6f6f6", borderColor: "#f6f6f6" }}>
-            <p className="overflow-hidden text-ellipsis whitespace-nowrap text-base font-bold leading-[1.5] tracking-[-0.16px] text-black">
-              조코딩AX파트너스
-            </p>
-          </div>
-          <div className="flex flex-1 min-h-0 flex-col overflow-hidden rounded-bl-xl border-r" style={{ backgroundColor: "#f6f6f6", borderColor: "#f6f6f6" }}>
-            <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 py-2">
-              <button type="button" className="menu-active flex w-full items-center gap-2 rounded-lg px-3 py-2">
-                <Image src="/icons/version-b/admin-menu-apps.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#4A78B8]">전체 앱 현황</span>
-              </button>
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
-                <Image src="/icons/version-b/admin-menu-api.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">API 관리</span>
-              </button>
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
-                <Image src="/icons/version-b/admin-menu-members.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">멤버 관리</span>
-              </button>
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
-                <Image src="/icons/version-b/admin-menu-roles.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">역할 관리</span>
-              </button>
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
-                <Image src="/icons/version-b/admin-menu-permissions.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">권한 관리</span>
-              </button>
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
-                <Image src="/icons/version-b/admin-menu-gateway.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">게이트웨이 로그</span>
-              </button>
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
-                <Image src="/icons/version-b/admin-menu-shared-data.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">공유 데이터 관리</span>
-              </button>
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
-                <Image src="/icons/version-b/admin-menu-categories.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">카테고리 관리</span>
-              </button>
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
-                <Image src="/icons/version-b/admin-menu-company-info.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">기업 정보 관리</span>
-              </button>
-              <div className="flex w-full items-center px-3 pt-4 rounded-lg">
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px]" style={{ color: "#a1a1aa" }}>모든 기업</span>
-              </div>
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
-                <Image src="/icons/version-b/admin-menu-company-mgmt.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">기업 생성 • 관리</span>
-              </button>
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
-                <Image src="/icons/version-b/admin-menu-cluster.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">클러스터 관리</span>
-              </button>
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
-                <Image src="/icons/version-b/admin-menu-tables.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">테이블 관리</span>
-              </button>
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
-                <Image src="/icons/version-b/admin-menu-costs.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">전체 비용 분석</span>
-              </button>
-            </nav>
-          </div>
-        </div>
+        <PageSidebar activeMenu="배포 신청" />
         {/* Right: Main content */}
-        <div className="flex h-full min-w-0 flex-1 flex-col overflow-hidden rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6">
+        <div className="flex h-full min-w-0 flex-1 flex-col overflow-y-auto rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6 pb-[224px]">
           <div className="mx-auto flex w-full flex-col gap-6 min-[1281px]:max-w-[1280px]" style={{ animation: "fadeSlideIn 0.4s ease-out" }}>
           {/* Header */}
           <div className="flex shrink-0 items-center justify-between">

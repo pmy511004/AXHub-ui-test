@@ -1,31 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import TeamColumn from "./TeamColumn";
+import PageSidebar from "./PageSidebar";
 
 export default function HomePageB() {
-  const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [appsExpanded, setAppsExpanded] = useState(false);
+  const [viewVersion, setViewVersion] = useState<"first-time" | "in-use">("first-time");
   const [guideModalOpen, setGuideModalOpen] = useState(false);
   const [guideModalStep, setGuideModalStep] = useState<"os-select" | "mac" | "windows" | "final">("os-select");
   const [guideModalClosing, setGuideModalClosing] = useState(false);
   const [selectedOS, setSelectedOS] = useState<"mac" | "windows">("mac");
   const [guideDirection, setGuideDirection] = useState<"forward" | "back">("forward");
-  const pathname = usePathname();
-  const navItems = [
-    { href: "/", label: "홈", activeIcon: "/icons/version-b/nav-home-active-new.svg", inactiveIcon: "/icons/version-b/nav-home-inactive.svg" },
-    { href: "/make", label: "프로젝트", activeIcon: "/icons/version-b/nav-project-active.svg", inactiveIcon: "/icons/version-b/nav-project-inactive.svg" },
-    { href: "/browse", label: "스토어", activeIcon: "/icons/version-b/nav-store-active.svg", inactiveIcon: "/icons/version-b/nav-store-new.svg" },
-    { href: "/admin", label: "설정", activeIcon: "/icons/version-b/nav-settings-active.svg", inactiveIcon: "/icons/version-b/nav-settings-new.svg" },
-  ];
+  const [activeTeam, setActiveTeam] = useState<"JO" | "DE">("JO");
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [showTeamProfile, setShowTeamProfile] = useState(true);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [notificationOpen, setNotificationOpen] = useState(false);
   const openGuideModal = () => { setGuideModalStep("os-select"); setGuideModalOpen(true); };
+
+  useEffect(() => {
+    if (viewVersion === "first-time") {
+      setGuideModalStep("os-select");
+      setGuideModalOpen(true);
+    } else {
+      setGuideModalOpen(false);
+    }
+  }, [viewVersion]);
   const closeGuideModal = () => {
     setGuideModalClosing(true);
     setTimeout(() => { setGuideModalOpen(false); setGuideModalClosing(false); setGuideModalStep("os-select"); }, 250);
@@ -34,39 +36,37 @@ export default function HomePageB() {
   return (
     <div
       className="flex h-screen w-full items-start overflow-hidden"
-      style={{ backgroundColor: "#3F1C5C", "--page-primary": "#5B3D7A" } as React.CSSProperties}
+      style={{ backgroundColor: "#130321", "--page-primary": "#5B3D7A" } as React.CSSProperties}
     >
-      {/* Team Column */}
-      <TeamColumn expanded={sidebarExpanded} bgColor="#2f1546" />
-
-      {/* L. Global Nav */}
+      {/* L. Global Nav (팀 프로필 셀렉터) */}
       <div className="flex h-full w-[76px] shrink-0 flex-col items-center justify-between">
-        <div className="flex w-full flex-col items-start">
-          {/* 팀 아이콘 */}
-          <div className="flex w-full flex-col items-center justify-center px-5 py-4">
-            <div className="flex size-11 items-center justify-center overflow-hidden rounded-xl bg-[#6d319d] p-1">
-              <p className="flex-1 text-center text-base font-bold leading-[1.5] tracking-[-0.16px] text-white">JO</p>
-            </div>
-          </div>
-
-          {/* 네비 메뉴 */}
-          <nav className="flex w-full flex-col items-center gap-4 px-5">
-            {navItems.map((item) => {
-              const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
-              return (
-                <Link key={item.href} href={item.href} className="flex flex-col items-center gap-1">
-                  <div className={`relative size-11 rounded-xl transition-colors ${isActive ? "" : "hover:bg-white/10"}`}>
-                    <Image src={isActive ? item.activeIcon : item.inactiveIcon} alt={item.label} fill sizes="44px" />
-                  </div>
-                  <p className={`whitespace-nowrap text-center text-xs leading-[1.3] tracking-[-0.12px] ${isActive ? "font-semibold text-white" : "font-normal text-white/70"}`}>{item.label}</p>
-                </Link>
-              );
-            })}
-          </nav>
+        {/* 상단: 팀 목록 */}
+        <div className="flex w-full flex-col items-center gap-4 px-3 py-4">
+          {(["JO", "DE"] as const).map((team) => {
+            const isActive = activeTeam === team;
+            return (
+              <button
+                key={team}
+                type="button"
+                onClick={() => setActiveTeam(team)}
+                className={`relative flex size-11 items-center justify-center overflow-hidden rounded-xl bg-[#5B3D7A] p-1 transition-shadow ${isActive ? "shadow-[0px_0px_0px_1px_white]" : ""}`}
+                aria-label={`팀 ${team}`}
+              >
+                <p className="flex-1 text-center text-base font-bold leading-[1.5] tracking-[-0.16px] text-white">{team}</p>
+                {!isActive && <span className="pointer-events-none absolute inset-0 rounded-xl bg-[rgba(24,24,27,0.48)]" />}
+              </button>
+            );
+          })}
+          {/* + 팀 추가 */}
+          <button type="button" aria-label="팀 추가" className="flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M12 5v14M5 12h14" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </button>
         </div>
 
         {/* 하단: 검색(+설정팝오버)/알림/프로필 */}
-        <div className="flex w-full flex-col items-center gap-2 py-4">
+        <div className="flex w-full flex-col items-center gap-2 px-3 py-4">
           {/* 검색 아이콘 + 설정 팝오버 */}
           <div className="relative">
             <button type="button" onClick={() => setSettingsOpen(!settingsOpen)} className="flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10" aria-label="설정">
@@ -95,13 +95,29 @@ export default function HomePageB() {
             )}
           </div>
 
-          <button type="button" className="flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10" aria-label="알림">
-            <Image src="/icons/version-b/nav-bell.svg" alt="" width={44} height={44} />
-          </button>
+          <div className="relative">
+            <button type="button" onClick={() => setNotificationOpen(!notificationOpen)} className="flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10" aria-label="알림">
+              <Image src="/icons/version-b/nav-bell.svg" alt="" width={44} height={44} />
+            </button>
+            {notificationOpen && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setNotificationOpen(false)} />
+                <div
+                  className="absolute bottom-0 left-[calc(100%+8px)] z-50 flex h-[520px] w-[400px] flex-col items-center justify-center gap-5 rounded-2xl bg-white p-5"
+                  style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)" }}
+                >
+                  <Image src="/icons/version-b/notification-empty.svg" alt="" width={80} height={80} />
+                  <p className="text-center text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#a1a1aa]">
+                    알림이 생기면 여기서 알려드릴게요
+                  </p>
+                </div>
+              </>
+            )}
+          </div>
 
           <div className="relative">
-            <button type="button" onClick={() => setProfileOpen(!profileOpen)} className="relative size-11 overflow-hidden rounded-xl transition-opacity hover:opacity-80" aria-label="프로필">
-              <Image src="/icons/version-b/profile-new.png" alt="" fill sizes="44px" className="rounded-xl object-cover" />
+            <button type="button" onClick={() => setProfileOpen(!profileOpen)} className="relative size-10 overflow-hidden rounded-full transition-opacity hover:opacity-80" aria-label="프로필">
+              <Image src="/icons/version-b/profile-new.png" alt="" fill sizes="40px" className="rounded-full object-cover" />
             </button>
             {profileOpen && (
               <>
@@ -127,52 +143,54 @@ export default function HomePageB() {
 
       {/* M + R. Sidebar + Main area */}
       <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden pr-2 py-2">
-        {/* Left sidebar */}
-        <div className="flex h-full w-[200px] shrink-0 flex-col">
-          <div className="flex h-[44px] items-center overflow-hidden rounded-tl-xl border-r px-3" style={{ backgroundColor: "#f6f6f6", borderColor: "#f6f6f6" }}>
-            <p className="overflow-hidden text-ellipsis whitespace-nowrap text-base font-bold leading-[1.5] tracking-[-0.16px] text-black">
-              조코딩AX파트너스
-            </p>
-          </div>
-          <div className="flex flex-1 min-h-0 flex-col overflow-hidden rounded-bl-xl border-r" style={{ backgroundColor: "#f6f6f6", borderColor: "#f6f6f6" }}>
-            <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 py-2">
-              {/* 홈 (active) */}
-              <button type="button" className="menu-active flex w-full items-center gap-2 rounded-lg px-3 py-2">
-                <Image src="/icons/version-b/home-menu-home.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#5B3D7A]">홈</span>
-              </button>
-
-              {/* 섹션 헤더: 요청내역 */}
-              <div className="flex w-full items-center px-3 pt-4 rounded-lg">
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px]" style={{ color: "#a1a1aa" }}>요청내역</span>
-              </div>
-
-              {/* 앱 신청 */}
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
-                <Image src="/icons/version-b/home-menu-app-request.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">앱 신청</span>
-                <span className="ml-auto flex size-5 items-center justify-center rounded-full bg-red-500 text-[11px] font-bold text-white">2</span>
-              </button>
-
-              {/* 공유데이터 신청 */}
-              <button type="button" className="flex w-full items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200">
-                <Image src="/icons/version-b/home-menu-data-request.svg" alt="" width={18} height={18} />
-                <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-gray-900">공유데이터 신청</span>
-              </button>
-            </nav>
-            <div className="flex-1" />
-            <div className="p-5">
-              <button type="button" onClick={openGuideModal} className="flex h-[37px] w-full items-center justify-center rounded-lg border border-[#d4d4d8] px-3 py-2 text-xs font-semibold text-[#52525b] transition-colors hover:bg-[#f0f0f0]">
-                클로드코드 세팅하기
-              </button>
-            </div>
-          </div>
-        </div>
+        <PageSidebar activeMenu="홈" />
 
         {/* Right: Main content */}
         <div className="relative flex h-full min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden rounded-br-2xl rounded-tr-2xl border-r border-[#f6f6f6] bg-white">
-          {/* 새 홈 디자인: 단일 스크롤 영역 */}
-          <div className="mx-auto flex w-full flex-col gap-[80px] p-10 min-[1441px]:max-w-[1280px]">
+          {viewVersion === "first-time" ? (
+            /* 최초접속 버전 */
+            <div className="relative flex min-h-full w-full flex-1 items-center justify-center overflow-hidden p-10">
+              {/* 배경 이미지 (하단 중앙) */}
+              <div className="pointer-events-none absolute bottom-0 left-1/2 h-[400px] w-[997px] max-w-none -translate-x-1/2">
+                <Image
+                  src="/icons/version-b/home-bg-firsttime.png"
+                  alt=""
+                  fill
+                  sizes="997px"
+                  className="object-cover object-top"
+                  priority
+                />
+              </div>
+              {/* 컨텐츠 */}
+              <div className="relative z-10 flex w-full flex-col items-center justify-center gap-10">
+                <div className="flex w-full flex-col items-center gap-3">
+                  <div className="flex flex-col items-center text-center">
+                    <p className="text-[40px] font-bold leading-[1.2] text-[#a1a1aa]">안녕하세요 박민영 님</p>
+                    <p className="text-[40px] font-bold leading-[1.2] text-[#18181b]">업무 자동화를 어떻게 시작할까요?</p>
+                  </div>
+                  <p className="text-lg font-normal leading-[1.4] tracking-[-0.18px] text-[rgba(24,24,27,0.48)]">
+                    원하는 방법으로 빠르게 시작해 보세요
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    className="flex h-12 items-center justify-center rounded-full bg-[#5B3D7A] px-6 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-white transition-opacity hover:opacity-90"
+                  >
+                    내가 앱 만들기
+                  </button>
+                  <button
+                    type="button"
+                    className="flex h-12 items-center justify-center rounded-full border border-[#e4e4e7] bg-white px-6 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors hover:bg-[#f9f9f9]"
+                  >
+                    동료가 만든 앱 쓰기
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : (
+          /* 사용 중 버전: 단일 스크롤 영역 */
+          <div className="mx-auto flex w-full flex-col gap-[80px] p-10 pb-[240px] min-[1441px]:max-w-[1280px]">
 
             {/* 1. 헤더 섹션 */}
             <div className="flex flex-col gap-10">
@@ -242,9 +260,9 @@ export default function HomePageB() {
               {(() => {
                 const gradients = [
                   "linear-gradient(135deg, #9B7AB8, #5B3D7A)",
-                  "linear-gradient(135deg, #DBA869, #B88539)",
-                  "linear-gradient(135deg, #D68FBB, #B86397)",
-                  "linear-gradient(135deg, #7AA3D4, #4A78B8)",
+                  "linear-gradient(135deg, #DBA869, #5B3D7A)",
+                  "linear-gradient(135deg, #D68FBB, #5B3D7A)",
+                  "linear-gradient(135deg, #7AA3D4, #5B3D7A)",
                 ];
                 const allApps = [
                   "경비 정산", "스마트 캘린더", "매출 대시보드", "문서 검색", "프로젝트 트래커", "회의실 예약", "전자 결재",
@@ -357,6 +375,25 @@ export default function HomePageB() {
                 </div>
               </div>
             </div>
+          </div>
+          )}
+
+          {/* 버전 토글 (우측 하단 플로팅) */}
+          <div className="fixed bottom-6 right-6 z-50 flex items-center gap-1 rounded-full border border-[#e4e4e7] bg-white p-1" style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px 14px 28px rgba(0,0,0,0.04)" }}>
+            <button
+              type="button"
+              onClick={() => setViewVersion("first-time")}
+              className={`flex h-9 items-center justify-center rounded-full px-4 text-sm font-semibold leading-[1.5] tracking-[-0.14px] transition-colors ${viewVersion === "first-time" ? "bg-[#5B3D7A] text-white" : "text-[#71717a] hover:text-[#18181b]"}`}
+            >
+              최초접속
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewVersion("in-use")}
+              className={`flex h-9 items-center justify-center rounded-full px-4 text-sm font-semibold leading-[1.5] tracking-[-0.14px] transition-colors ${viewVersion === "in-use" ? "bg-[#5B3D7A] text-white" : "text-[#71717a] hover:text-[#18181b]"}`}
+            >
+              사용 중
+            </button>
           </div>
 
           {/* 초기 시작 가이드 모달 */}
