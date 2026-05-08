@@ -151,8 +151,8 @@ export default function DiscoveryPageB() {
     <div
       className={`flex h-screen w-full items-start overflow-hidden${darkMode ? " dark-mode" : ""}`}
       style={{
-        backgroundColor: darkMode ? "#0d0a12" : "#130321",
-        "--page-primary": darkMode ? "#A07BC7" : "#5B3D7A",
+        backgroundColor: darkMode ? "#0C0A12" : "#130321",
+        "--page-primary": darkMode ? "#6E4A94" : "#5B3D7A",
       } as React.CSSProperties}
       data-node-id="2504:1034"
     >
@@ -653,13 +653,16 @@ function DiscoveryContent({ viewMode, setViewMode, onAppClick, onInstantRequest,
         type="button"
         onClick={scrollToTop}
         aria-label="맨 위로"
-        className={`absolute bottom-6 left-1/2 z-20 flex size-9 items-center justify-center rounded-full bg-[#18181b] p-2 shadow-lg transition-all duration-200 hover:bg-[#27272a] ${
+        data-node-id="4453:2448"
+        className={`scroll-top-btn absolute bottom-6 left-1/2 z-20 flex size-9 items-center justify-center rounded-full bg-[#18181b] p-2 text-white shadow-lg transition-all duration-200 hover:bg-[#27272a] ${
           showScrollTop
             ? "pointer-events-auto -translate-x-1/2 translate-y-0 opacity-100"
             : "pointer-events-none -translate-x-1/2 translate-y-2 opacity-0"
         }`}
       >
-        <Image src="/icons/version-b/scroll-top.svg" alt="" width={20} height={20} />
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M16.0672 9.19219C16.0091 9.2503 15.9402 9.2964 15.8643 9.32785C15.7885 9.3593 15.7071 9.37549 15.625 9.37549C15.5429 9.37549 15.4615 9.3593 15.3857 9.32785C15.3098 9.2964 15.2409 9.2503 15.1828 9.19219L10.625 4.63359V16.875C10.625 17.0408 10.5592 17.1997 10.4419 17.3169C10.3247 17.4342 10.1658 17.5 10 17.5C9.83424 17.5 9.67527 17.4342 9.55806 17.3169C9.44085 17.1997 9.375 17.0408 9.375 16.875V4.63359L4.81719 9.19219C4.69991 9.30946 4.54085 9.37535 4.375 9.37535C4.20915 9.37535 4.05009 9.30946 3.93281 9.19219C3.81554 9.07491 3.74965 8.91585 3.74965 8.75C3.74965 8.58415 3.81554 8.42509 3.93281 8.30781L9.55781 2.68281C9.61586 2.6247 9.68479 2.5786 9.76066 2.54715C9.83654 2.5157 9.91787 2.49951 10 2.49951C10.0821 2.49951 10.1635 2.5157 10.2393 2.54715C10.3152 2.5786 10.3841 2.6247 10.4422 2.68281L16.0672 8.30781C16.1253 8.36586 16.1714 8.43479 16.2029 8.51066C16.2343 8.58654 16.2505 8.66787 16.2505 8.75C16.2505 8.83213 16.2343 8.91346 16.2029 8.98934C16.1714 9.06521 16.1253 9.13414 16.0672 9.19219Z" fill="currentColor" />
+        </svg>
       </button>
     </div>
   );
@@ -689,16 +692,33 @@ function DiscoveryBanner({ onAppClick }: DiscoveryBannerProps) {
 
   return (
     <div className="relative flex w-full shrink-0 items-center gap-5 overflow-hidden rounded-2xl bg-[#f6f6f6] p-10">
-      {/* 장식 ellipse (피그마 자산) */}
-      <Image
-        src="/icons/version-b/banner-ellipse.svg"
-        alt=""
-        width={800}
-        height={300}
+      {/* 장식 ellipse (피그마 자산) — stop-color는 globals.css에서 다크모드 분기 */}
+      <svg
+        width="800"
+        height="300"
+        viewBox="0 0 800 300"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
         className="pointer-events-none absolute"
-        style={{ right: "-369px", bottom: "-102px", width: "800px", height: "300px", maxWidth: "none" }}
+        style={{ right: "-369px", bottom: "-102px", maxWidth: "none" }}
         data-node-id="4181:1629"
-      />
+        aria-hidden="true"
+      >
+        <ellipse cx="400" cy="150" rx="400" ry="150" fill="url(#banner-ellipse-gradient)" fillOpacity="0.2" />
+        <defs>
+          <radialGradient
+            id="banner-ellipse-gradient"
+            cx="0"
+            cy="0"
+            r="1"
+            gradientUnits="userSpaceOnUse"
+            gradientTransform="translate(400 150) rotate(90) scale(150 400)"
+          >
+            <stop className="banner-ellipse-center" />
+            <stop offset="1" className="banner-ellipse-outer" />
+          </radialGradient>
+        </defs>
+      </svg>
       {/* 좌측: 라벨 + 이름/설명 + 버튼 */}
       <div className="relative flex min-w-0 flex-1 flex-col items-start gap-10">
         <div key={activeIndex} className="flex w-full flex-col items-start gap-5" style={{ animation: "fadeSlideIn 0.3s ease-out" }}>
@@ -894,7 +914,7 @@ function GridView({ onAppClick, onInstantRequest, onApprovalRequest }: GridViewP
           <button
             type="button"
             onClick={() => setSortOpen((v) => !v)}
-            className="flex h-9 items-center justify-center gap-1 rounded-[10px] bg-[#f6f6f6] px-3 transition-colors hover:bg-[#ececec]"
+            className="filter-btn flex h-9 items-center justify-center gap-1 rounded-[10px] bg-[#f6f6f6] px-3 transition-colors hover:bg-[#ececec]"
           >
             <span className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#18181b]">
               {sortOption}
@@ -1031,7 +1051,7 @@ function ListView({ onAppClick, onInstantRequest, onApprovalRequest }: ListViewP
           <button
             type="button"
             onClick={() => setSortOpen((v) => !v)}
-            className="flex h-9 items-center justify-center gap-1 rounded-[10px] bg-[#f6f6f6] px-3 transition-colors hover:bg-[#ececec]"
+            className="filter-btn flex h-9 items-center justify-center gap-1 rounded-[10px] bg-[#f6f6f6] px-3 transition-colors hover:bg-[#ececec]"
           >
             <span className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#18181b]">
               {sortOption}
@@ -1195,7 +1215,7 @@ function CarouselSection({ subtitle, title, renderCard, count }: CarouselSection
             aria-label="이전"
             onClick={() => canPrev && setSlideIndex((i) => i - 1)}
             disabled={!canPrev}
-            className="flex size-8 items-center justify-center overflow-hidden rounded-full border border-[#e4e4e7] transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
+            className="pagination-arrow flex size-8 items-center justify-center overflow-hidden rounded-full border border-[#e4e4e7] transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
           >
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
               <path d="M11 4L6 9L11 14" stroke="#71717a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -1206,7 +1226,7 @@ function CarouselSection({ subtitle, title, renderCard, count }: CarouselSection
             aria-label="다음"
             onClick={() => canNext && setSlideIndex((i) => i + 1)}
             disabled={!canNext}
-            className="flex size-8 items-center justify-center overflow-hidden rounded-full border border-[#e4e4e7] transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
+            className="pagination-arrow flex size-8 items-center justify-center overflow-hidden rounded-full border border-[#e4e4e7] transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
           >
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
               <path d="M7 4L12 9L7 14" stroke="#71717a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -1304,7 +1324,8 @@ function EmptyPopularCard({ rank }: { rank: number }) {
     >
       <p className="text-[28px] font-bold leading-[1.2] text-[#a1a1aa]">{String(rank).padStart(2, "0")}</p>
       <div className="flex w-full flex-1 flex-col items-center justify-center gap-5">
-        <Image src="/icons/version-b/empty-stack.svg" alt="" width={66} height={60} />
+        <Image src="/icons/version-b/empty-stack.svg" alt="" width={66} height={60} className="empty-stack-light" />
+        <Image src="/icons/version-b/empty-stack-dark.svg" alt="" width={66} height={60} className="empty-stack-dark" />
         <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">아직 앱이 없어요</p>
       </div>
     </div>

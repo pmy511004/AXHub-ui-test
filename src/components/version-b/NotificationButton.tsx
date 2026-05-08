@@ -32,7 +32,8 @@ export default function NotificationButton() {
           >
             <NotificationTabs />
             <div className="flex w-full flex-1 flex-col items-center justify-center gap-5">
-              <Image src="/icons/version-b/notification-bell.svg" alt="" width={72} height={76} />
+              <Image src="/icons/version-b/notification-bell.svg" alt="" width={72} height={76} className="notification-bell-light" />
+              <Image src="/icons/version-b/notification-bell-dark.svg" alt="" width={72} height={76} className="notification-bell-dark" />
               <p className="text-center text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#a1a1aa]">
                 알림이 생기면
                 <br />

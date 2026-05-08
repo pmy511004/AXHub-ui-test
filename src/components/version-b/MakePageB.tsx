@@ -54,8 +54,8 @@ export default function MakePageB() {
     <div
       className={`flex h-screen w-full items-start overflow-hidden${darkMode ? " dark-mode" : ""}`}
       style={{
-        backgroundColor: darkMode ? "#0d0a12" : "#130321",
-        "--page-primary": darkMode ? "#A07BC7" : "#5B3D7A",
+        backgroundColor: darkMode ? "#0C0A12" : "#130321",
+        "--page-primary": darkMode ? "#6E4A94" : "#5B3D7A",
       } as React.CSSProperties}
       data-node-id="2471:1262"
     >

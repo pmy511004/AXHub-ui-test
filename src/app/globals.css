@@ -395,17 +395,18 @@
      --page-primary는 페이지 인라인 스타일에서 다크 변형으로 자동 전환됩니다.
 
      팔레트:
-       canvas      #0d0a12  (사이드바 루트 — 페이지 인라인에서 처리)
+       canvas      #0C0A12  (사이드바 루트 — 페이지 인라인에서 처리)
        main        #16151a  (메인 콘텐츠 표면)
        raised      #1c1b21  (sub-sidebar / 카드)
-       elevated    #1f1e25  (모달 / 팝오버)
+       elevated    #16151a  (모달 / 팝오버)
        hover       #2a2932
        border-sub  rgba(255,255,255,0.08)
        border-str  rgba(255,255,255,0.16)
        text 1°     #fafafa
        text 2°     #d4d4d8
        text 3°     #a1a1aa
-       text 4°     #71717a                                             */
+       text 4°     #71717a
+       page-primary (dark) #6E4A94                                      */
 
   .dark-mode {
     color-scheme: dark;
@@ -428,10 +429,50 @@
     background-color: #1c1b21;
   }
 
-  /* 모달 / 팝오버 (elevated surface) */
+  /* 모달 / 팝오버 (elevated surface) — 다크모드에서 흰색 10% 보더로 윤곽 강조 */
   .dark-mode [class*="rounded-2xl"].bg-white,
   .dark-mode [class*="rounded-xl"].bg-white {
-    background-color: #1f1e25;
+    background-color: #16151a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* ── 모달 dim 백드롭 — 다크모드에서 더 어둡게 ── */
+  .dark-mode .bg-black\/20 {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  /* ── EmptyPopularCard 빈 상태 아이콘 — 라이트/다크 변형 스왑 ── */
+  .empty-stack-dark {
+    display: none;
+  }
+  .dark-mode .empty-stack-light {
+    display: none;
+  }
+  .dark-mode .empty-stack-dark {
+    display: block;
+  }
+
+  /* ── 알림 팝오버 빈 상태 벨 — 라이트/다크 변형 스왑 ── */
+  .notification-bell-dark {
+    display: none;
+  }
+  .dark-mode .notification-bell-light {
+    display: none;
+  }
+  .dark-mode .notification-bell-dark {
+    display: block;
+  }
+
+  /* ── 알림 팝오버 활성 탭 pill — 다크모드에서 흰색 10% (opacity/white/100) ── */
+  /* !important로 Tailwind utility 덮어씀 */
+  .dark-mode .bg-\[rgba\(24\,24\,27\,0\.08\)\] {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  /* ── 모달/드롭다운 구분선 — 다크모드에서 흰색 10% (opacity/white/100) ── */
+  /* h-px 1px 디바이더만 타겟 — !important로 base bg 클래스 덮어씀 */
+  .dark-mode .h-px.bg-\[\#e4e4e7\] {
+    background-color: rgba(255, 255, 255, 0.1) !important;
   }
 
   /* ── 텍스트 ── */
@@ -491,7 +532,7 @@
 
   /* ── 메뉴 활성 인디케이터 바 (light 미설정시 fallback도 다크 톤으로) ── */
   .dark-mode .menu-active::before {
-    background-color: var(--page-primary, #A07BC7);
+    background-color: var(--page-primary, #6E4A94);
   }
 
   /* ── 스크롤 그라데이션 (white→transparent → 다크 표면→transparent) ── */
@@ -511,11 +552,120 @@
 
   /* ── 선택 카드 (#fdf2f8 분홍 톤) — primary 계열의 어두운 틴트로 ── */
   .dark-mode .bg-\[\#fdf2f8\] {
-    background-color: rgba(160, 123, 199, 0.14);
+    background-color: rgba(110, 74, 148, 0.18);
   }
 
   /* ── 앱 미리보기 툴팁 — 다크 표면에서 더 진하게 ── */
   .dark-mode .app-tooltip-box {
     background: rgba(250, 250, 250, 0.92);
     color: #18181b;
+  }
+
+  /* ── 텍스트 primary — 다크모드에서만 더 밝은 톤 (#9866CC)으로 ── */
+  /* bg/border/indicator의 --page-primary(#6E4A94)는 그대로 유지하고, 텍스트만 분리 */
+  .dark-mode .text-\[\#5B3D7A\] {
+    color: #9866CC;
+  }
+
+  /* ── 디스커버리 배너 ellipse 그라데이션 — 라이트/다크 stop 색 ── */
+  .banner-ellipse-center {
+    stop-color: #5B3D7A;
+  }
+  .banner-ellipse-outer {
+    stop-color: #F6F6F6;
+  }
+  .dark-mode .banner-ellipse-center {
+    stop-color: #9866CC;
+  }
+  .dark-mode .banner-ellipse-outer {
+    stop-color: #1C1B21;
+  }
+
+  /* ── 디스커버리 배너 우측 비활성 탭 텍스트 — 다크모드에서 흰색/30%로 ── */
+  .dark-mode .text-\[rgba\(24\,24\,27\,0\.28\)\] {
+    color: rgba(255, 255, 255, 0.3);
+  }
+  .dark-mode .hover\:text-\[rgba\(24\,24\,27\,0\.5\)\]:hover {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* ── 카테고리 탭 비활성 텍스트/숫자 — 다크모드 ── */
+  .dark-mode .text-\[rgba\(24\,24\,27\,0\.9\)\] {
+    color: #FAFAFA;
+  }
+  .dark-mode .text-\[rgba\(24\,24\,27\,0\.48\)\] {
+    color: #d4d4d8;
+  }
+
+  /* ── 검색바 — raised(#1c1b21)보다 한 단계 밝은 #272530 ── */
+  .dark-mode [data-node-id="4181:1572"] {
+    background-color: #272530;
+  }
+
+  /* ── 비활성 버튼 오버레이 — 다크모드에서 흰색/70% → opacity/gray/500 ── */
+  /* light mode: bg-white/70 (흰색 70%로 약화) / dark mode: #18181B 48% + 흰색 10% 보더 */
+  .dark-mode .bg-white\/70 {
+    background-color: rgba(24, 24, 27, 0.48);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* ── 리스트 행의 disabled "열기" 버튼 (Figma 4457:2616) — 다크모드 전용 ── */
+  /* 흰색 5% bg + gray-600 text + overlay 제거 */
+  .dark-mode button:disabled.bg-\[rgba\(91\,61\,122\,0\.2\)\] {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    color: #52525b !important;
+  }
+  .dark-mode button:disabled.bg-\[rgba\(91\,61\,122\,0\.2\)\] .bg-white\/70 {
+    display: none;
+  }
+
+  /* ── 필터(정렬) 버튼 — 검색바와 같은 #272530, 아이콘은 white/70% ── */
+  .dark-mode .filter-btn {
+    background-color: #272530 !important;
+  }
+  .dark-mode .filter-btn:hover {
+    background-color: #2F2D3A !important;
+  }
+  .dark-mode .filter-btn svg path {
+    stroke: rgba(255, 255, 255, 0.7);
+  }
+
+  /* ── 스크롤탑 플로팅 버튼 — 다크모드에서 색상 반전 (Figma node 4453:2448) ── */
+  .dark-mode .scroll-top-btn {
+    background-color: #ffffff !important;
+    color: #18181b !important;
+  }
+  .dark-mode .scroll-top-btn:hover {
+    background-color: #f4f4f5 !important;
+  }
+
+  /* ── 캐러셀 페이지네이션 화살표 버튼 — 다크모드에서 white/opacity 토큰 적용 ── */
+  /* 활성: 보더 30%, 아이콘 70%. 비활성(disabled): 보더 10%, 아이콘 30%. */
+  .dark-mode .pagination-arrow {
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    opacity: 1 !important;
+  }
+  .dark-mode .pagination-arrow svg path {
+    stroke: rgba(255, 255, 255, 0.7);
+  }
+  .dark-mode .pagination-arrow:disabled {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+  }
+  .dark-mode .pagination-arrow:disabled svg path {
+    stroke: rgba(255, 255, 255, 0.3);
+  }
+
+  /* ── 뷰 토글 (스토어/그리드/리스트) — 다크모드에서 색상 반전 ── */
+  /* Tailwind v4 utilities를 확실히 덮어쓰기 위해 !important 사용 */
+  .dark-mode .bg-\[\#18181B\] {
+    background-color: #ffffff !important;
+  }
+  .dark-mode .bg-\[\#18181B\] .bg-white {
+    background-color: #18181b !important;
+  }
+  .dark-mode .bg-\[\#18181B\] .text-\[\#18181B\] {
+    color: #ffffff !important;
+  }
+  .dark-mode .bg-\[\#18181B\] .text-white\/60 {
+    color: rgba(24, 24, 27, 0.6) !important;
   }
