@@ -75,6 +75,11 @@
     -webkit-mask-position: center;
   }
 
+  /* PageSidebar 활성 메뉴 아이콘/텍스트 강조색 */
+  .menu-active-accent {
+    color: var(--page-primary);
+  }
+
   /* 인기앱 피처드 카드 hover */
   .rank-card {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -564,6 +569,11 @@
   /* ── 텍스트 primary — 다크모드에서만 더 밝은 톤 (#9866CC)으로 ── */
   /* bg/border/indicator의 --page-primary(#6E4A94)는 그대로 유지하고, 텍스트만 분리 */
   .dark-mode .text-\[\#5B3D7A\] {
+    color: #9866CC;
+  }
+
+  /* PageSidebar 활성 메뉴 강조색 — 다크모드에서 #9866CC */
+  .dark-mode .menu-active-accent {
     color: #9866CC;
   }
 

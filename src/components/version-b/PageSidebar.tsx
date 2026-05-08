@@ -31,18 +31,17 @@ export default function PageSidebar({ activeMenu }: Props) {
         className="flex h-[37px] w-full items-center gap-2 rounded-lg px-3 py-2 transition-colors hover:bg-black/[0.03]"
       >
         <span
-          className="menu-icon"
+          className={`menu-icon${isActive ? " menu-active-accent" : ""}`}
           style={{
             maskImage: `url(${item.icon})`,
             WebkitMaskImage: `url(${item.icon})`,
-            color: isActive ? "var(--page-primary)" : "#d4d4d8",
+            ...(isActive ? {} : { color: "#d4d4d8" }),
           }}
         />
         <span
           className={`flex-1 whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${
-            isActive ? "font-semibold" : "font-normal text-[#18181b]"
+            isActive ? "font-semibold menu-active-accent" : "font-normal text-[#18181b]"
           }`}
-          style={isActive ? { color: "var(--page-primary)" } : undefined}
         >
           {item.label}
         </span>
