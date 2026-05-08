@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import PageSidebar from "./PageSidebar";
+import NotificationButton from "./NotificationButton";
 import { useDarkMode } from "@/hooks/useDarkMode";
 
 export default function HomePageB() {
@@ -16,7 +17,6 @@ export default function HomePageB() {
   const [activeTeam, setActiveTeam] = useState<"JO" | "DE">("JO");
   const [profileOpen, setProfileOpen] = useState(false);
   const [darkMode, setDarkMode] = useDarkMode();
-  const [notificationOpen, setNotificationOpen] = useState(false);
   const openGuideModal = () => { setGuideModalStep("os-select"); setGuideModalOpen(true); };
 
   useEffect(() => {
@@ -74,25 +74,7 @@ export default function HomePageB() {
             <Image src={darkMode ? "/icons/version-b/nav-sun.svg" : "/icons/version-b/nav-moon.svg"} alt="" width={24} height={24} />
           </button>
 
-          <div className="relative">
-            <button type="button" onClick={() => setNotificationOpen(!notificationOpen)} className="flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10" aria-label="알림">
-              <Image src="/icons/version-b/nav-bell.svg" alt="" width={44} height={44} />
-            </button>
-            {notificationOpen && (
-              <>
-                <div className="fixed inset-0 z-40" onClick={() => setNotificationOpen(false)} />
-                <div
-                  className="absolute bottom-0 left-[calc(100%+8px)] z-50 flex h-[520px] w-[400px] flex-col items-center justify-center gap-5 rounded-2xl bg-white p-5"
-                  style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)" }}
-                >
-                  <Image src="/icons/version-b/notification-empty.svg" alt="" width={80} height={80} />
-                  <p className="text-center text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#a1a1aa]">
-                    알림이 생기면 여기서 알려드릴게요
-                  </p>
-                </div>
-              </>
-            )}
-          </div>
+          <NotificationButton />
 
           <div className="relative">
             <button type="button" onClick={() => setProfileOpen(!profileOpen)} className="relative size-10 overflow-hidden rounded-full transition-opacity hover:opacity-80" aria-label="프로필">

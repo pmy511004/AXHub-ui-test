@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
 import AppDetailView from "./AppDetailView";
 import PageSidebar from "./PageSidebar";
+import NotificationButton from "./NotificationButton";
 import { useDarkMode } from "@/hooks/useDarkMode";
 
 // 피그마 versionB (node 2471:1262) — /make 페이지 Version B 전체 레이아웃
@@ -86,9 +87,7 @@ export default function MakePageB() {
           <button type="button" onClick={() => setDarkMode(!darkMode)} className="flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10" aria-label={darkMode ? "라이트모드로 전환" : "다크모드로 전환"}>
             <Image src={darkMode ? "/icons/version-b/nav-sun.svg" : "/icons/version-b/nav-moon.svg"} alt="" width={24} height={24} />
           </button>
-          <button type="button" className="flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10" aria-label="알림">
-            <Image src="/icons/version-b/nav-bell.svg" alt="" width={44} height={44} />
-          </button>
+          <NotificationButton />
           <div className="relative">
             <button type="button" onClick={() => setProfileOpen(!profileOpen)} className="relative size-10 overflow-hidden rounded-full transition-opacity hover:opacity-80" aria-label="프로필">
               <Image src="/icons/version-b/profile-new.png" alt="" fill sizes="40px" className="rounded-full object-cover" />

@@ -11,14 +11,14 @@ interface Props {
 type Item = { label: ActiveMenu; icon: string; href: string; badge?: number };
 
 const topItems: Item[] = [
-  { label: "홈", icon: "/icons/version-b/home-menu-home.svg", href: "/" },
-  { label: "디스커버리", icon: "/icons/version-b/browse-menu-app-store.svg", href: "/discovery" },
-  { label: "신청 내역", icon: "/icons/version-b/home-menu-app-request.svg", href: "#", badge: 2 },
+  { label: "홈", icon: "/icons/version-b/snb-home.svg", href: "/" },
+  { label: "디스커버리", icon: "/icons/version-b/snb-discovery.svg", href: "/discovery" },
+  { label: "신청 내역", icon: "/icons/version-b/snb-request.svg", href: "#", badge: 2 },
 ];
 
 const menuSection: Item[] = [
-  { label: "앱 만들기", icon: "/icons/version-b/make-menu-create.svg", href: "/make" },
-  { label: "배포 신청", icon: "/icons/version-b/home-menu-data-request.svg", href: "/admin" },
+  { label: "앱 만들기", icon: "/icons/version-b/snb-app.svg", href: "/make" },
+  { label: "배포 신청", icon: "/icons/version-b/snb-app.svg", href: "/admin" },
 ];
 
 export default function PageSidebar({ activeMenu }: Props) {
@@ -35,7 +35,7 @@ export default function PageSidebar({ activeMenu }: Props) {
           style={{
             maskImage: `url(${item.icon})`,
             WebkitMaskImage: `url(${item.icon})`,
-            color: isActive ? "var(--page-primary)" : "rgba(24,24,27,0.48)",
+            color: isActive ? "var(--page-primary)" : "#d4d4d8",
           }}
         />
         <span
@@ -70,7 +70,7 @@ export default function PageSidebar({ activeMenu }: Props) {
 
           {/* 섹션 헤더: 메뉴 */}
           <div className="flex w-full items-center pt-4 px-3">
-            <span className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">
+            <span className="whitespace-nowrap text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#71717a]">
               메뉴
             </span>
           </div>

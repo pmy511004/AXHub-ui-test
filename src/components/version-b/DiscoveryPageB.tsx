@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect, useRef, useLayoutEffect } from "react";
+import { Fragment, useState, useEffect, useRef, useLayoutEffect } from "react";
 import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
 import PageSidebar from "./PageSidebar";
 import AppDetailView from "./AppDetailView";
+import NotificationButton from "./NotificationButton";
 import { useDarkMode } from "@/hooks/useDarkMode";
 
 type ViewMode = "스토어" | "그리드" | "리스트";
@@ -183,9 +184,7 @@ export default function DiscoveryPageB() {
           <button type="button" onClick={() => setDarkMode(!darkMode)} className="flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10" aria-label={darkMode ? "라이트모드로 전환" : "다크모드로 전환"}>
             <Image src={darkMode ? "/icons/version-b/nav-sun.svg" : "/icons/version-b/nav-moon.svg"} alt="" width={24} height={24} />
           </button>
-          <button type="button" className="flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10" aria-label="알림">
-            <Image src="/icons/version-b/nav-bell.svg" alt="" width={44} height={44} />
-          </button>
+          <NotificationButton />
           <div className="relative">
             <button type="button" onClick={() => setProfileOpen(!profileOpen)} className="relative size-10 overflow-hidden rounded-full transition-opacity hover:opacity-80" aria-label="프로필">
               <Image src="/icons/version-b/profile-new.png" alt="" fill sizes="40px" className="rounded-full object-cover" />
@@ -216,15 +215,27 @@ export default function DiscoveryPageB() {
       <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden pr-2 py-2">
         <PageSidebar activeMenu="디스커버리" />
         {selectedApp ? (
-          <div className="relative flex h-full min-w-0 flex-1 flex-col overflow-y-auto rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6 gap-6">
-            <AppDetailView
-              appName={selectedApp.name}
-              category={selectedApp.category}
-              fromMenu="디스커버리"
-              onBack={deselectApp}
-              isAdmin={selectedApp.isAdmin}
-              appStatus={selectedApp.status}
-            />
+          <div className="relative flex h-full min-w-0 flex-1 flex-col">
+            {/* 헤더 (브레드크럼) */}
+            <div className="flex h-[60px] w-full shrink-0 items-center overflow-hidden rounded-tr-2xl border-b border-[rgba(82,82,91,0.08)] bg-white px-5">
+              <Breadcrumb
+                crumbs={[
+                  { label: "디스커버리", onClick: deselectApp },
+                  { label: selectedApp.name },
+                ]}
+              />
+            </div>
+            {/* 본문 */}
+            <div className="flex h-full flex-1 min-h-0 flex-col gap-6 overflow-y-auto rounded-br-2xl border-r border-gray-100 bg-white p-6">
+              <AppDetailView
+                appName={selectedApp.name}
+                category={selectedApp.category}
+                fromMenu="디스커버리"
+                onBack={deselectApp}
+                isAdmin={selectedApp.isAdmin}
+                appStatus={selectedApp.status}
+              />
+            </div>
           </div>
         ) : (
           <DiscoveryContent
@@ -419,6 +430,64 @@ function CancelToast({ mode, topOffset }: { mode: RequestMode | null; topOffset:
   );
 }
 
+interface Crumb {
+  label: string;
+  onClick?: () => void;
+}
+
+function Breadcrumb({ crumbs }: { crumbs: Crumb[] }) {
+  return (
+    <div className="flex items-center gap-1" data-node-id="4430:2092">
+      {crumbs.map((crumb, i) => {
+        const isLast = i === crumbs.length - 1;
+        return (
+          <Fragment key={i}>
+            {!isLast && crumb.onClick ? (
+              <button
+                type="button"
+                onClick={crumb.onClick}
+                className="group flex shrink-0 items-center px-1"
+              >
+                <span className="overflow-hidden text-ellipsis whitespace-nowrap text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a] transition-colors group-hover:text-[#18181b]">
+                  {crumb.label}
+                </span>
+              </button>
+            ) : (
+              <div className="flex shrink-0 items-center px-1">
+                <span
+                  className={`overflow-hidden text-ellipsis whitespace-nowrap text-base leading-[1.5] tracking-[-0.16px] ${
+                    isLast ? "font-semibold text-[#18181b]" : "font-normal text-[#71717a]"
+                  }`}
+                >
+                  {crumb.label}
+                </span>
+              </div>
+            )}
+            {!isLast && (
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                className="shrink-0"
+                aria-hidden="true"
+              >
+                <path
+                  d="M6 3L11 8L6 13"
+                  stroke="#71717a"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            )}
+          </Fragment>
+        );
+      })}
+    </div>
+  );
+}
+
 interface DiscoveryContentProps {
   viewMode: ViewMode;
   setViewMode: (m: ViewMode) => void;
@@ -451,9 +520,7 @@ function DiscoveryContent({ viewMode, setViewMode, onAppClick, onInstantRequest,
     <div className="relative flex h-full min-w-0 flex-1 flex-col">
       {/* 헤더 */}
       <div className="flex h-[60px] w-full shrink-0 items-center overflow-hidden rounded-tr-2xl border-b border-[rgba(82,82,91,0.08)] bg-white px-5">
-        <p className="overflow-hidden text-ellipsis whitespace-nowrap text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">
-          디스커버리
-        </p>
+        <Breadcrumb crumbs={[{ label: "디스커버리" }]} />
       </div>
 
       {/* 본문 (스크롤 컨테이너) */}
