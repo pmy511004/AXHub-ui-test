@@ -914,7 +914,7 @@ function GridView({ onAppClick, onInstantRequest, onApprovalRequest }: GridViewP
           <button
             type="button"
             onClick={() => setSortOpen((v) => !v)}
-            className="filter-btn flex h-9 items-center justify-center gap-1 rounded-[10px] bg-[#f6f6f6] px-3 transition-colors hover:bg-[#ececec]"
+            className="filter-btn flex h-9 items-center justify-center gap-1 rounded-full bg-[#f6f6f6] px-3 transition-colors hover:bg-[#ececec]"
           >
             <span className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#18181b]">
               {sortOption}
@@ -1051,7 +1051,7 @@ function ListView({ onAppClick, onInstantRequest, onApprovalRequest }: ListViewP
           <button
             type="button"
             onClick={() => setSortOpen((v) => !v)}
-            className="filter-btn flex h-9 items-center justify-center gap-1 rounded-[10px] bg-[#f6f6f6] px-3 transition-colors hover:bg-[#ececec]"
+            className="filter-btn flex h-9 items-center justify-center gap-1 rounded-full bg-[#f6f6f6] px-3 transition-colors hover:bg-[#ececec]"
           >
             <span className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#18181b]">
               {sortOption}
