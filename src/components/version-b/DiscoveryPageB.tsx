@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
 import PageSidebar from "./PageSidebar";
@@ -521,6 +521,9 @@ function DiscoveryContent({ viewMode, setViewMode, onAppClick, onInstantRequest,
           subtitle="동료들이 가장 많이 쓰는 앱"
           title="인기 TOP10"
           renderCard={(i) => {
+            if (i === 9) {
+              return <EmptyPopularCard key={i} rank={10} />;
+            }
             const app = popularApps[i];
             return (
               <PopularCard
@@ -704,6 +707,91 @@ const gridCategories = [
   { name: "마케팅", count: 5 },
 ];
 
+function CategoryTabs({ value, onChange }: { value: string; onChange: (next: string) => void }) {
+  const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
+
+  useLayoutEffect(() => {
+    const el = tabRefs.current[value];
+    if (!el) return;
+    setIndicatorStyle({ left: el.offsetLeft, width: el.offsetWidth });
+  }, [value]);
+
+  return (
+    <div className="no-scrollbar relative flex w-full items-start gap-2 overflow-x-auto">
+      {gridCategories.map((cat) => {
+        const isActive = value === cat.name;
+        return (
+          <button
+            key={cat.name}
+            ref={(el) => {
+              tabRefs.current[cat.name] = el;
+            }}
+            type="button"
+            onClick={() => onChange(cat.name)}
+            className="flex shrink-0 items-center gap-1 whitespace-nowrap border-b-2 border-transparent px-3 py-2"
+          >
+            <span
+              className={`text-sm leading-[1.5] tracking-[-0.14px] transition-colors ${
+                isActive ? "font-semibold text-[#5B3D7A]" : "font-normal text-[rgba(24,24,27,0.9)]"
+              }`}
+            >
+              {cat.name}
+            </span>
+            <span
+              className={`text-sm font-normal leading-[1.5] tracking-[-0.14px] transition-colors ${
+                isActive ? "text-[#5B3D7A]" : "text-[rgba(24,24,27,0.48)]"
+              }`}
+            >
+              {cat.count}
+            </span>
+          </button>
+        );
+      })}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute bottom-0 left-0 h-[2px] rounded-full"
+        style={{
+          width: indicatorStyle.width,
+          transform: `translateX(${indicatorStyle.left}px)`,
+          backgroundColor: "var(--page-primary)",
+          transition:
+            "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        }}
+      />
+    </div>
+  );
+}
+
+function SearchBar({ value, onChange }: { value: string; onChange: (next: string) => void }) {
+  return (
+    <div className="flex w-full items-center gap-4 overflow-hidden rounded-full bg-[#f4f4f5] p-4" data-node-id="4181:1572">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" className="shrink-0">
+        <circle cx="9" cy="9" r="6" stroke="#71717a" strokeWidth="1.5" />
+        <path d="M14 14L17 17" stroke="#71717a" strokeWidth="1.5" strokeLinecap="round" />
+      </svg>
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder="앱, 개발자를 검색하세요"
+        className="min-w-0 flex-1 bg-transparent text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] outline-none placeholder:text-[#a1a1aa]"
+      />
+      {value.length > 0 && (
+        <button
+          type="button"
+          onClick={() => onChange("")}
+          aria-label="검색어 지우기"
+          className="flex shrink-0 items-center justify-center transition-opacity hover:opacity-80"
+          data-node-id="4410:2063"
+        >
+          <Image src="/icons/version-b/search-clear.svg" alt="" width={24} height={24} />
+        </button>
+      )}
+    </div>
+  );
+}
+
 interface GridViewProps {
   onAppClick: (name: string, category: string, status?: string) => void;
   onInstantRequest: (name: string, category: string) => void;
@@ -717,6 +805,7 @@ function GridView({ onAppClick, onInstantRequest, onApprovalRequest }: GridViewP
   const [activeCategory, setActiveCategory] = useState("전체");
   const [sortOption, setSortOption] = useState<SortOption>("최신순");
   const [sortOpen, setSortOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const filteredApps = activeCategory === "전체" ? gridApps : gridApps.filter((a) => a.category === activeCategory);
 
@@ -725,45 +814,10 @@ function GridView({ onAppClick, onInstantRequest, onApprovalRequest }: GridViewP
       {/* 검색 + 카테고리 그룹 */}
       <div className="flex w-full flex-col gap-3">
         {/* 검색 입력 */}
-        <div className="flex w-full items-center gap-4 overflow-hidden rounded-full bg-[#f4f4f5] p-4">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <circle cx="9" cy="9" r="6" stroke="#71717a" strokeWidth="1.5" />
-            <path d="M14 14L17 17" stroke="#71717a" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
-          <p className="flex-1 truncate text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#a1a1aa]">앱, 개발자를 검색하세요</p>
-        </div>
+        <SearchBar value={searchQuery} onChange={setSearchQuery} />
 
         {/* 카테고리 탭 */}
-        <div className="no-scrollbar flex w-full items-start gap-2 overflow-x-auto">
-        {gridCategories.map((cat) => {
-          const isActive = activeCategory === cat.name;
-          return (
-            <button
-              key={cat.name}
-              type="button"
-              onClick={() => setActiveCategory(cat.name)}
-              className={`flex shrink-0 items-center gap-1 whitespace-nowrap border-b-2 px-3 py-2 transition-colors ${
-                isActive ? "border-[#5B3D7A]" : "border-transparent"
-              }`}
-            >
-              <span
-                className={`text-sm leading-[1.5] tracking-[-0.14px] ${
-                  isActive ? "font-semibold text-[#5B3D7A]" : "font-normal text-[rgba(24,24,27,0.9)]"
-                }`}
-              >
-                {cat.name}
-              </span>
-              <span
-                className={`text-sm font-normal leading-[1.5] tracking-[-0.14px] ${
-                  isActive ? "text-[#5B3D7A]" : "text-[rgba(24,24,27,0.48)]"
-                }`}
-              >
-                {cat.count}
-              </span>
-            </button>
-          );
-        })}
-        </div>
+        <CategoryTabs value={activeCategory} onChange={setActiveCategory} />
       </div>
 
       {/* 필터 + 그리드 그룹 */}
@@ -888,6 +942,7 @@ function ListView({ onAppClick, onInstantRequest, onApprovalRequest }: ListViewP
   const [activeCategory, setActiveCategory] = useState("전체");
   const [sortOption, setSortOption] = useState<SortOption>("최신순");
   const [sortOpen, setSortOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const filteredApps = activeCategory === "전체" ? gridApps : gridApps.filter((a) => a.category === activeCategory);
 
@@ -896,45 +951,10 @@ function ListView({ onAppClick, onInstantRequest, onApprovalRequest }: ListViewP
       {/* 검색 + 카테고리 그룹 */}
       <div className="flex w-full flex-col gap-3">
         {/* 검색 입력 */}
-        <div className="flex w-full items-center gap-4 overflow-hidden rounded-full bg-[#f4f4f5] p-4">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <circle cx="9" cy="9" r="6" stroke="#71717a" strokeWidth="1.5" />
-            <path d="M14 14L17 17" stroke="#71717a" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
-          <p className="flex-1 truncate text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#a1a1aa]">앱, 개발자를 검색하세요</p>
-        </div>
+        <SearchBar value={searchQuery} onChange={setSearchQuery} />
 
         {/* 카테고리 탭 */}
-        <div className="no-scrollbar flex w-full items-start gap-2 overflow-x-auto">
-          {gridCategories.map((cat) => {
-            const isActive = activeCategory === cat.name;
-            return (
-              <button
-                key={cat.name}
-                type="button"
-                onClick={() => setActiveCategory(cat.name)}
-                className={`flex shrink-0 items-center gap-1 whitespace-nowrap border-b-2 px-3 py-2 transition-colors ${
-                  isActive ? "border-[#5B3D7A]" : "border-transparent"
-                }`}
-              >
-                <span
-                  className={`text-sm leading-[1.5] tracking-[-0.14px] ${
-                    isActive ? "font-semibold text-[#5B3D7A]" : "font-normal text-[rgba(24,24,27,0.9)]"
-                  }`}
-                >
-                  {cat.name}
-                </span>
-                <span
-                  className={`text-sm font-normal leading-[1.5] tracking-[-0.14px] ${
-                    isActive ? "text-[#5B3D7A]" : "text-[rgba(24,24,27,0.48)]"
-                  }`}
-                >
-                  {cat.count}
-                </span>
-              </button>
-            );
-          })}
-        </div>
+        <CategoryTabs value={activeCategory} onChange={setActiveCategory} />
       </div>
 
       {/* 필터 + 리스트 그룹 */}
@@ -1204,6 +1224,21 @@ function PopularCard({ rank, app, onClick, onRequest }: PopularCardProps) {
         >
           받기
         </button>
+      </div>
+    </div>
+  );
+}
+
+function EmptyPopularCard({ rank }: { rank: number }) {
+  return (
+    <div
+      className="flex h-full flex-col items-start rounded-2xl bg-[#f9f9f9] p-5"
+      data-node-id="4400:1980"
+    >
+      <p className="text-[28px] font-bold leading-[1.2] text-[#a1a1aa]">{String(rank).padStart(2, "0")}</p>
+      <div className="flex w-full flex-1 flex-col items-center justify-center gap-5">
+        <Image src="/icons/version-b/empty-stack.svg" alt="" width={66} height={60} />
+        <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">아직 앱이 없어요</p>
       </div>
     </div>
   );
