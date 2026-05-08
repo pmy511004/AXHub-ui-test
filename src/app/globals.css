@@ -388,3 +388,134 @@
     transform: translateY(0);
   }
 }
+
+/* ──────────────── 다크모드 ──────────────── */
+  /* 깔끔한 중성톤 팔레트 (subtle warm hint) — 사이드바 토글로 전 페이지 동기화.
+     html.dark-mode 또는 페이지 루트의 .dark-mode 클래스에 반응합니다.
+     --page-primary는 페이지 인라인 스타일에서 다크 변형으로 자동 전환됩니다.
+
+     팔레트:
+       canvas      #0d0a12  (사이드바 루트 — 페이지 인라인에서 처리)
+       main        #16151a  (메인 콘텐츠 표면)
+       raised      #1c1b21  (sub-sidebar / 카드)
+       elevated    #1f1e25  (모달 / 팝오버)
+       hover       #2a2932
+       border-sub  rgba(255,255,255,0.08)
+       border-str  rgba(255,255,255,0.16)
+       text 1°     #fafafa
+       text 2°     #d4d4d8
+       text 3°     #a1a1aa
+       text 4°     #71717a                                             */
+
+  .dark-mode {
+    color-scheme: dark;
+  }
+
+  /* ── 표면(surface) ── */
+  .dark-mode .bg-white {
+    background-color: #16151a;
+  }
+
+  .dark-mode .bg-\[\#f6f6f6\] {
+    background-color: #1c1b21;
+  }
+
+  .dark-mode .bg-\[\#f4f4f5\],
+  .dark-mode .bg-\[\#f9f9f9\],
+  .dark-mode .bg-\[\#fafafa\],
+  .dark-mode .bg-gray-50,
+  .dark-mode .bg-gray-100 {
+    background-color: #1c1b21;
+  }
+
+  /* 모달 / 팝오버 (elevated surface) */
+  .dark-mode [class*="rounded-2xl"].bg-white,
+  .dark-mode [class*="rounded-xl"].bg-white {
+    background-color: #1f1e25;
+  }
+
+  /* ── 텍스트 ── */
+  .dark-mode .text-black,
+  .dark-mode .text-\[\#18181b\],
+  .dark-mode .text-\[\#27272a\] {
+    color: #fafafa;
+  }
+
+  .dark-mode .text-\[\#3f3f46\],
+  .dark-mode .text-\[\#52525b\] {
+    color: #d4d4d8;
+  }
+
+  .dark-mode .text-\[\#71717a\] {
+    color: #a1a1aa;
+  }
+
+  .dark-mode .text-\[\#a1a1aa\],
+  .dark-mode .text-\[\#d4d4d8\] {
+    color: #71717a;
+  }
+
+  /* ── 보더 ── */
+  .dark-mode .border-\[\#e4e4e7\],
+  .dark-mode .border-\[\#f4f4f5\],
+  .dark-mode .border-\[\#f6f6f6\],
+  .dark-mode .border-\[\#ececec\],
+  .dark-mode .border-gray-100,
+  .dark-mode .border-gray-200 {
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .dark-mode .border-\[\#d4d4d8\] {
+    border-color: rgba(255, 255, 255, 0.16);
+  }
+
+  /* ── 호버 표면 ── */
+  .dark-mode .hover\:bg-\[\#f4f4f5\]:hover,
+  .dark-mode .hover\:bg-\[\#f9f9f9\]:hover,
+  .dark-mode .hover\:bg-\[\#ececec\]:hover,
+  .dark-mode .hover\:bg-gray-50:hover {
+    background-color: #2a2932;
+  }
+
+  /* PageSidebar 메뉴 호버 — 검정 톤 호버를 흰색 톤으로 */
+  .dark-mode .hover\:bg-black\/\[0\.03\]:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  /* PageSidebar 메뉴 비활성 아이콘 — 어두운 표면에서 잘 보이게 */
+  .dark-mode .menu-icon[style*="rgba(24,24,27,0.48)"] {
+    color: rgba(255, 255, 255, 0.4) !important;
+  }
+
+  /* 메뉴 비활성 라벨 (#18181b 텍스트) — 위 텍스트 규칙으로 #fafafa 처리됨 */
+
+  /* ── 메뉴 활성 인디케이터 바 (light 미설정시 fallback도 다크 톤으로) ── */
+  .dark-mode .menu-active::before {
+    background-color: var(--page-primary, #A07BC7);
+  }
+
+  /* ── 스크롤 그라데이션 (white→transparent → 다크 표면→transparent) ── */
+  .dark-mode .from-white {
+    --tw-gradient-from: #16151a var(--tw-gradient-from-position);
+  }
+
+  /* ── 사이드바 스크롤바 — 어두운 표면에 맞게 밝은 컨트롤러 ── */
+  .dark-mode .sidebar-scroll:hover,
+  .dark-mode .sidebar-scroll:active {
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  }
+
+  .dark-mode .sidebar-scroll:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  /* ── 선택 카드 (#fdf2f8 분홍 톤) — primary 계열의 어두운 틴트로 ── */
+  .dark-mode .bg-\[\#fdf2f8\] {
+    background-color: rgba(160, 123, 199, 0.14);
+  }
+
+  /* ── 앱 미리보기 툴팁 — 다크 표면에서 더 진하게 ── */
+  .dark-mode .app-tooltip-box {
+    background: rgba(250, 250, 250, 0.92);
+    color: #18181b;
+  }

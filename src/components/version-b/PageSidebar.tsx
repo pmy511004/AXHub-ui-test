@@ -35,13 +35,14 @@ export default function PageSidebar({ activeMenu }: Props) {
           style={{
             maskImage: `url(${item.icon})`,
             WebkitMaskImage: `url(${item.icon})`,
-            color: isActive ? "#5B3D7A" : "rgba(24,24,27,0.48)",
+            color: isActive ? "var(--page-primary)" : "rgba(24,24,27,0.48)",
           }}
         />
         <span
           className={`flex-1 whitespace-nowrap text-sm leading-[1.5] tracking-[-0.14px] ${
-            isActive ? "font-semibold text-[#5B3D7A]" : "font-normal text-[#18181b]"
+            isActive ? "font-semibold" : "font-normal text-[#18181b]"
           }`}
+          style={isActive ? { color: "var(--page-primary)" } : undefined}
         >
           {item.label}
         </span>

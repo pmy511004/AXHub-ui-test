@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
 import AppDetailView from "./AppDetailView";
 import PageSidebar from "./PageSidebar";
+import { useDarkMode } from "@/hooks/useDarkMode";
 
 // 피그마 versionB (node 2471:1262) — /make 페이지 Version B 전체 레이아웃
 //
@@ -23,10 +24,8 @@ export default function MakePageB() {
   const detailApp = searchParams.get("app") || "";
   const detailCategory = searchParams.get("category") || "";
   const [activeTeam, setActiveTeam] = useState<"JO" | "DE">("JO");
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
-  const [showTeamProfile, setShowTeamProfile] = useState(true);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [darkMode, setDarkMode] = useDarkMode();
   const [sortOpen, setSortOpen] = useState(false);
   const [sortBy, setSortBy] = useState("최근 생성순");
   const [isEmpty, setIsEmpty] = useState(false);
@@ -52,8 +51,11 @@ export default function MakePageB() {
 
   return (
     <div
-      className="flex h-screen w-full items-start overflow-hidden"
-      style={{ backgroundColor: "#130321", "--page-primary": "#5B3D7A" } as React.CSSProperties}
+      className={`flex h-screen w-full items-start overflow-hidden${darkMode ? " dark-mode" : ""}`}
+      style={{
+        backgroundColor: darkMode ? "#0d0a12" : "#130321",
+        "--page-primary": darkMode ? "#A07BC7" : "#5B3D7A",
+      } as React.CSSProperties}
       data-node-id="2471:1262"
     >
       {/* L. Global Nav (팀 프로필 셀렉터) */}
@@ -81,32 +83,9 @@ export default function MakePageB() {
           </button>
         </div>
         <div className="flex w-full flex-col items-center gap-2 px-3 py-4">
-          <div className="relative">
-            <button type="button" onClick={() => setSettingsOpen(!settingsOpen)} className="flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10" aria-label="설정">
-              <Image src="/icons/version-b/nav-search.svg" alt="" width={24} height={24} />
-            </button>
-            {settingsOpen && (
-              <>
-                <div className="fixed inset-0 z-40" onClick={() => setSettingsOpen(false)} />
-                <div className="absolute bottom-0 left-[calc(100%+8px)] z-50 w-[220px] rounded-xl bg-white p-5 shadow-lg" style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)" }}>
-                  <div className="flex flex-col gap-5">
-                    <div className="flex items-center justify-between">
-                      <span className="text-base font-normal text-[#3f3f46]">다크모드</span>
-                      <button type="button" onClick={() => setDarkMode(!darkMode)} className={`relative h-6 w-10 rounded-full transition-colors ${darkMode ? "bg-[#5B3D7A]" : "bg-[#d4d4d8]"}`}>
-                        <span className={`absolute top-[3px] h-[18px] w-[18px] rounded-full bg-white transition-all ${darkMode ? "left-[19px]" : "left-[3px]"}`} />
-                      </button>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-base font-normal text-[#3f3f46]">팀 프로필 표시</span>
-                      <button type="button" onClick={() => setShowTeamProfile(!showTeamProfile)} className={`relative h-6 w-10 rounded-full transition-colors ${showTeamProfile ? "bg-[#5B3D7A]" : "bg-[#d4d4d8]"}`}>
-                        <span className={`absolute top-[3px] h-[18px] w-[18px] rounded-full bg-white transition-all ${showTeamProfile ? "left-[19px]" : "left-[3px]"}`} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
+          <button type="button" onClick={() => setDarkMode(!darkMode)} className="flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10" aria-label={darkMode ? "라이트모드로 전환" : "다크모드로 전환"}>
+            <Image src={darkMode ? "/icons/version-b/nav-sun.svg" : "/icons/version-b/nav-moon.svg"} alt="" width={24} height={24} />
+          </button>
           <button type="button" className="flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10" aria-label="알림">
             <Image src="/icons/version-b/nav-bell.svg" alt="" width={44} height={44} />
           </button>

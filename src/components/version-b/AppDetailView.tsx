@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useLayoutEffect } from "react";
 import Image from "next/image";
 
 interface AppDetailViewProps {
@@ -31,6 +31,8 @@ const comments = [
 export default function AppDetailView({ appName, category, onBack, fromMenu, isAdmin, appStatus }: AppDetailViewProps) {
   const primaryColor = isAdmin ? "#5B3D7A" : "#5B3D7A";
   const [activeTab, setActiveTab] = useState("앱");
+  const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
   const [expanded, setExpanded] = useState(false);
   const [gitStep, setGitStep] = useState<"login" | "install" | "repo" | "connected">("login");
   const [selectedRepo, setSelectedRepo] = useState<string | null>(null);
@@ -68,6 +70,13 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
   const [ciFilter, setCiFilter] = useState("전체 활동");
   const [statTooltip, setStatTooltip] = useState<string | null>(null);
   const [adminMenuOpen, setAdminMenuOpen] = useState(false);
+
+  useLayoutEffect(() => {
+    if (!isAdmin) return;
+    const el = tabRefs.current[activeTab];
+    if (!el) return;
+    setIndicatorStyle({ left: el.offsetLeft, width: el.offsetWidth });
+  }, [activeTab, isAdmin]);
 
   return (
     <div className="mx-auto flex w-full flex-col gap-6 pb-[100px] min-[1281px]:max-w-[1280px]" style={{ animation: "fadeSlideIn 0.4s ease-out" }}>
@@ -302,18 +311,21 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
 
       {/* 섹션 2: Tab Bar */}
       {isAdmin && (
-        <div className="flex items-center border-b border-[rgba(82,82,91,0.08)]">
+        <div className="relative flex items-center border-b border-[rgba(82,82,91,0.08)]">
           {["앱", "Git 연동", "배포", "운영", "테이블", "환경변수", "데이터 접근", "멤버", "설정"].map((tab) => {
             const hasWarning = (tab === "Git 연동" && gitStep !== "connected") || tab === "배포" || tab === "환경변수";
             const isActive = activeTab === tab;
             return (
               <button
                 key={tab}
+                ref={(el) => {
+                  tabRefs.current[tab] = el;
+                }}
                 type="button"
                 onClick={() => setActiveTab(tab)}
                 className={`relative flex items-center gap-1 px-5 py-2 text-base leading-[1.5] tracking-[-0.16px] transition-colors ${
                   isActive
-                    ? "font-semibold text-black border-b-[2.5px] border-[#5B3D7A]"
+                    ? "font-semibold text-black"
                     : "font-normal text-[#a1a1aa] hover:text-[#71717a]"
                 }`}
               >
@@ -324,6 +336,18 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
               </button>
             );
           })}
+          {/* 슬라이딩 인디케이터 — 활성 탭 위치/너비를 측정해 부드럽게 이동 */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute bottom-0 left-0 h-[2.5px] rounded-full"
+            style={{
+              width: indicatorStyle.width,
+              transform: `translateX(${indicatorStyle.left}px)`,
+              backgroundColor: "var(--page-primary)",
+              transition:
+                "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+            }}
+          />
         </div>
       )}
 
