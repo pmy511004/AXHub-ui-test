@@ -87,12 +87,20 @@ export default function DiscoveryPageB() {
   const [stickyHeaderButtonVisible, setStickyHeaderButtonVisible] = useState(false);
   const [appRecommended, setAppRecommended] = useState(false);
   const [stickyThumbAnimKey, setStickyThumbAnimKey] = useState(0);
+  const [recommendToastVisible, setRecommendToastVisible] = useState(false);
   const handleToggleRecommend = () => {
     if (!appRecommended) {
       setStickyThumbAnimKey((k) => k + 1);
+      setRecommendToastVisible(true);
     }
     setAppRecommended((v) => !v);
   };
+
+  useEffect(() => {
+    if (!recommendToastVisible) return;
+    const t = setTimeout(() => setRecommendToastVisible(false), 2500);
+    return () => clearTimeout(t);
+  }, [recommendToastVisible]);
   const [requestApp, setRequestApp] = useState<{ name: string; category: string; mode: RequestMode } | null>(null);
   const [toastMode, setToastMode] = useState<RequestMode | null>(null);
   const [cancelToastMode, setCancelToastMode] = useState<RequestMode | null>(null);
@@ -237,7 +245,7 @@ export default function DiscoveryPageB() {
               {selectedApp.status === "not-using" && (
                 <button
                   type="button"
-                  className={`flex h-8 items-center justify-center overflow-hidden rounded-full bg-[#18181b] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-all duration-200 hover:opacity-90 ${
+                  className={`app-detail-primary-cta flex h-8 items-center justify-center overflow-hidden rounded-full bg-[#18181b] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-all duration-200 hover:opacity-90 ${
                     stickyHeaderButtonVisible
                       ? "translate-y-0 opacity-100"
                       : "pointer-events-none -translate-y-1 opacity-0"
@@ -257,6 +265,12 @@ export default function DiscoveryPageB() {
                   {selectedApp.status === "admin" && (
                     <button
                       type="button"
+                      onClick={() => {
+                        const params = new URLSearchParams();
+                        params.set("app", selectedApp.name);
+                        params.set("category", selectedApp.category);
+                        router.push(`/discovery/admin-console?${params.toString()}`);
+                      }}
                       className="flex items-center rounded-lg px-3 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#1571F3] transition-colors hover:bg-[#1571F3]/5"
                     >
                       관리 콘솔로 이동
@@ -264,7 +278,7 @@ export default function DiscoveryPageB() {
                   )}
                   <button
                     type="button"
-                    className="flex h-8 items-center justify-center overflow-hidden rounded-full bg-[#18181b] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+                    className="app-detail-primary-cta flex h-8 items-center justify-center overflow-hidden rounded-full bg-[#18181b] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
                   >
                     앱 열기
                   </button>
@@ -272,9 +286,9 @@ export default function DiscoveryPageB() {
                     type="button"
                     onClick={handleToggleRecommend}
                     aria-pressed={appRecommended}
-                    className={`flex h-8 w-20 items-center justify-center gap-1 overflow-hidden whitespace-nowrap rounded-full border text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors ${
+                    className={`discovery-rec-btn flex h-8 w-20 items-center justify-center gap-1 overflow-hidden whitespace-nowrap rounded-full border text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors ${
                       appRecommended
-                        ? "border-transparent bg-[#fff8e6] hover:bg-[#fdefc5]"
+                        ? "discovery-rec-btn-active border-transparent bg-[rgba(251,176,59,0.2)] hover:bg-[rgba(251,176,59,0.28)]"
                         : "border-[#e4e4e7] bg-white hover:bg-[#f9f9f9]"
                     }`}
                   >
@@ -353,6 +367,12 @@ export default function DiscoveryPageB() {
         onCancel={handleToastCancel}
         topOffset={cancelToastMode ? 112 : 40}
         canceled={cancelToastMode !== null}
+      />
+
+      {/* 추천 활성화 토스트 */}
+      <RecommendToast
+        visible={recommendToastVisible}
+        topOffset={(cancelToastMode ? 72 : 0) + (toastMode ? 72 : 0) + 40}
       />
     </div>
   );
@@ -473,6 +493,41 @@ function Toast({ mode, onCancel, topOffset, canceled }: { mode: RequestMode | nu
         >
           취소
         </button>
+      </div>
+    </div>
+  );
+}
+
+function RecommendToast({ visible, topOffset }: { visible: boolean; topOffset: number }) {
+  return (
+    <div
+      className={`fixed right-10 z-50 transition-all duration-[400ms] ease-out ${
+        visible ? "pointer-events-auto translate-x-0" : "pointer-events-none translate-x-[calc(100%+40px)]"
+      }`}
+      style={{ top: `${topOffset}px` }}
+    >
+      <div
+        className="flex w-[400px] items-center gap-3 overflow-hidden rounded-2xl bg-white px-4"
+        style={{
+          boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)",
+          backdropFilter: "blur(20px)",
+          minHeight: "56px",
+        }}
+      >
+        <div className="flex shrink-0 items-center py-3.5">
+          <Image
+            src="/icons/version-b/toast-thumb-up.svg"
+            alt=""
+            width={15}
+            height={17}
+            aria-hidden="true"
+          />
+        </div>
+        <div className="flex min-w-0 flex-1 flex-col items-start justify-center py-[11.5px]">
+          <p className="w-full whitespace-nowrap text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">
+            이 앱을 동료들에게 추천했어요!
+          </p>
+        </div>
       </div>
     </div>
   );

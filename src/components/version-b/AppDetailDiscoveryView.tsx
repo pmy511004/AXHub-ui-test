@@ -2,6 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 type AppDetailStatus = "not-using" | "using" | "admin";
 
@@ -78,6 +79,25 @@ export default function AppDetailDiscoveryView({
   });
   const [indicatorTop, setIndicatorTop] = useState(0);
   const [reviewInput, setReviewInput] = useState("");
+  const [reviewExpanded, setReviewExpanded] = useState(false);
+  const reviewTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const router = useRouter();
+
+  const goToAdminConsole = () => {
+    const params = new URLSearchParams();
+    params.set("app", appName);
+    params.set("category", category);
+    router.push(`/discovery/admin-console?${params.toString()}`);
+  };
+
+  useEffect(() => {
+    const el = reviewTextareaRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight}px`;
+    const lineHeight = parseFloat(getComputedStyle(el).lineHeight) || 24;
+    setReviewExpanded(el.scrollHeight > lineHeight + 2);
+  }, [reviewInput]);
 
   useLayoutEffect(() => {
     const btn = buttonRefs.current[activeSection];
@@ -158,6 +178,7 @@ export default function AppDetailDiscoveryView({
             {appStatus === "admin" && (
               <button
                 type="button"
+                onClick={goToAdminConsole}
                 className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#1571F3] transition-colors hover:bg-[#1571F3]/5"
               >
                 관리 콘솔로 이동
@@ -166,7 +187,7 @@ export default function AppDetailDiscoveryView({
             )}
             <button
               type="button"
-              className="flex h-12 w-full items-center justify-center overflow-hidden rounded-full bg-[#18181b] px-8 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-white transition-opacity hover:opacity-90"
+              className="app-detail-primary-cta flex h-12 w-full items-center justify-center overflow-hidden rounded-full bg-[#18181b] px-8 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-white transition-opacity hover:opacity-90"
             >
               {appStatus === "using" || appStatus === "admin" ? "앱 열기" : "받기"}
             </button>
@@ -176,9 +197,9 @@ export default function AppDetailDiscoveryView({
                   type="button"
                   onClick={handleRecommend}
                   aria-pressed={isRecommended}
-                  className={`flex h-12 min-w-0 flex-1 items-center justify-center gap-1 overflow-hidden rounded-full border px-4 text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors ${
+                  className={`discovery-rec-btn flex h-12 min-w-0 flex-1 items-center justify-center gap-1 overflow-hidden whitespace-nowrap rounded-[40px] border px-8 text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors ${
                     isRecommended
-                      ? "border-transparent bg-[#fff8e6] hover:bg-[#fdefc5]"
+                      ? "discovery-rec-btn-active border-transparent bg-[rgba(251,176,59,0.2)] hover:bg-[rgba(251,176,59,0.28)]"
                       : "border-[#e4e4e7] bg-white hover:bg-[#f9f9f9]"
                   }`}
                 >
@@ -189,7 +210,7 @@ export default function AppDetailDiscoveryView({
                 </button>
                 <button
                   type="button"
-                  className="flex h-12 min-w-0 flex-1 items-center justify-center overflow-hidden rounded-full bg-[#f6f6f6] px-4 text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors hover:bg-[#ececec]"
+                  className="discovery-cancel-btn flex h-12 min-w-0 flex-1 items-center justify-center overflow-hidden whitespace-nowrap rounded-[40px] bg-[#f6f6f6] px-8 text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors hover:bg-[#ececec]"
                 >
                   사용해제
                 </button>
@@ -201,7 +222,7 @@ export default function AppDetailDiscoveryView({
         </div>
 
         {/* 통계: 사용자 / 추천 / 댓글 / 발행일 */}
-        <div className="flex w-full items-stretch border-y border-[#e4e4e7] bg-white">
+        <div className="app-detail-stat-bar flex w-full items-stretch border-y border-[#e4e4e7] bg-white">
           <StatCell label="사용자" value="14" />
           <StatDivider />
           <StatCell label="추천" value="8" />
@@ -283,6 +304,15 @@ export default function AppDetailDiscoveryView({
                         width={52}
                         height={48}
                         aria-hidden="true"
+                        className="empty-stack-light"
+                      />
+                      <Image
+                        src="/icons/version-b/empty-stack-dark.svg"
+                        alt=""
+                        width={52}
+                        height={48}
+                        aria-hidden="true"
+                        className="empty-stack-dark"
                       />
                       <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">
                         연결된 앱이 없어요
@@ -296,7 +326,7 @@ export default function AppDetailDiscoveryView({
             {/* PERMISSIONS */}
             <section id="permissions" className="flex w-full scroll-mt-10 flex-col gap-5">
               <SectionHeader tag="PERMISSIONS" title="권한 및 데이터" subtitle="앱 실행 시 적용되는 기본 접근 조건입니다" />
-              <div className="flex flex-col gap-5 rounded-[20px] border border-[rgba(82,82,91,0.08)] p-7">
+              <div className="app-detail-info-card flex flex-col gap-5 rounded-[20px] border border-[rgba(82,82,91,0.08)] p-7">
                 <KeyValueRow label="인증 방식" value="선택 인증" />
                 <KeyValueRow label="DB Schema" value="jocodingax_ai_ccrank" />
                 <KeyValueRow label="공유 테이블" value="0" />
@@ -308,7 +338,7 @@ export default function AppDetailDiscoveryView({
             {/* OVERVIEW */}
             <section id="overview" className="flex w-full scroll-mt-10 flex-col gap-5">
               <SectionHeader tag="OVERVIEW" title="한 눈에 보기" />
-              <div className="flex flex-col gap-5 rounded-[20px] border border-[rgba(82,82,91,0.08)] p-7">
+              <div className="app-detail-info-card flex flex-col gap-5 rounded-[20px] border border-[rgba(82,82,91,0.08)] p-7">
                 <KeyValueRow label="카테고리" value={category} />
                 <KeyValueRow label="발행팀" value="안승원" />
                 <KeyValueRow label="라이선스" value="사내 전용" />
@@ -320,15 +350,16 @@ export default function AppDetailDiscoveryView({
             <section id="review" className="flex w-full scroll-mt-10 flex-col gap-5">
               <SectionHeader tag="REVIEW" title="동료들이 남긴 한마디" subtitle={`${reviews.length}개`} />
               {appStatus === "using" && (
-                <div className="flex w-full min-h-12 items-center gap-4 overflow-hidden rounded-full border border-[#e4e4e7] bg-[#fafafa] px-4 py-3 transition-colors focus-within:border-[#18181b]">
-                  <div className="flex min-w-0 flex-1 items-center gap-2.5 overflow-hidden pl-2">
-                    <input
-                      type="text"
+                <div className={`review-input-container flex w-full min-h-12 ${reviewExpanded ? "items-end" : "items-center"} gap-4 overflow-hidden rounded-[28px] border border-[#e4e4e7] bg-[#fafafa] px-4 py-3 transition-colors focus-within:border-[#18181b]`}>
+                  <div className={`flex min-w-0 flex-1 ${reviewExpanded ? "items-end" : "items-center"} gap-2.5 overflow-hidden pl-2`}>
+                    <textarea
+                      ref={reviewTextareaRef}
+                      rows={1}
                       value={reviewInput}
                       onChange={(e) => setReviewInput(e.target.value.slice(0, 500))}
                       placeholder="이 앱에 대한 한 마디를 남겨주세요"
                       maxLength={500}
-                      className="min-w-0 flex-1 bg-transparent text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] outline-none placeholder:text-[#71717a]"
+                      className="min-w-0 flex-1 resize-none overflow-hidden bg-transparent p-0 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] outline-none placeholder:text-[#71717a]"
                     />
                     <p className="shrink-0 whitespace-nowrap text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">
                       {reviewInput.length}/500
@@ -338,12 +369,12 @@ export default function AppDetailDiscoveryView({
                     type="button"
                     aria-label="댓글 등록"
                     disabled={reviewInput.length === 0}
-                    className="group relative size-8 shrink-0 overflow-hidden rounded-full bg-[#18181b] transition-opacity hover:opacity-90 disabled:hover:opacity-100"
+                    className="review-send-btn group relative size-8 shrink-0 overflow-hidden rounded-full bg-[#18181b] transition-opacity hover:opacity-90 disabled:hover:opacity-100"
                   >
                     <SendIcon />
                     <span
                       aria-hidden="true"
-                      className="pointer-events-none absolute inset-0 rounded-full bg-white/70 transition-opacity group-enabled:opacity-0"
+                      className="review-send-overlay pointer-events-none absolute inset-0 rounded-full bg-white/70 transition-opacity group-enabled:opacity-0"
                     />
                   </button>
                 </div>
@@ -352,7 +383,7 @@ export default function AppDetailDiscoveryView({
                 {reviews.map((r) => (
                   <div
                     key={r.name}
-                    className="flex w-full items-start gap-3 border-b border-[rgba(82,82,91,0.08)] py-5"
+                    className="app-detail-review-card flex w-full items-start gap-3 border-b border-[rgba(82,82,91,0.08)] py-5"
                   >
                     <div className="relative size-8 shrink-0 overflow-hidden rounded-full">
                       <Image src={r.avatar} alt="" fill sizes="32px" className="object-cover" />
@@ -382,11 +413,11 @@ export default function AppDetailDiscoveryView({
             <div className="relative flex flex-col">
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute bottom-2 left-0.5 top-2 w-px bg-[#e4e4e7]"
+                className="app-detail-toc-rail pointer-events-none absolute bottom-2 left-0.5 top-2 w-px bg-[#e4e4e7]"
               />
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute left-0 top-0 h-[21px] w-1 rounded-full bg-[#5B3D7A] transition-transform duration-300 ease-out"
+                className="app-detail-toc-indicator pointer-events-none absolute left-0 top-0 h-[21px] w-1 rounded-full bg-[#5B3D7A] transition-transform duration-300 ease-out"
                 style={{ transform: `translateY(${indicatorTop}px)` }}
               />
               {TOC.map((item) => {
@@ -434,7 +465,7 @@ function StatCell({ label, value, labelColor = "#71717a" }: { label: string; val
 }
 
 function StatDivider() {
-  return <div className="w-px shrink-0 self-stretch bg-[#e4e4e7]" aria-hidden="true" />;
+  return <div className="app-detail-stat-divider w-px shrink-0 self-stretch bg-[#e4e4e7]" aria-hidden="true" />;
 }
 
 function SectionHeader({ tag, title, subtitle }: { tag: string; title: string; subtitle?: string }) {

@@ -609,7 +609,7 @@
     color: rgba(255, 255, 255, 0.3);
   }
   .dark-mode .hover\:text-\[rgba\(24\,24\,27\,0\.5\)\]:hover {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.1);
   }
 
   /* ── 카테고리 탭 비활성 텍스트/숫자 — 다크모드 ── */
@@ -640,6 +640,64 @@
   }
   .dark-mode button:disabled.bg-\[rgba\(91\,61\,122\,0\.2\)\] .bg-white\/70 {
     display: none;
+  }
+
+  /* ── 디스커버리 앱 상세 리뷰 입력창 — 다크모드 전용 ── */
+  /* 입력 컨테이너: 보더 제거, fill #272530 */
+  .dark-mode .review-input-container {
+    background-color: #272530 !important;
+    border-color: transparent !important;
+  }
+  .dark-mode .review-input-container:focus-within {
+    border-color: transparent !important;
+  }
+
+  /* 등록(send) 버튼: 활성 → 흰색 배경 / 검정 아이콘, 비활성 → 옅은 회색 배경 / 어두운 아이콘 */
+  /* 비활성 ↔ 활성 전환 부드럽게 (배경/아이콘 fill 모두) */
+  .review-send-btn {
+    transition: background-color 0.25s ease, opacity 0.25s ease;
+  }
+  .review-send-btn svg path {
+    transition: fill 0.25s ease;
+  }
+
+  .dark-mode .review-send-btn {
+    background-color: #ffffff !important;
+  }
+  .dark-mode .review-send-btn:disabled {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+  }
+  .dark-mode .review-send-btn svg path {
+    fill: #18181b;
+  }
+  .dark-mode .review-send-btn:disabled svg path {
+    fill: #71717a;
+  }
+  /* 라이트 모드의 화이트 오버레이는 다크모드에서 불필요 */
+  .dark-mode .review-send-overlay {
+    display: none;
+  }
+
+  /* ── 디스커버리 앱 상세 액션 버튼: 추천 / 사용해제 ── */
+  /* 라이트 모드는 Tailwind 클래스로, 다크 모드만 여기서 오버라이드 */
+  .dark-mode .discovery-rec-btn:not(.discovery-rec-btn-active) {
+    background-color: transparent !important;
+    border-color: #3f3f46 !important;
+  }
+  .dark-mode .discovery-rec-btn:not(.discovery-rec-btn-active):hover {
+    background-color: rgba(255, 255, 255, 0.04) !important;
+  }
+  .dark-mode .discovery-rec-btn-active {
+    background-color: rgba(251, 176, 59, 0.4) !important;
+  }
+  .dark-mode .discovery-rec-btn-active:hover {
+    background-color: rgba(251, 176, 59, 0.48) !important;
+  }
+  .dark-mode .discovery-cancel-btn {
+    background-color: #27272a !important;
+  }
+  .dark-mode .discovery-cancel-btn:hover {
+    background-color: #3f3f46 !important;
   }
 
   /* ── 필터(정렬) 버튼 — 검색바와 같은 #272530, 아이콘은 white/70% ── */
@@ -691,4 +749,39 @@
   }
   .dark-mode .bg-\[\#18181B\] .text-white\/60 {
     color: rgba(24, 24, 27, 0.6) !important;
+  }
+
+  /* ── 앱 상세(디스커버리) 다크모드 ── */
+  /* 받기/앱 열기 CTA — 검정→흰 반전, 텍스트 검정 */
+  .dark-mode .app-detail-primary-cta {
+    background-color: #ffffff !important;
+    color: #18181b !important;
+  }
+
+  /* 통계 영역 — 상하 보더 + 수직 디바이더 (opacity/white/100) */
+  .dark-mode .app-detail-stat-bar {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+  }
+  .dark-mode .app-detail-stat-divider {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  /* TOC 좌측 가이드 라인 (opacity/white/100) */
+  .dark-mode .app-detail-toc-rail {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  /* PERMISSIONS/OVERVIEW 카드 — stroke 10% white (fill 없음) */
+  .dark-mode .app-detail-info-card {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  /* TOC 슬라이딩 인디케이터 — 다크모드 page-primary */
+  .dark-mode .app-detail-toc-indicator {
+    background-color: #9866cc !important;
+  }
+
+  /* 댓글 카드 하단 stroke (opacity/white/100) */
+  .dark-mode .app-detail-review-card {
+    border-color: rgba(255, 255, 255, 0.1) !important;
   }
