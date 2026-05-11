@@ -118,7 +118,7 @@ export default function MakePageB() {
       <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden pr-2 py-2">
         <PageSidebar activeMenu="앱 만들기" />
         {/* Right: Main content */}
-        <div className="no-scrollbar relative flex h-full min-w-0 flex-1 flex-col overflow-y-auto rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-10 pb-[240px]">
+        <div className="no-scrollbar relative flex h-full min-w-0 flex-1 flex-col overflow-y-auto rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white px-14 py-10 pb-[240px]">
           {/* 예시 보기 모달 */}
           {exampleOpen && (
             <div className="absolute inset-0 z-50 flex items-center justify-center rounded-br-2xl rounded-tr-2xl bg-white/50 transition-opacity duration-250" style={{ opacity: exampleClosing ? 0 : 1 }} onClick={closeExample}>

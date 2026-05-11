@@ -80,7 +80,7 @@ export default function AdminPageB() {
       <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden pr-2 py-2">
         <PageSidebar activeMenu="배포 신청" />
         {/* Right: Main content */}
-        <div className="flex h-full min-w-0 flex-1 flex-col overflow-y-auto rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white p-6 pb-[224px]">
+        <div className="flex h-full min-w-0 flex-1 flex-col overflow-y-auto rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white px-14 py-6 pb-[224px]">
           <div className="mx-auto flex w-full flex-col gap-6 min-[1281px]:max-w-[1280px]" style={{ animation: "fadeSlideIn 0.4s ease-out" }}>
           {/* Header */}
           <div className="flex shrink-0 items-center justify-between">

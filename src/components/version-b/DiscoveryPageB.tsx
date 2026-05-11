@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
 import PageSidebar from "./PageSidebar";
 import AppDetailView from "./AppDetailView";
+import AppDetailDiscoveryView from "./AppDetailDiscoveryView";
 import NotificationButton from "./NotificationButton";
 import { useDarkMode } from "@/hooks/useDarkMode";
 
@@ -83,6 +84,15 @@ export default function DiscoveryPageB() {
   const [darkMode, setDarkMode] = useDarkMode();
   const [selectedApp, setSelectedApp] = useState<{ name: string; category: string; isAdmin?: boolean; status?: string } | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("스토어");
+  const [stickyHeaderButtonVisible, setStickyHeaderButtonVisible] = useState(false);
+  const [appRecommended, setAppRecommended] = useState(false);
+  const [stickyThumbAnimKey, setStickyThumbAnimKey] = useState(0);
+  const handleToggleRecommend = () => {
+    if (!appRecommended) {
+      setStickyThumbAnimKey((k) => k + 1);
+    }
+    setAppRecommended((v) => !v);
+  };
   const [requestApp, setRequestApp] = useState<{ name: string; category: string; mode: RequestMode } | null>(null);
   const [toastMode, setToastMode] = useState<RequestMode | null>(null);
   const [cancelToastMode, setCancelToastMode] = useState<RequestMode | null>(null);
@@ -217,25 +227,101 @@ export default function DiscoveryPageB() {
         {selectedApp ? (
           <div className="relative flex h-full min-w-0 flex-1 flex-col">
             {/* 헤더 (브레드크럼) */}
-            <div className="flex h-[60px] w-full shrink-0 items-center overflow-hidden rounded-tr-2xl border-b border-[rgba(82,82,91,0.08)] bg-white px-5">
+            <div className="flex h-[60px] w-full shrink-0 items-center justify-between overflow-hidden rounded-tr-2xl border-b border-[rgba(82,82,91,0.08)] bg-white pl-5 pr-[76px]">
               <Breadcrumb
                 crumbs={[
                   { label: "디스커버리", onClick: deselectApp },
                   { label: selectedApp.name },
                 ]}
               />
+              {selectedApp.status === "not-using" && (
+                <button
+                  type="button"
+                  className={`flex h-8 items-center justify-center overflow-hidden rounded-full bg-[#18181b] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-all duration-200 hover:opacity-90 ${
+                    stickyHeaderButtonVisible
+                      ? "translate-y-0 opacity-100"
+                      : "pointer-events-none -translate-y-1 opacity-0"
+                  }`}
+                >
+                  받기
+                </button>
+              )}
+              {(selectedApp.status === "using" || selectedApp.status === "admin") && (
+                <div
+                  className={`flex items-center gap-2 transition-all duration-200 ${
+                    stickyHeaderButtonVisible
+                      ? "translate-y-0 opacity-100"
+                      : "pointer-events-none -translate-y-1 opacity-0"
+                  }`}
+                >
+                  {selectedApp.status === "admin" && (
+                    <button
+                      type="button"
+                      className="flex items-center rounded-lg px-3 py-2 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#1571F3] transition-colors hover:bg-[#1571F3]/5"
+                    >
+                      관리 콘솔로 이동
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    className="flex h-8 items-center justify-center overflow-hidden rounded-full bg-[#18181b] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+                  >
+                    앱 열기
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleToggleRecommend}
+                    aria-pressed={appRecommended}
+                    className={`flex h-8 w-20 items-center justify-center gap-1 overflow-hidden whitespace-nowrap rounded-full border text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors ${
+                      appRecommended
+                        ? "border-transparent bg-[#fff8e6] hover:bg-[#fdefc5]"
+                        : "border-[#e4e4e7] bg-white hover:bg-[#f9f9f9]"
+                    }`}
+                  >
+                    <span key={stickyThumbAnimKey} className="thumb-bounce inline-flex">
+                      {appRecommended ? (
+                        <svg width="16" height="16" viewBox="0 0 12 13" fill="none" aria-hidden="true">
+                          <path
+                            d="M8.04488 13C7.84184 13 7.62472 12.9867 7.39219 12.9575L0 11.6999V5.84963L2.90466 4.26227C2.90466 4.26227 5.23941 0.00651752 5.23963 0.00651752C6.83972 -0.0757481 7.96338 0.612662 7.45772 2.53326C7.30459 3.11482 7.10122 3.89954 7.10122 3.89954H9.40725C10.2148 3.89954 10.9177 4.20651 11.3875 4.7299C11.9015 5.30281 12.1018 6.10075 11.9511 6.97709L11.9497 6.98154C11.809 7.7655 11.4317 9.81839 10.9774 10.9553C10.7442 11.5374 10.1592 13 8.04488 13Z"
+                            fill="#FBB03B"
+                          />
+                        </svg>
+                      ) : (
+                        <svg width="16" height="16" viewBox="0 0 12 13" fill="none" aria-hidden="true">
+                          <path
+                            d="M5.53809 0.5C6.13821 0.507455 6.55644 0.652274 6.79199 0.878906C7.02918 1.10715 7.20207 1.5423 6.97461 2.40625C6.89788 2.69767 6.80829 3.03963 6.73828 3.30859C6.70326 3.44314 6.67285 3.55985 6.65137 3.64258C6.64067 3.68377 6.63183 3.7167 6.62598 3.73926C6.62312 3.75028 6.62066 3.75878 6.61914 3.76465C6.61844 3.76736 6.61855 3.76999 6.61816 3.77148L6.61719 3.77344V3.77441L6.45508 4.39941H9.40723C10.0867 4.39941 10.6496 4.65578 11.0156 5.06348C11.411 5.50419 11.5874 6.14072 11.458 6.89258V6.89355C11.3143 7.69417 10.9441 9.69004 10.5127 10.7695C10.3971 11.0581 10.2237 11.4825 9.86328 11.8418C9.51838 12.1857 8.97112 12.5 8.04492 12.5C7.86384 12.5 7.66713 12.4877 7.4541 12.4609H7.45312L0.5 11.2773V6.14551L3.14453 4.70117L3.27246 4.63086L3.34375 4.50195L3.34961 4.49023C3.35401 4.42396 3.41152 4.37835 3.44336 4.32031C3.5072 4.20394 3.59857 4.03738 3.70801 3.83789L5.31348 0.912109C5.40241 0.750019 5.47813 0.609249 5.53809 0.5Z"
+                            stroke="currentColor"
+                          />
+                        </svg>
+                      )}
+                    </span>
+                    추천
+                  </button>
+                </div>
+              )}
             </div>
             {/* 본문 */}
-            <div className="flex h-full flex-1 min-h-0 flex-col gap-6 overflow-y-auto rounded-br-2xl border-r border-gray-100 bg-white p-6">
-              <AppDetailView
+            {selectedApp.status === "not-using" || selectedApp.status === "using" || selectedApp.status === "admin" ? (
+              <AppDetailDiscoveryView
                 appName={selectedApp.name}
                 category={selectedApp.category}
-                fromMenu="디스커버리"
-                onBack={deselectApp}
-                isAdmin={selectedApp.isAdmin}
-                appStatus={selectedApp.status}
+                appStatus={selectedApp.status as "not-using" | "using" | "admin"}
+                isRecommended={appRecommended}
+                onToggleRecommend={handleToggleRecommend}
+                onHeaderVisibilityChange={(visible) => setStickyHeaderButtonVisible(!visible)}
               />
-            </div>
+            ) : (
+              <div className="flex h-full flex-1 min-h-0 flex-col gap-6 overflow-y-auto rounded-br-2xl border-r border-gray-100 bg-white p-6">
+                <AppDetailView
+                  appName={selectedApp.name}
+                  category={selectedApp.category}
+                  fromMenu="디스커버리"
+                  onBack={deselectApp}
+                  isAdmin={selectedApp.isAdmin}
+                  appStatus={selectedApp.status}
+                />
+              </div>
+            )}
           </div>
         ) : (
           <DiscoveryContent
@@ -530,7 +616,7 @@ function DiscoveryContent({ viewMode, setViewMode, onAppClick, onInstantRequest,
         className="no-scrollbar flex w-full flex-1 min-h-0 flex-col overflow-x-hidden overflow-y-auto rounded-br-2xl border-r border-[#f6f6f6] bg-white"
       >
         {/* 콘텐츠 max-width 래퍼 (1441px+ 양옆 여백) */}
-        <div className="mx-auto flex w-full flex-col gap-[60px] px-10 pt-10 pb-[120px] min-[1441px]:max-w-[1360px]">
+        <div className="mx-auto flex w-full flex-col gap-[60px] px-14 pt-10 pb-[120px] min-[1441px]:max-w-[1360px]">
         {/* 1. 타이틀 + 설명 + 탭 */}
         <div className="flex w-full shrink-0 flex-col gap-10">
           <div className="flex flex-col">
@@ -597,7 +683,7 @@ function DiscoveryContent({ viewMode, setViewMode, onAppClick, onInstantRequest,
                 key={i}
                 rank={i + 1}
                 app={app}
-                onClick={() => onAppClick(app.name, app.category)}
+                onClick={() => onAppClick(app.name, app.category, i === 0 ? "not-using" : i === 1 ? "using" : i === 2 ? "admin" : undefined)}
                 onRequest={() => {
                   const mode = pickRequestMode(app.name);
                   if (mode === "instant") onInstantRequest(app.name, app.category);

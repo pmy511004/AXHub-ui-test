@@ -110,7 +110,7 @@ export default function HomePageB() {
         <div className="relative flex h-full min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden rounded-br-2xl rounded-tr-2xl border-r border-[#f6f6f6] bg-white">
           {viewVersion === "first-time" ? (
             /* 최초접속 버전 */
-            <div className="relative flex min-h-full w-full flex-1 items-center justify-center overflow-hidden p-10">
+            <div className="relative flex min-h-full w-full flex-1 items-center justify-center overflow-hidden px-14 py-10">
               {/* 배경 이미지 (하단 중앙) */}
               <div className="pointer-events-none absolute bottom-0 left-1/2 h-[400px] w-[997px] max-w-none -translate-x-1/2">
                 <Image
@@ -151,7 +151,7 @@ export default function HomePageB() {
             </div>
           ) : (
           /* 사용 중 버전: 단일 스크롤 영역 */
-          <div className="mx-auto flex w-full flex-col gap-[80px] p-10 pb-[240px] min-[1441px]:max-w-[1280px]">
+          <div className="mx-auto flex w-full flex-col gap-[80px] px-14 py-10 pb-[240px] min-[1441px]:max-w-[1280px]">
 
             {/* 1. 헤더 섹션 */}
             <div className="flex flex-col gap-10">
