@@ -163,24 +163,10 @@ export default function AppDetailDiscoveryView({
               style={{ backgroundImage: "linear-gradient(135deg, #9B7AB8 0%, #5B3D7A 100%)" }}
             />
             <div className="flex min-w-0 flex-1 flex-col items-start gap-3">
-              {isPrivateApp && !isInlineLockApp && (
-                <div className="flex items-center gap-2">
+              <div className="flex w-full items-center gap-2">
+                {isPrivateApp && (
                   <Image
-                    src="/icons/version-b/private-app-lock.svg"
-                    alt=""
-                    width={18}
-                    height={18}
-                    aria-hidden="true"
-                  />
-                  <span className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#71717a]">
-                    비공개 앱
-                  </span>
-                </div>
-              )}
-              <div className="flex items-center gap-2">
-                {isInlineLockApp && (
-                  <Image
-                    src="/icons/version-b/status-private.svg"
+                    src="/icons/version-b/private-lock-gray.svg"
                     alt=""
                     width={24}
                     height={24}
@@ -288,7 +274,7 @@ export default function AppDetailDiscoveryView({
               <SectionHeader tag="OVERVIEW" title="한 눈에 보기" />
               <div className="app-detail-info-card flex flex-col gap-5 rounded-[20px] border border-[rgba(82,82,91,0.08)] p-7">
                 <KeyValueRow label="접근" value={isPrivateApp ? "비공개 (초대받은 사용자만)" : "공개 (승인없이 누구나)"} />
-                <KeyValueRow label="심사" value="미요청" />
+                <KeyValueRow label="심사" value="심사 완료" />
                 <KeyValueRow label="카테고리" value={category} />
                 <KeyValueRow label="발행팀" value="안승원" />
                 <KeyValueRow label="라이선스" value="사내 전용" />
