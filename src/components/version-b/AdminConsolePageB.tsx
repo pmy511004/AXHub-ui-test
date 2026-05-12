@@ -50,15 +50,35 @@ export default function AdminConsolePageB() {
     setOpenGroups((prev) => ({ ...prev, [g]: !prev[g] }));
 
   const [introText, setIntroText] = useState("");
-  type AppStatusKey = "public-no-approval" | "public-approval" | "private" | "archived";
-  const [appStatus, setAppStatus] = useState<AppStatusKey>("public-no-approval");
+  const [isPublic, setIsPublic] = useState(false);
+  const [autoApprove, setAutoApprove] = useState(false);
+  const [isArchived, setIsArchived] = useState(false);
   const [statusModalOpen, setStatusModalOpen] = useState(false);
-  const STATUS_LABEL: Record<AppStatusKey, { main: string; sub?: string; short: string }> = {
-    "public-no-approval": { main: "공개 운영", sub: "(승인없음)", short: "공개 운영중" },
-    "public-approval": { main: "공개 운영", sub: "(승인필요)", short: "공개 운영중" },
-    private: { main: "비공개 운영", short: "비공개 운영중" },
-    archived: { main: "보관", short: "보관중" },
-  };
+  const [userModalOpen, setUserModalOpen] = useState(false);
+  const [recommendModalOpen, setRecommendModalOpen] = useState(false);
+  const [commentsModalOpen, setCommentsModalOpen] = useState(false);
+  const [pendingUsers, setPendingUsers] = useState<{ name: string; email: string }[]>([]);
+  const comments = [
+    { name: "박민영", time: "1시간 전", text: "셋업이 정말 단순합니다. 토큰 키만 넣으면 자동으로 멤버 매핑까지 돼서 다음 날 바로 리포트가 도착했어요" },
+    { name: "송재희", time: "1일 전", text: "토큰 사용량과 비용을 한눈에 볼 수 있어서 팀 단위 운영에 도움이 많이 됩니다" },
+    { name: "안준성", time: "20일 전", text: "Slack 알림 연동까지 자연스럽게 되어 모니터링 부담이 줄었어요. 강력 추천합니다" },
+  ];
+  const currentUsers = [
+    { name: "박민영", email: "minion@jocodingax.ai" },
+    { name: "송재희", email: "songjh@jocodingax.ai" },
+    { name: "안준성", email: "ahn.js@jocodingax.ai" },
+    { name: "김태호", email: "kimth@jocodingax.ai" },
+    { name: "이지은", email: "lje@jocodingax.ai" },
+    { name: "윤서아", email: "yoonsa@jocodingax.ai" },
+    { name: "강민준", email: "minjun@jocodingax.ai" },
+    { name: "정수빈", email: "subin.j@jocodingax.ai" },
+    { name: "최유나", email: "yuna.c@jocodingax.ai" },
+    { name: "한승호", email: "han.sh@jocodingax.ai" },
+    { name: "박지훈", email: "jihoon@jocodingax.ai" },
+    { name: "오세영", email: "syoung@jocodingax.ai" },
+    { name: "임도현", email: "dohyun@jocodingax.ai" },
+    { name: "조하늘", email: "haneul@jocodingax.ai" },
+  ];
   const introRef = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
     const el = introRef.current;
@@ -178,7 +198,16 @@ export default function AdminConsolePageB() {
                     }}
                   />
                   <div className="flex min-w-0 flex-1 flex-col items-start gap-3">
-                    <p className="text-[40px] font-bold leading-[1.2] text-black">{appName}</p>
+                    <div className="flex w-full items-center gap-2">
+                      <Image
+                        src="/icons/version-b/private-lock-gray.svg"
+                        alt=""
+                        width={24}
+                        height={24}
+                        aria-hidden="true"
+                      />
+                      <p className="text-[40px] font-bold leading-[1.2] text-black">{appName}</p>
+                    </div>
                     <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#3f3f46]">
                       팀원별·프로젝트별 Claude Code 사용량을 집계하고, 토큰·요청 수·비용을 한눈에 비교합니다.
                     </p>
@@ -194,50 +223,59 @@ export default function AdminConsolePageB() {
 
                 {/* 우측: 액션 버튼 */}
                 <div className="flex w-[200px] shrink-0 flex-col items-center justify-end gap-2 self-stretch pb-2">
-                  {/* 상태 표시 */}
-                  <div className="flex w-full items-center justify-center gap-2 py-1">
-                    {appStatus === "private" ? (
-                      <Image
-                        src="/icons/version-b/status-private.svg"
-                        alt=""
-                        width={16}
-                        height={16}
-                        aria-hidden="true"
-                      />
-                    ) : appStatus === "archived" ? (
-                      <Image
-                        src="/icons/version-b/status-archived.svg"
-                        alt=""
-                        width={16}
-                        height={16}
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <span className="relative flex size-2.5 shrink-0">
-                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#1fa24e] opacity-60" />
-                        <span className="relative inline-flex size-2.5 rounded-full bg-[#1fa24e]" />
-                      </span>
-                    )}
-                    <p className="text-sm font-medium leading-[1.5] tracking-[-0.14px]">
-                      <span className="text-[#18181b]">{STATUS_LABEL[appStatus].short}</span>
-                      {STATUS_LABEL[appStatus].sub && (
-                        <span className="text-[#71717a]"> {STATUS_LABEL[appStatus].sub}</span>
-                      )}
-                    </p>
-                  </div>
                   <button
                     type="button"
                     onClick={() => setStatusModalOpen(true)}
                     className="flex h-12 w-full items-center justify-center overflow-hidden rounded-full bg-[#f6f6f6] px-8 text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors hover:bg-[#ececec]"
                   >
-                    상태 변경
+                    공개 범위 설정
                   </button>
                   <button
                     type="button"
                     className="flex h-12 w-full items-center justify-center overflow-hidden rounded-full border border-[#e4e4e7] bg-white px-8 text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors hover:bg-[#f9f9f9]"
                   >
-                    정보 수정
+                    보관
                   </button>
+                </div>
+              </div>
+
+              {/* 통계 바: 2행 × 3컬럼 — 상태/공개범위/심사 → 사용자/추천/댓글 */}
+              <div className="flex w-full flex-col">
+                <div className="flex h-[120px] w-full items-center border-t border-b border-[rgba(82,82,91,0.08)]">
+                  <StatInfoCell
+                    label="상태"
+                    value={isArchived ? "보관됨" : "운영중"}
+                    helpTooltip={
+                      <>
+                        개발중 : 배포 전 상태예요
+                        <br />
+                        운영중 : 사용자가 이용할 수 있는 활성 상태예요
+                        <br />
+                        보관중 : 사용자가 이용할 수 없는 비활성 상태예요
+                      </>
+                    }
+                  />
+                  <div className="h-full w-px shrink-0 bg-[rgba(82,82,91,0.08)]" />
+                  <StatInfoCell
+                    label="공개범위"
+                    value={isPublic ? "공개" : "비공개"}
+                    helpTooltip={
+                      <>
+                        비공개 : 관리자가 초대한 사용자만 이용할 수 있어요
+                        <br />
+                        공개 : 누구나 디스커버리에서 앱을 찾고 이용할 수 있어요
+                      </>
+                    }
+                  />
+                  <div className="h-full w-px shrink-0 bg-[rgba(82,82,91,0.08)]" />
+                  <StatReviewCell label="심사" value="미요청" />
+                </div>
+                <div className="flex h-[120px] w-full items-center border-b border-[rgba(82,82,91,0.08)]">
+                  <StatChevronCell label="사용자" value={String(currentUsers.length)} onClick={() => setUserModalOpen(true)} />
+                  <div className="h-full w-px shrink-0 bg-[rgba(82,82,91,0.08)]" />
+                  <StatChevronCell label="추천" value="8" onClick={() => setRecommendModalOpen(true)} />
+                  <div className="h-full w-px shrink-0 bg-[rgba(82,82,91,0.08)]" />
+                  <StatChevronCell label="댓글" value={String(comments.length)} onClick={() => setCommentsModalOpen(true)} />
                 </div>
               </div>
 
@@ -315,49 +353,339 @@ export default function AdminConsolePageB() {
       </div>
 
       {statusModalOpen && (
-        <StatusChangeModal
-          current={appStatus}
+        <VisibilityModal
+          isPublic={isPublic}
+          autoApprove={autoApprove}
           onClose={() => setStatusModalOpen(false)}
-          onSave={(next) => {
-            setAppStatus(next);
+          onSave={(nextPublic, nextAuto) => {
+            setIsPublic(nextPublic);
+            setAutoApprove(nextAuto);
             setStatusModalOpen(false);
           }}
+        />
+      )}
+
+      {userModalOpen && (
+        <UserModal
+          currentUsers={currentUsers}
+          pendingUsers={pendingUsers}
+          onInvite={(name, email) => setPendingUsers((prev) => [...prev, { name, email }])}
+          onCancelInvite={(idx) =>
+            setPendingUsers((prev) => prev.filter((_, i) => i !== idx))
+          }
+          onClose={() => setUserModalOpen(false)}
+        />
+      )}
+
+      {recommendModalOpen && (
+        <RecommendModal
+          users={currentUsers.slice(0, 8)}
+          onClose={() => setRecommendModalOpen(false)}
+        />
+      )}
+
+      {commentsModalOpen && (
+        <CommentsModal
+          comments={comments}
+          onClose={() => setCommentsModalOpen(false)}
         />
       )}
     </div>
   );
 }
 
-interface StatusOptionDef {
-  key: "public-no-approval" | "public-approval" | "private" | "archived";
-  main: string;
-  sub?: string;
-  desc: string;
-}
-
-const STATUS_OPTIONS: StatusOptionDef[] = [
-  { key: "public-no-approval", main: "공개 운영", sub: "(승인없음)", desc: "디스커버리에서 모든 동료가 찾고, 바로 사용할 수 있어요" },
-  { key: "public-approval", main: "공개 운영", sub: "(승인필요)", desc: "누구나 찾을 수 있지만, 관리자의 승인을 받은 동료만 사용할 수 있어요" },
-  { key: "private", main: "비공개 운영", desc: "초대받은 사용자만 접근할 수 있어요" },
-  { key: "archived", main: "보관", desc: "디스커버리에서 동료들이 더 이상 볼 수 없지만, 데이터는 유지돼요" },
-];
-
-function StatusChangeModal({
-  current,
+function UserModal({
+  currentUsers,
+  pendingUsers,
+  onInvite,
+  onCancelInvite,
   onClose,
-  onSave,
 }: {
-  current: StatusOptionDef["key"];
+  currentUsers: { name: string; email: string }[];
+  pendingUsers: { name: string; email: string }[];
+  onInvite: (name: string, email: string) => void;
+  onCancelInvite: (index: number) => void;
   onClose: () => void;
-  onSave: (next: StatusOptionDef["key"]) => void;
 }) {
-  const [selected, setSelected] = useState<StatusOptionDef["key"]>(current);
-  const isDirty = selected !== current;
+  const [query, setQuery] = useState("");
+  const canInvite = query.trim().length > 0;
+  const handleInvite = () => {
+    const trimmed = query.trim();
+    if (!trimmed) return;
+    const looksLikeEmail = trimmed.includes("@");
+    onInvite(looksLikeEmail ? trimmed.split("@")[0] : trimmed, looksLikeEmail ? trimmed : `${trimmed}@jocodingax.ai`);
+    setQuery("");
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20" onClick={onClose}>
       <div
-        className="flex w-[460px] flex-col items-end gap-6 rounded-2xl bg-white p-6"
+        className="flex max-h-[calc(100vh-64px)] w-[510px] flex-col gap-6 overflow-hidden rounded-2xl bg-white p-6"
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)",
+          backdropFilter: "blur(20px)",
+          animation: "modalScaleIn 0.3s ease-out",
+        }}
+      >
+        <div className="flex w-full items-center gap-6">
+          <p className="flex-1 text-xl font-semibold leading-[1.3] tracking-[-0.2px] text-black">앱 사용자</p>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="닫기"
+            className="flex shrink-0 items-center justify-center text-[#3f3f46] transition-opacity hover:opacity-70"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="flex w-full items-center gap-2">
+          <div className="flex h-12 min-h-12 flex-1 items-center rounded-full border border-[#e4e4e7] bg-[#fafafa] px-5">
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && canInvite) handleInvite();
+              }}
+              placeholder="초대할 사용자의 이름, 이메일을 검색하세요"
+              className="min-w-0 flex-1 bg-transparent text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] outline-none placeholder:text-[#a1a1aa]"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={handleInvite}
+            disabled={!canInvite}
+            className="relative flex h-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#5B3D7A] px-6 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:hover:opacity-100"
+          >
+            초대
+            {!canInvite && (
+              <span aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-full bg-white/70" />
+            )}
+          </button>
+        </div>
+
+        {/* 초대 확인중 / 사용중 — 각 영역이 별도 스크롤, 두 영역 사이 24px 갭 */}
+        {pendingUsers.length > 0 && (
+          <div className="flex w-full flex-col">
+            <p className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">
+              초대 확인중 {pendingUsers.length}
+            </p>
+            <div className="sidebar-scroll -mx-2 flex max-h-[180px] w-[calc(100%+1rem)] flex-col overflow-y-auto px-2">
+              {pendingUsers.map((u, i) => (
+                <UserRow
+                  key={`pending-${i}`}
+                  name={u.name}
+                  email={u.email}
+                  action={
+                    <button
+                      type="button"
+                      onClick={() => onCancelInvite(i)}
+                      className="flex h-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#e4e4e7] bg-white px-5 text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#f9f9f9]"
+                    >
+                      취소
+                    </button>
+                  }
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="flex w-full flex-col">
+          <p className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">
+            사용중 {currentUsers.length}
+          </p>
+          <div className="sidebar-scroll -mx-2 flex h-[375px] w-[calc(100%+1rem)] flex-col overflow-y-auto px-2">
+            {currentUsers.map((u, i) => (
+              <UserRow key={`current-${i}`} name={u.name} email={u.email} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RecommendModal({
+  users,
+  onClose,
+}: {
+  users: { name: string; email: string }[];
+  onClose: () => void;
+}) {
+  const [query, setQuery] = useState("");
+  const filtered = users.filter(
+    (u) => u.name.includes(query.trim()) || u.email.includes(query.trim()),
+  );
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20" onClick={onClose}>
+      <div
+        className="flex max-h-[calc(100vh-64px)] w-[510px] flex-col gap-6 overflow-hidden rounded-2xl bg-white p-6"
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)",
+          backdropFilter: "blur(20px)",
+          animation: "modalScaleIn 0.3s ease-out",
+        }}
+      >
+        <div className="flex w-full items-center gap-6">
+          <p className="flex-1 text-xl font-semibold leading-[1.3] tracking-[-0.2px] text-black">추천 {users.length}</p>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="닫기"
+            className="flex shrink-0 items-center justify-center text-[#3f3f46] transition-opacity hover:opacity-70"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="flex h-12 min-h-12 w-full items-center rounded-full border border-[#e4e4e7] bg-[#fafafa] px-5">
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="사용자의 이름, 이메일을 검색하세요"
+            className="min-w-0 flex-1 bg-transparent text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] outline-none placeholder:text-[#a1a1aa]"
+          />
+        </div>
+
+        <div className="sidebar-scroll -mx-2 flex h-[375px] w-[calc(100%+1rem)] flex-col overflow-y-auto px-2">
+          {filtered.map((u, i) => (
+            <UserRow key={i} name={u.name} email={u.email} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CommentsModal({
+  comments,
+  onClose,
+}: {
+  comments: { name: string; time: string; text: string }[];
+  onClose: () => void;
+}) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20" onClick={onClose}>
+      <div
+        className="flex max-h-[calc(100vh-64px)] w-[510px] flex-col gap-6 overflow-hidden rounded-2xl bg-white p-6"
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)",
+          backdropFilter: "blur(20px)",
+          animation: "modalScaleIn 0.3s ease-out",
+        }}
+      >
+        <div className="flex w-full items-center gap-6">
+          <p className="flex-1 text-xl font-semibold leading-[1.3] tracking-[-0.2px] text-black">댓글 {comments.length}</p>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="닫기"
+            className="flex shrink-0 items-center justify-center text-[#3f3f46] transition-opacity hover:opacity-70"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="sidebar-scroll -mx-2 flex min-h-0 max-h-[450px] w-[calc(100%+1rem)] flex-col overflow-y-auto px-2">
+          {comments.map((c, i) => (
+            <div key={i} className="flex w-full items-start gap-3 py-5">
+              <div
+                className="size-8 shrink-0 rounded-full"
+                style={{ backgroundImage: "linear-gradient(135deg, #7AA3D4 0%, #5B3D7A 100%)" }}
+              />
+              <div className="flex min-w-0 flex-1 flex-col gap-2">
+                <div className="flex items-end gap-2">
+                  <p className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#3f3f46]">{c.name}</p>
+                  <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">{c.time}</p>
+                </div>
+                <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b]">{c.text}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function UserRow({ name, email, action }: { name: string; email: string; action?: React.ReactNode }) {
+  return (
+    <div className="flex h-[60px] w-full items-center gap-2 py-4">
+      <div
+        className="size-7 shrink-0 rounded-full"
+        style={{ backgroundImage: "linear-gradient(135deg, #7AA3D4 0%, #5B3D7A 100%)" }}
+      />
+      <p className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46]">{name}</p>
+      <p className="min-w-0 flex-1 truncate text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+        {email}
+      </p>
+      {action}
+    </div>
+  );
+}
+
+function Switch({
+  checked,
+  onChange,
+  disabled = false,
+}: {
+  checked: boolean;
+  onChange: (next: boolean) => void;
+  disabled?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      disabled={disabled}
+      onClick={() => onChange(!checked)}
+      className={`relative h-8 w-[52px] shrink-0 rounded-full transition-colors ${
+        checked ? "bg-[#5B3D7A]" : "bg-[#d4d4d8]"
+      } ${disabled ? "cursor-not-allowed" : ""}`}
+    >
+      <span
+        aria-hidden="true"
+        className={`absolute top-1 size-6 rounded-full bg-white transition-all ${
+          checked ? "left-[24px]" : "left-1"
+        }`}
+      />
+    </button>
+  );
+}
+
+function VisibilityModal({
+  isPublic,
+  autoApprove,
+  onClose,
+  onSave,
+}: {
+  isPublic: boolean;
+  autoApprove: boolean;
+  onClose: () => void;
+  onSave: (nextPublic: boolean, nextAuto: boolean) => void;
+}) {
+  const [localPublic, setLocalPublic] = useState(isPublic);
+  const [localAuto, setLocalAuto] = useState(autoApprove);
+  const isDirty = localPublic !== isPublic || localAuto !== autoApprove;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20" onClick={onClose}>
+      <div
+        className="flex w-[520px] flex-col items-end gap-6 rounded-2xl bg-white p-6"
         style={{
           boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)",
           backdropFilter: "blur(20px)",
@@ -366,42 +694,41 @@ function StatusChangeModal({
         onClick={(e) => e.stopPropagation()}
       >
         <p className="w-full text-xl font-semibold leading-[1.3] tracking-[-0.2px] text-black">
-          앱 상태를 변경하시겠어요?
+          앱 공개 범위 설정
         </p>
 
-        <div className="flex w-full flex-col gap-1">
-          {STATUS_OPTIONS.map((opt) => {
-            const isSelected = selected === opt.key;
-            return (
-              <button
-                key={opt.key}
-                type="button"
-                onClick={() => setSelected(opt.key)}
-                className={`flex w-full items-center gap-5 rounded-[20px] p-4 text-left transition-colors ${
-                  isSelected ? "bg-[#f9f9f9]" : "hover:bg-[#fafafa]"
-                }`}
-              >
-                <span className="flex shrink-0 items-center self-stretch p-0.5">
-                  <span
-                    className={`flex size-5 items-center justify-center rounded-full border-[1.5px] ${
-                      isSelected ? "border-[#B86397] bg-[#B86397]" : "border-[#d4d4d8] bg-white"
-                    }`}
-                  >
-                    {isSelected && <span className="size-2 rounded-full bg-white" />}
-                  </span>
-                </span>
-                <div className="flex min-w-0 flex-1 flex-col items-start gap-2">
-                  <p className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46]">
-                    {opt.main}
-                    {opt.sub && <span className="font-medium text-[#71717a]"> {opt.sub}</span>}
-                  </p>
-                  <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">
-                    {opt.desc}
-                  </p>
-                </div>
-              </button>
-            );
-          })}
+        <div className="flex w-full flex-col gap-2">
+          {/* 공개 토글 */}
+          <div className="flex w-full items-start gap-5 p-3">
+            <div className="flex min-w-0 flex-1 flex-col items-start gap-2">
+              <p className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46]">공개</p>
+              <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+                앱이 디스커버리에 올라가 모든 동료들이 볼 수 있어요
+                <br />
+                단, 심사를 완료한 앱만 공개할 수 있어요
+              </p>
+            </div>
+            <Switch checked={localPublic} onChange={setLocalPublic} />
+          </div>
+
+          {/* 신청 자동 승인 토글 + 비공개 시 오버레이 */}
+          <div className="relative flex w-full items-start gap-5 p-3">
+            <div className="flex min-w-0 flex-1 flex-col items-start gap-2">
+              <p className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46]">신청 자동 승인</p>
+              <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+                별도의 확인없이 앱 사용 신청을 자동으로 승인해요
+                <br />
+                사용자는 대기없이 바로 앱을 이용할 수 있어요
+              </p>
+            </div>
+            <Switch checked={localAuto} onChange={setLocalAuto} disabled={!localPublic} />
+            {!localPublic && (
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 rounded-[20px] bg-white/70 transition-opacity"
+              />
+            )}
+          </div>
         </div>
 
         <div className="flex items-start gap-2">
@@ -415,7 +742,7 @@ function StatusChangeModal({
           <button
             type="button"
             disabled={!isDirty}
-            onClick={() => onSave(selected)}
+            onClick={() => onSave(localPublic, localPublic ? localAuto : false)}
             className="relative flex h-9 items-center justify-center overflow-hidden rounded-full bg-[#5B3D7A] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:hover:opacity-100"
           >
             저장
@@ -568,6 +895,89 @@ function MenuGroup({
       </button>
       {open && <div className="flex w-full flex-col gap-0.5">{children}</div>}
     </>
+  );
+}
+
+function StatChevronCell({ label, value, onClick }: { label: string; value: string; onClick?: () => void }) {
+  const Comp = onClick ? "button" : "div";
+  return (
+    <Comp
+      {...(onClick ? { type: "button" as const, onClick } : {})}
+      className={`flex h-full flex-1 items-center gap-2 px-7 text-left ${
+        onClick ? "transition-colors hover:bg-[#fafafa]" : ""
+      }`}
+    >
+      <div className="flex min-w-0 flex-1 flex-col items-start gap-2">
+        <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">{label}</p>
+        <p className="text-2xl font-bold leading-[1.2] text-[#3f3f46]">{value}</p>
+      </div>
+      <Image
+        src="/icons/version-b/admin-chevron-right.svg"
+        alt=""
+        width={16}
+        height={16}
+        aria-hidden="true"
+        className="-rotate-90 shrink-0"
+      />
+    </Comp>
+  );
+}
+
+function StatInfoCell({
+  label,
+  value,
+  showHelp = false,
+  helpTooltip,
+}: {
+  label: string;
+  value: string;
+  showHelp?: boolean;
+  helpTooltip?: React.ReactNode;
+}) {
+  const hasHelp = showHelp || helpTooltip !== undefined;
+  return (
+    <div className="flex h-full flex-1 flex-col items-start justify-center gap-2 px-7">
+      <div className="flex items-center gap-1">
+        <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">{label}</p>
+        {hasHelp && (
+          <span className="group relative inline-flex">
+            <Image
+              src="/icons/version-b/admin-help.svg"
+              alt=""
+              width={18}
+              height={18}
+              aria-hidden="true"
+            />
+            {helpTooltip && (
+              <span
+                role="tooltip"
+                className="pointer-events-none absolute bottom-full left-0 mb-2 hidden whitespace-nowrap rounded-[8px] bg-[#27272a] px-2.5 py-1.5 text-sm font-medium leading-[1.5] tracking-[-0.14px] text-white shadow-[0px_2px_4px_rgba(0,0,0,0.06),0px_-6px_6px_rgba(0,0,0,0.03),0px_14px_14px_rgba(0,0,0,0.04)] backdrop-blur-[20px] group-hover:block"
+              >
+                {helpTooltip}
+              </span>
+            )}
+          </span>
+        )}
+      </div>
+      <p className="text-2xl font-bold leading-[1.2] text-[#3f3f46]">{value}</p>
+    </div>
+  );
+}
+
+function StatReviewCell({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex h-full flex-1 items-end gap-2 px-7 py-7">
+      <div className="flex min-w-0 flex-1 flex-col items-start justify-center gap-2 self-stretch">
+        <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">{label}</p>
+        <p className="text-2xl font-bold leading-[1.2] text-[#3f3f46]">{value}</p>
+      </div>
+      <button
+        type="button"
+        className="flex h-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#5B3D7A] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+      >
+        심사 요청
+      </button>
+    </div>
   );
 }
 
