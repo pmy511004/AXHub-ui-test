@@ -19,9 +19,9 @@ type SectionId = "about" | "data-flow" | "permissions" | "overview" | "review";
 
 const TOC: { id: SectionId; label: string }[] = [
   { id: "about", label: "앱 소개" },
+  { id: "overview", label: "한 눈에 보기" },
   { id: "data-flow", label: "데이터 사용 관계" },
   { id: "permissions", label: "권한 및 데이터" },
-  { id: "overview", label: "한 눈에 보기" },
   { id: "review", label: "동료들이 남긴 한마디" },
 ];
 
@@ -83,7 +83,8 @@ export default function AppDetailDiscoveryView({
   const reviewTextareaRef = useRef<HTMLTextAreaElement>(null);
   const router = useRouter();
 
-  const isPrivateApp = appName === "매출 대시보드";
+  const isPrivateApp = appName === "매출 대시보드" || appName === "AI 문서 요약";
+  const isInlineLockApp = appName === "AI 문서 요약";
 
   const goToAdminConsole = () => {
     const params = new URLSearchParams();
@@ -162,7 +163,7 @@ export default function AppDetailDiscoveryView({
               style={{ backgroundImage: "linear-gradient(135deg, #9B7AB8 0%, #5B3D7A 100%)" }}
             />
             <div className="flex min-w-0 flex-1 flex-col items-start gap-3">
-              {isPrivateApp && (
+              {isPrivateApp && !isInlineLockApp && (
                 <div className="flex items-center gap-2">
                   <Image
                     src="/icons/version-b/private-app-lock.svg"
@@ -176,7 +177,18 @@ export default function AppDetailDiscoveryView({
                   </span>
                 </div>
               )}
-              <p className="text-[40px] font-bold leading-[1.2] text-black">{appName}</p>
+              <div className="flex items-center gap-2">
+                {isInlineLockApp && (
+                  <Image
+                    src="/icons/version-b/status-private.svg"
+                    alt=""
+                    width={24}
+                    height={24}
+                    aria-hidden="true"
+                  />
+                )}
+                <p className="text-[40px] font-bold leading-[1.2] text-black">{appName}</p>
+              </div>
               <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#3f3f46]">
                 팀원별·프로젝트별 Claude Code 사용량을 집계하고, 토큰·요청 수·비용을 한눈에 비교합니다.
               </p>
@@ -232,7 +244,9 @@ export default function AppDetailDiscoveryView({
                 </button>
               </div>
             ) : (
-              <p className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#71717a]">승인 필요</p>
+              <p className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#71717a]">
+                {isInlineLockApp ? "바로 사용" : "승인 필요"}
+              </p>
             )}
           </div>
         </div>
@@ -266,6 +280,19 @@ export default function AppDetailDiscoveryView({
                   <li>월간 비용 리포트 PDF 자동 생성·메일 발송</li>
                   <li>Anthropic Console 토큰 키 단방향 검증 (Read-only)</li>
                 </ul>
+              </div>
+            </section>
+
+            {/* OVERVIEW */}
+            <section id="overview" className="flex w-full scroll-mt-10 flex-col gap-5">
+              <SectionHeader tag="OVERVIEW" title="한 눈에 보기" />
+              <div className="app-detail-info-card flex flex-col gap-5 rounded-[20px] border border-[rgba(82,82,91,0.08)] p-7">
+                <KeyValueRow label="접근" value={isPrivateApp ? "비공개 (초대받은 사용자만)" : "공개 (승인없이 누구나)"} />
+                <KeyValueRow label="심사" value="미요청" />
+                <KeyValueRow label="카테고리" value={category} />
+                <KeyValueRow label="발행팀" value="안승원" />
+                <KeyValueRow label="라이선스" value="사내 전용" />
+                <KeyValueRow label="최근 업데이트" value="2026. 04. 29" />
               </div>
             </section>
 
@@ -348,18 +375,6 @@ export default function AppDetailDiscoveryView({
                 <KeyValueRow label="공유 테이블" value="0" />
                 <KeyValueRow label="API 호출" value="818,271" />
                 <KeyValueRow label="데이터 스코프" value="read, write" />
-              </div>
-            </section>
-
-            {/* OVERVIEW */}
-            <section id="overview" className="flex w-full scroll-mt-10 flex-col gap-5">
-              <SectionHeader tag="OVERVIEW" title="한 눈에 보기" />
-              <div className="app-detail-info-card flex flex-col gap-5 rounded-[20px] border border-[rgba(82,82,91,0.08)] p-7">
-                <KeyValueRow label="접근" value={isPrivateApp ? "비공개 (초대받은 사용자만)" : "공개 (승인없이 누구나)"} />
-                <KeyValueRow label="카테고리" value={category} />
-                <KeyValueRow label="발행팀" value="안승원" />
-                <KeyValueRow label="라이선스" value="사내 전용" />
-                <KeyValueRow label="최근 업데이트" value="2026. 04. 29" />
               </div>
             </section>
 

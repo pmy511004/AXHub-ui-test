@@ -738,7 +738,7 @@ function DiscoveryContent({ viewMode, setViewMode, onAppClick, onInstantRequest,
                 key={i}
                 rank={i + 1}
                 app={app}
-                onClick={() => onAppClick(app.name, app.category, i === 0 ? "not-using" : i === 1 ? "using" : i === 2 ? "admin" : undefined)}
+                onClick={() => onAppClick(app.name, app.category, i === 0 ? "not-using" : i === 1 ? "using" : i === 2 ? "admin" : i === 3 ? "not-using" : undefined)}
                 onRequest={() => {
                   const mode = pickRequestMode(app.name);
                   if (mode === "instant") onInstantRequest(app.name, app.category);
