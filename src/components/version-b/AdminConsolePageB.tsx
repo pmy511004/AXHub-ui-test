@@ -227,16 +227,16 @@ export default function AdminConsolePageB() {
                   </div>
                   <button
                     type="button"
-                    className="flex h-12 w-full items-center justify-center overflow-hidden rounded-full border border-[#e4e4e7] bg-white px-8 text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors hover:bg-[#f9f9f9]"
-                  >
-                    정보 수정
-                  </button>
-                  <button
-                    type="button"
                     onClick={() => setStatusModalOpen(true)}
                     className="flex h-12 w-full items-center justify-center overflow-hidden rounded-full bg-[#f6f6f6] px-8 text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors hover:bg-[#ececec]"
                   >
                     상태 변경
+                  </button>
+                  <button
+                    type="button"
+                    className="flex h-12 w-full items-center justify-center overflow-hidden rounded-full border border-[#e4e4e7] bg-white px-8 text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors hover:bg-[#f9f9f9]"
+                  >
+                    정보 수정
                   </button>
                 </div>
               </div>
