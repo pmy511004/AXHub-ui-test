@@ -83,6 +83,8 @@ export default function AppDetailDiscoveryView({
   const reviewTextareaRef = useRef<HTMLTextAreaElement>(null);
   const router = useRouter();
 
+  const isPrivateApp = appName === "매출 대시보드";
+
   const goToAdminConsole = () => {
     const params = new URLSearchParams();
     params.set("app", appName);
@@ -160,6 +162,20 @@ export default function AppDetailDiscoveryView({
               style={{ backgroundImage: "linear-gradient(135deg, #9B7AB8 0%, #5B3D7A 100%)" }}
             />
             <div className="flex min-w-0 flex-1 flex-col items-start gap-3">
+              {isPrivateApp && (
+                <div className="flex items-center gap-2">
+                  <Image
+                    src="/icons/version-b/private-app-lock.svg"
+                    alt=""
+                    width={18}
+                    height={18}
+                    aria-hidden="true"
+                  />
+                  <span className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+                    비공개 앱
+                  </span>
+                </div>
+              )}
               <p className="text-[40px] font-bold leading-[1.2] text-black">{appName}</p>
               <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#3f3f46]">
                 팀원별·프로젝트별 Claude Code 사용량을 집계하고, 토큰·요청 수·비용을 한눈에 비교합니다.
@@ -339,6 +355,7 @@ export default function AppDetailDiscoveryView({
             <section id="overview" className="flex w-full scroll-mt-10 flex-col gap-5">
               <SectionHeader tag="OVERVIEW" title="한 눈에 보기" />
               <div className="app-detail-info-card flex flex-col gap-5 rounded-[20px] border border-[rgba(82,82,91,0.08)] p-7">
+                <KeyValueRow label="접근" value={isPrivateApp ? "비공개 (초대받은 사용자만)" : "공개 (승인없이 누구나)"} />
                 <KeyValueRow label="카테고리" value={category} />
                 <KeyValueRow label="발행팀" value="안승원" />
                 <KeyValueRow label="라이선스" value="사내 전용" />
