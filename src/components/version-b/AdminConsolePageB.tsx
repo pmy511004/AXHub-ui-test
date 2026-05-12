@@ -8,6 +8,22 @@ import PageSidebar from "./PageSidebar";
 import NotificationButton from "./NotificationButton";
 import { useDarkMode } from "@/hooks/useDarkMode";
 
+const PROFILE_ICONS = [
+  "/icons/version-b/profile-gray.png",
+  "/icons/version-b/profile-blue.png",
+  "/icons/version-b/profile-green.png",
+  "/icons/version-b/profile-peach.png",
+  "/icons/version-b/profile-red.png",
+];
+
+function pickProfileIcon(seed: string): string {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    hash = (hash * 31 + seed.charCodeAt(i)) | 0;
+  }
+  return PROFILE_ICONS[Math.abs(hash) % PROFILE_ICONS.length];
+}
+
 type SubMenuKey =
   | "intro"
   | "dev"
@@ -602,10 +618,9 @@ function CommentsModal({
         <div className="sidebar-scroll -mx-2 flex min-h-0 max-h-[450px] w-[calc(100%+1rem)] flex-col overflow-y-auto px-2">
           {comments.map((c, i) => (
             <div key={i} className="flex w-full items-start gap-3 py-5">
-              <div
-                className="size-8 shrink-0 rounded-full"
-                style={{ backgroundImage: "linear-gradient(135deg, #7AA3D4 0%, #5B3D7A 100%)" }}
-              />
+              <div className="relative size-8 shrink-0 overflow-hidden rounded-full">
+                <Image src={pickProfileIcon(c.name + c.time)} alt="" fill sizes="32px" className="object-cover" />
+              </div>
               <div className="flex min-w-0 flex-1 flex-col gap-2">
                 <div className="flex items-end gap-2">
                   <p className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#3f3f46]">{c.name}</p>
@@ -624,10 +639,9 @@ function CommentsModal({
 function UserRow({ name, email, action }: { name: string; email: string; action?: React.ReactNode }) {
   return (
     <div className="flex h-[60px] w-full items-center gap-2 py-4">
-      <div
-        className="size-7 shrink-0 rounded-full"
-        style={{ backgroundImage: "linear-gradient(135deg, #7AA3D4 0%, #5B3D7A 100%)" }}
-      />
+      <div className="relative size-7 shrink-0 overflow-hidden rounded-full">
+        <Image src={pickProfileIcon(name + email)} alt="" fill sizes="28px" className="object-cover" />
+      </div>
       <p className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46]">{name}</p>
       <p className="min-w-0 flex-1 truncate text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">
         {email}
