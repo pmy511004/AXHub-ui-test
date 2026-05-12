@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -57,13 +57,6 @@ export default function AdminConsolePageB() {
   const category = searchParams.get("category") ?? "공용";
 
   const [activeMenu, setActiveMenu] = useState<SubMenuKey>("intro");
-  const [openGroups, setOpenGroups] = useState<Record<"dev" | "ops" | "settings", boolean>>({
-    dev: true,
-    ops: true,
-    settings: true,
-  });
-  const toggleGroup = (g: "dev" | "ops" | "settings") =>
-    setOpenGroups((prev) => ({ ...prev, [g]: !prev[g] }));
 
   const [introText, setIntroText] = useState("");
   const [isPublic, setIsPublic] = useState(false);
@@ -295,18 +288,12 @@ export default function AdminConsolePageB() {
                 </div>
               </div>
 
-              {/* 본문: 서브메뉴 + 콘텐츠 */}
-              <div className="flex w-full items-start gap-10">
-                {/* 서브메뉴 */}
-                <SubMenu
-                  active={activeMenu}
-                  onSelect={setActiveMenu}
-                  openGroups={openGroups}
-                  toggleGroup={toggleGroup}
-                />
+              {/* 본문: 상단 수평 탭 네비 + 콘텐츠 */}
+              <div className="flex w-full flex-col gap-10">
+                <TopTabs active={activeMenu} onSelect={setActiveMenu} />
 
                 {/* 콘텐츠 */}
-                <div className="flex min-h-[800px] flex-1 min-w-0 flex-col gap-5">
+                <div className="flex w-full min-w-0 flex-col gap-5">
                   {/* 앱 소개 섹션 */}
                   <div className="flex w-full items-end gap-5">
                     <div className="flex min-w-0 flex-1 flex-col items-start gap-2">
@@ -810,105 +797,69 @@ function Breadcrumb({ crumbs, onCrumbClick }: { crumbs: Crumb[]; onCrumbClick: (
   );
 }
 
-interface SubMenuProps {
-  active: SubMenuKey;
-  onSelect: (key: SubMenuKey) => void;
-  openGroups: Record<"dev" | "ops" | "settings", boolean>;
-  toggleGroup: (g: "dev" | "ops" | "settings") => void;
-}
+const TOP_TABS: { key: SubMenuKey; label: string }[] = [
+  { key: "intro", label: "소개" },
+  { key: "dev-git", label: "Git 연동" },
+  { key: "dev-env", label: "환경변수" },
+  { key: "dev-deploy", label: "배포" },
+  { key: "ops-ops", label: "운영" },
+  { key: "ops-table", label: "테이블" },
+  { key: "ops-data", label: "데이터 접근" },
+  { key: "members", label: "멤버" },
+  { key: "settings", label: "설정" },
+];
 
-function SubMenu({ active, onSelect, openGroups, toggleGroup }: SubMenuProps) {
+function TopTabs({ active, onSelect }: { active: SubMenuKey; onSelect: (key: SubMenuKey) => void }) {
+  const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const [indicator, setIndicator] = useState({ left: 0, width: 0 });
+
+  useLayoutEffect(() => {
+    const el = tabRefs.current[active];
+    if (!el) return;
+    setIndicator({ left: el.offsetLeft, width: el.offsetWidth });
+  }, [active]);
+
   return (
-    <nav className="sticky top-5 flex w-[180px] shrink-0 flex-col gap-0.5 self-start rounded-[12px] bg-[#f9f9f9] p-3">
-      <MenuItem label="소개" active={active === "intro"} onClick={() => onSelect("intro")} />
-      <MenuGroup label="개발" open={openGroups.dev} onToggle={() => toggleGroup("dev")}>
-        <MenuItem label="Git 연동" indent active={active === "dev-git"} onClick={() => onSelect("dev-git")} />
-        <MenuItem label="환경변수" indent active={active === "dev-env"} onClick={() => onSelect("dev-env")} />
-        <MenuItem label="배포" indent active={active === "dev-deploy"} onClick={() => onSelect("dev-deploy")} />
-      </MenuGroup>
-      <MenuGroup label="운영" open={openGroups.ops} onToggle={() => toggleGroup("ops")}>
-        <MenuItem label="운영" indent active={active === "ops-ops"} onClick={() => onSelect("ops-ops")} />
-        <MenuItem label="테이블" indent active={active === "ops-table"} onClick={() => onSelect("ops-table")} />
-        <MenuItem label="데이터 접근" indent active={active === "ops-data"} onClick={() => onSelect("ops-data")} />
-      </MenuGroup>
-      <MenuItem label="멤버" active={active === "members"} onClick={() => onSelect("members")} />
-      <MenuGroup label="설정" open={openGroups.settings} onToggle={() => toggleGroup("settings")}>
-        <MenuItem label="정보 수정" indent active={active === "settings-info"} onClick={() => onSelect("settings-info")} />
-        <MenuItem label="CI 자동 검증" indent active={active === "settings-ci"} onClick={() => onSelect("settings-ci")} />
-        <MenuItem label="배포 방식" indent active={active === "settings-deploy"} onClick={() => onSelect("settings-deploy")} />
-        <MenuItem label="API 키" indent active={active === "settings-api"} onClick={() => onSelect("settings-api")} />
-        <MenuItem label="SSO 통합" indent active={active === "settings-sso"} onClick={() => onSelect("settings-sso")} />
-        <MenuItem label="파일" indent active={active === "settings-file"} onClick={() => onSelect("settings-file")} />
-        <MenuItem label="캐시" indent active={active === "settings-cache"} onClick={() => onSelect("settings-cache")} />
-      </MenuGroup>
+    <nav className="sidebar-scroll relative flex w-full items-start gap-2 overflow-x-auto overflow-y-hidden">
+      {TOP_TABS.map((tab) => {
+        const isActive = active === tab.key;
+        return (
+          <button
+            key={tab.key}
+            ref={(el) => {
+              tabRefs.current[tab.key] = el;
+            }}
+            type="button"
+            onClick={() => onSelect(tab.key)}
+            className="relative flex shrink-0 items-center justify-center px-4 py-2"
+          >
+            {/* 너비 고정용 ghost (항상 SemiBold로 너비 예약, 보이지 않음) */}
+            <span
+              aria-hidden="true"
+              className="invisible block whitespace-nowrap text-base font-semibold leading-[1.5] tracking-[-0.16px]"
+            >
+              {tab.label}
+            </span>
+            {/* 실제 노출 텍스트 */}
+            <span
+              className={`absolute inset-0 flex items-center justify-center whitespace-nowrap text-base leading-[1.5] tracking-[-0.16px] transition-colors ${
+                isActive
+                  ? "font-semibold text-[#5B3D7A]"
+                  : "font-normal text-[rgba(24,24,27,0.9)] hover:text-[#18181b]"
+              }`}
+            >
+              {tab.label}
+            </span>
+          </button>
+        );
+      })}
+      {/* 슬라이딩 인디케이터 */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-0 h-[2px] rounded-full bg-[#5B3D7A] transition-[left,width] duration-300 ease-out"
+        style={{ left: indicator.left, width: indicator.width }}
+      />
     </nav>
-  );
-}
-
-function MenuItem({
-  label,
-  active = false,
-  indent = false,
-  onClick,
-}: {
-  label: string;
-  active?: boolean;
-  indent?: boolean;
-  onClick?: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`flex w-full items-center rounded-[8px] py-2 text-left text-sm leading-[1.5] tracking-[-0.14px] transition-colors ${
-        indent ? "px-6" : "px-3"
-      } ${
-        active
-          ? "bg-[rgba(24,24,27,0.03)] font-semibold text-[#5B3D7A]"
-          : indent
-            ? "font-normal text-[#71717a] hover:bg-[rgba(24,24,27,0.03)]"
-            : "font-normal text-[#18181b] hover:bg-[rgba(24,24,27,0.03)]"
-      }`}
-    >
-      {label}
-    </button>
-  );
-}
-
-function MenuGroup({
-  label,
-  open,
-  onToggle,
-  children,
-}: {
-  label: string;
-  open: boolean;
-  onToggle: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <>
-      <button
-        type="button"
-        onClick={onToggle}
-        className={`flex w-full items-center justify-between gap-2 rounded-[8px] px-3 py-2 text-left text-sm leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[rgba(24,24,27,0.03)] ${
-          open ? "font-semibold" : "font-normal"
-        }`}
-      >
-        <span>{label}</span>
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          aria-hidden="true"
-          className={`shrink-0 transition-transform ${open ? "" : "-rotate-90"}`}
-        >
-          <path d="M4 6l4 4 4-4" stroke="#71717a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </button>
-      {open && <div className="flex w-full flex-col gap-0.5">{children}</div>}
-    </>
   );
 }
 
