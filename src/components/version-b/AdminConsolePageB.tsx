@@ -50,6 +50,15 @@ export default function AdminConsolePageB() {
     setOpenGroups((prev) => ({ ...prev, [g]: !prev[g] }));
 
   const [introText, setIntroText] = useState("");
+  type AppStatusKey = "public-no-approval" | "public-approval" | "private" | "archived";
+  const [appStatus, setAppStatus] = useState<AppStatusKey>("public-no-approval");
+  const [statusModalOpen, setStatusModalOpen] = useState(false);
+  const STATUS_LABEL: Record<AppStatusKey, { main: string; sub?: string; short: string }> = {
+    "public-no-approval": { main: "공개 운영", sub: "(승인없음)", short: "공개 운영중" },
+    "public-approval": { main: "공개 운영", sub: "(승인필요)", short: "공개 운영중" },
+    private: { main: "비공개 운영", short: "비공개 운영중" },
+    archived: { main: "보관", short: "보관중" },
+  };
   const introRef = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
     const el = introRef.current;
@@ -184,18 +193,50 @@ export default function AdminConsolePageB() {
                 </div>
 
                 {/* 우측: 액션 버튼 */}
-                <div className="flex w-[200px] shrink-0 flex-col items-end justify-end gap-2 self-stretch pb-2">
+                <div className="flex w-[200px] shrink-0 flex-col items-center justify-end gap-2 self-stretch pb-2">
+                  {/* 상태 표시 */}
+                  <div className="flex w-full items-center justify-center gap-2 py-1">
+                    {appStatus === "private" ? (
+                      <Image
+                        src="/icons/version-b/status-private.svg"
+                        alt=""
+                        width={16}
+                        height={16}
+                        aria-hidden="true"
+                      />
+                    ) : appStatus === "archived" ? (
+                      <Image
+                        src="/icons/version-b/status-archived.svg"
+                        alt=""
+                        width={16}
+                        height={16}
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      <span className="relative flex size-2.5 shrink-0">
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#1fa24e] opacity-60" />
+                        <span className="relative inline-flex size-2.5 rounded-full bg-[#1fa24e]" />
+                      </span>
+                    )}
+                    <p className="text-sm font-medium leading-[1.5] tracking-[-0.14px]">
+                      <span className="text-[#18181b]">{STATUS_LABEL[appStatus].short}</span>
+                      {STATUS_LABEL[appStatus].sub && (
+                        <span className="text-[#71717a]"> {STATUS_LABEL[appStatus].sub}</span>
+                      )}
+                    </p>
+                  </div>
                   <button
                     type="button"
-                    className="flex h-12 w-full items-center justify-center overflow-hidden rounded-full bg-[#18181b] px-8 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-white transition-opacity hover:opacity-90"
+                    className="flex h-12 w-full items-center justify-center overflow-hidden rounded-full border border-[#e4e4e7] bg-white px-8 text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors hover:bg-[#f9f9f9]"
                   >
                     정보 수정
                   </button>
                   <button
                     type="button"
+                    onClick={() => setStatusModalOpen(true)}
                     className="flex h-12 w-full items-center justify-center overflow-hidden rounded-full bg-[#f6f6f6] px-8 text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors hover:bg-[#ececec]"
                   >
-                    보관
+                    상태 변경
                   </button>
                 </div>
               </div>
@@ -211,7 +252,7 @@ export default function AdminConsolePageB() {
                 />
 
                 {/* 콘텐츠 */}
-                <div className="flex flex-1 min-w-0 flex-col gap-5">
+                <div className="flex min-h-[800px] flex-1 min-w-0 flex-col gap-5">
                   {/* 앱 소개 섹션 */}
                   <div className="flex w-full items-end gap-5">
                     <div className="flex min-w-0 flex-1 flex-col items-start gap-2">
@@ -273,6 +314,117 @@ export default function AdminConsolePageB() {
         </div>
       </div>
 
+      {statusModalOpen && (
+        <StatusChangeModal
+          current={appStatus}
+          onClose={() => setStatusModalOpen(false)}
+          onSave={(next) => {
+            setAppStatus(next);
+            setStatusModalOpen(false);
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+interface StatusOptionDef {
+  key: "public-no-approval" | "public-approval" | "private" | "archived";
+  main: string;
+  sub?: string;
+  desc: string;
+}
+
+const STATUS_OPTIONS: StatusOptionDef[] = [
+  { key: "public-no-approval", main: "공개 운영", sub: "(승인없음)", desc: "디스커버리에서 모든 동료가 찾고, 바로 사용할 수 있어요" },
+  { key: "public-approval", main: "공개 운영", sub: "(승인필요)", desc: "누구나 찾을 수 있지만, 관리자의 승인을 받은 동료만 사용할 수 있어요" },
+  { key: "private", main: "비공개 운영", desc: "초대받은 사용자만 접근할 수 있어요" },
+  { key: "archived", main: "보관", desc: "디스커버리에서 동료들이 더 이상 볼 수 없지만, 데이터는 유지돼요" },
+];
+
+function StatusChangeModal({
+  current,
+  onClose,
+  onSave,
+}: {
+  current: StatusOptionDef["key"];
+  onClose: () => void;
+  onSave: (next: StatusOptionDef["key"]) => void;
+}) {
+  const [selected, setSelected] = useState<StatusOptionDef["key"]>(current);
+  const isDirty = selected !== current;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20" onClick={onClose}>
+      <div
+        className="flex w-[460px] flex-col items-end gap-6 rounded-2xl bg-white p-6"
+        style={{
+          boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)",
+          backdropFilter: "blur(20px)",
+          animation: "modalScaleIn 0.3s ease-out",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <p className="w-full text-xl font-semibold leading-[1.3] tracking-[-0.2px] text-black">
+          앱 상태를 변경하시겠어요?
+        </p>
+
+        <div className="flex w-full flex-col gap-1">
+          {STATUS_OPTIONS.map((opt) => {
+            const isSelected = selected === opt.key;
+            return (
+              <button
+                key={opt.key}
+                type="button"
+                onClick={() => setSelected(opt.key)}
+                className={`flex w-full items-center gap-5 rounded-[20px] p-4 text-left transition-colors ${
+                  isSelected ? "bg-[#f9f9f9]" : "hover:bg-[#fafafa]"
+                }`}
+              >
+                <span className="flex shrink-0 items-center self-stretch p-0.5">
+                  <span
+                    className={`flex size-5 items-center justify-center rounded-full border-[1.5px] ${
+                      isSelected ? "border-[#B86397] bg-[#B86397]" : "border-[#d4d4d8] bg-white"
+                    }`}
+                  >
+                    {isSelected && <span className="size-2 rounded-full bg-white" />}
+                  </span>
+                </span>
+                <div className="flex min-w-0 flex-1 flex-col items-start gap-2">
+                  <p className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46]">
+                    {opt.main}
+                    {opt.sub && <span className="font-medium text-[#71717a]"> {opt.sub}</span>}
+                  </p>
+                  <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+                    {opt.desc}
+                  </p>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="flex items-start gap-2">
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex h-9 items-center justify-center overflow-hidden rounded-full bg-[#f6f6f6] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#ececec]"
+          >
+            취소
+          </button>
+          <button
+            type="button"
+            disabled={!isDirty}
+            onClick={() => onSave(selected)}
+            className="relative flex h-9 items-center justify-center overflow-hidden rounded-full bg-[#5B3D7A] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:hover:opacity-100"
+          >
+            저장
+            {!isDirty && (
+              <span aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-full bg-white/70" />
+            )}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
