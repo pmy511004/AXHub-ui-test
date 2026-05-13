@@ -2,31 +2,14 @@
 
 import { useState } from "react";
 import Image from "next/image";
-
-type Tenant = {
-  name: string;
-  slug: string;
-  createdAt: string;
-  apps: number;
-  members: number;
-};
-
-const TENANTS: ReadonlyArray<Tenant> = [
-  { name: "민트랩 주식회사", slug: "/mintlab", createdAt: "2026-05-12", apps: 235, members: 400 },
-  { name: "그린테크 솔루션", slug: "/greentech", createdAt: "2026-04-30", apps: 184, members: 312 },
-  { name: "노바AI 랩스", slug: "/novaai", createdAt: "2026-04-22", apps: 421, members: 588 },
-  { name: "어센드 워크스", slug: "/ascend", createdAt: "2026-04-15", apps: 96, members: 142 },
-  { name: "파스텔 디자인", slug: "/pastel", createdAt: "2026-03-28", apps: 67, members: 89 },
-  { name: "데이브릿지 컴퍼니", slug: "/daybridge", createdAt: "2026-03-19", apps: 312, members: 504 },
-  { name: "스카이로프트", slug: "/skyloft", createdAt: "2026-03-04", apps: 152, members: 233 },
-  { name: "더플로우 스튜디오", slug: "/theflow", createdAt: "2026-02-20", apps: 78, members: 124 },
-  { name: "오리진 파트너스", slug: "/origin", createdAt: "2026-02-09", apps: 209, members: 365 },
-];
+import Link from "next/link";
+import { TENANTS, tenantRouteSlug } from "@/lib/tenants";
 
 export default function PlatformAdminPageB() {
   const [search, setSearch] = useState("");
   const [tenantModalOpen, setTenantModalOpen] = useState(false);
   const [tenantModalClosing, setTenantModalClosing] = useState(false);
+  const [tenantEmail, setTenantEmail] = useState("");
   const [tenantName, setTenantName] = useState("");
   const [tenantSlug, setTenantSlug] = useState("");
 
@@ -38,7 +21,8 @@ export default function PlatformAdminPageB() {
       setTenantModalClosing(false);
     }, 250);
   };
-  const isTenantValid = tenantName.trim() !== "" && tenantSlug.trim() !== "";
+  const isTenantValid =
+    tenantEmail.trim() !== "" && tenantName.trim() !== "" && tenantSlug.trim() !== "";
 
   return (
     <main className="flex min-h-screen w-full flex-col bg-white" data-node-id="4821:2132">
@@ -55,7 +39,7 @@ export default function PlatformAdminPageB() {
 
       {/* 본문 */}
       <section
-        className="mx-auto flex w-full max-w-[1280px] flex-col gap-10 px-14 pb-[120px] pt-10"
+        className="mx-auto flex w-full max-w-[1439px] flex-col gap-10 px-14 pb-[120px] pt-10"
         data-node-id="4821:2194"
       >
         {/* 페이지 제목 + 새 테넌트 버튼 */}
@@ -118,19 +102,22 @@ export default function PlatformAdminPageB() {
             {/* 헤더 */}
             <div className="flex w-full items-center gap-4 px-4 py-2.5">
               <div className="flex flex-1 items-center">
-                <span className="text-xs font-medium leading-[1.3] tracking-[-0.12px] text-[#a1a1aa]">이름</span>
+                <span className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">이름</span>
               </div>
               <div className="flex w-[200px] items-center">
-                <span className="text-xs font-medium leading-[1.3] tracking-[-0.12px] text-[#a1a1aa]">슬러그</span>
+                <span className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">이메일</span>
               </div>
               <div className="flex w-[200px] items-center">
-                <span className="text-xs font-medium leading-[1.3] tracking-[-0.12px] text-[#a1a1aa]">생성일</span>
+                <span className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">슬러그</span>
+              </div>
+              <div className="flex w-[200px] items-center">
+                <span className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">생성일</span>
               </div>
               <div className="flex w-20 items-center">
-                <span className="text-xs font-medium leading-[1.3] tracking-[-0.12px] text-[#a1a1aa]">앱 개수</span>
+                <span className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">앱 개수</span>
               </div>
               <div className="flex w-20 items-center">
-                <span className="text-xs font-medium leading-[1.3] tracking-[-0.12px] text-[#a1a1aa]">멤버 수</span>
+                <span className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">멤버 수</span>
               </div>
               <span className="size-7 shrink-0" aria-hidden="true" />
             </div>
@@ -138,14 +125,19 @@ export default function PlatformAdminPageB() {
             {/* 바디 */}
             <div className="flex w-full flex-col overflow-hidden rounded-2xl bg-white">
               {TENANTS.map((tenant, i) => (
-                <button
+                <Link
                   key={tenant.slug}
-                  type="button"
+                  href={`/platform-admin/${tenantRouteSlug(tenant.slug)}`}
                   className="group relative flex h-14 w-full items-center gap-4 px-4 py-3 transition-colors hover:bg-[#fafafa]"
                 >
                   <div className="flex flex-1 items-center min-w-0">
                     <p className="truncate text-left text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#3f3f46]">
                       {tenant.name}
+                    </p>
+                  </div>
+                  <div className="flex w-[200px] items-center min-w-0">
+                    <p className="truncate text-left text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+                      {tenant.email}
                     </p>
                   </div>
                   <div className="flex w-[200px] items-center">
@@ -189,7 +181,7 @@ export default function PlatformAdminPageB() {
                   {i < TENANTS.length - 1 && (
                     <span className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-[#e4e4e7] opacity-50" />
                   )}
-                </button>
+                </Link>
               ))}
             </div>
           </div>
@@ -220,7 +212,21 @@ export default function PlatformAdminPageB() {
             </p>
 
             <div className="flex w-full flex-col gap-2">
-              <label htmlFor="tenant-name" className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+              <label htmlFor="tenant-email" className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#3f3f46]">
+                테넌트 이메일
+              </label>
+              <input
+                id="tenant-email"
+                type="email"
+                value={tenantEmail}
+                onChange={(e) => setTenantEmail(e.target.value)}
+                placeholder="이메일 입력"
+                className="min-h-12 w-full rounded-full border border-[#e4e4e7] bg-white px-5 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#5B3D7A] focus:outline-none"
+              />
+            </div>
+
+            <div className="flex w-full flex-col gap-2">
+              <label htmlFor="tenant-name" className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#3f3f46]">
                 테넌트 이름
               </label>
               <input
@@ -234,7 +240,7 @@ export default function PlatformAdminPageB() {
             </div>
 
             <div className="flex w-full flex-col gap-2">
-              <label htmlFor="tenant-slug" className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+              <label htmlFor="tenant-slug" className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#3f3f46]">
                 slug
               </label>
               <input
