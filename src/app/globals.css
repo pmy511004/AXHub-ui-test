@@ -217,6 +217,14 @@
     }
   }
 
+  /* 토스트형 툴팁: 페이드 인 0.5s → 유지 2s → 페이드 아웃 0.5s (총 3초) */
+  @keyframes tooltipFlash {
+    0% { opacity: 0; transform: translateY(10px); }
+    17% { opacity: 1; transform: translateY(0); }
+    83% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(10px); }
+  }
+
   @keyframes slideInLeft {
     from {
       opacity: 0;

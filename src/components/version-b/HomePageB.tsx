@@ -17,6 +17,21 @@ export default function HomePageB() {
   const [activeTeam, setActiveTeam] = useState<"JO" | "DE">("JO");
   const [profileOpen, setProfileOpen] = useState(false);
   const [darkMode, setDarkMode] = useDarkMode();
+  const [makeAppModalOpen, setMakeAppModalOpen] = useState(false);
+  const [makeAppModalClosing, setMakeAppModalClosing] = useState(false);
+  const [makeAppName, setMakeAppName] = useState("");
+  const [makeAppCategory, setMakeAppCategory] = useState("");
+  const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
+  const categoryOptions = ["인사관리", "데이터분석", "물류관리", "경영재무", "협업도구", "프로젝트관리", "AI도구"];
+  const closeMakeAppModal = () => {
+    setMakeAppModalClosing(true);
+    setTimeout(() => {
+      setMakeAppModalOpen(false);
+      setMakeAppModalClosing(false);
+      setCategoryDropdownOpen(false);
+    }, 250);
+  };
+  const isMakeAppValid = makeAppName.trim() !== "" && makeAppCategory !== "";
   const openGuideModal = () => { setGuideModalStep("os-select"); setGuideModalOpen(true); };
 
   useEffect(() => {
@@ -158,63 +173,35 @@ export default function HomePageB() {
               {/* 날짜 */}
               <p className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#71717a]">2026년 4월 16일 목요일</p>
 
-              {/* 인사말 */}
-              <div>
-                <p className="text-[40px] font-bold leading-[1.2] text-[#a1a1aa]">안녕하세요,</p>
-                <p className="text-[40px] font-bold leading-[1.2] text-[#18181b]">박민영 님</p>
-              </div>
-
-              {/* 설명 + 버튼 행 */}
-              <div className="flex items-center gap-10">
-                <div className="flex flex-1 flex-col">
-                  <p className="text-lg font-normal leading-[1.4] tracking-[-0.18px] text-[#71717a]">
-                    오늘 스토어에 새로운 앱 2개가 올라왔어요
-                  </p>
-                  <p className="text-lg font-normal leading-[1.4] tracking-[-0.18px] text-[#71717a]">
-                    민영님이 사용 중인 앱 중에 업데이트된 앱이 1개 있어요
-                  </p>
+              {/* 인사말 + 버튼 행 */}
+              <div className="flex items-end gap-10">
+                <div className="flex-1">
+                  <p className="text-[40px] font-bold leading-[1.2] text-[#a1a1aa]">안녕하세요,</p>
+                  <p className="text-[40px] font-bold leading-[1.2] text-[#18181b]">박민영 님</p>
                 </div>
                 <div className="flex shrink-0 gap-2">
                   <button
                     type="button"
-                    className="rounded-full border border-[#e4e4e7] px-6 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors hover:bg-[#f9f9f9]"
+                    className="flex h-12 items-center justify-center rounded-full bg-[#18181b] px-6 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-white transition-opacity hover:opacity-90"
                   >
                     개발 가이드
                   </button>
                   <button
                     type="button"
-                    className="flex h-12 items-center justify-center rounded-full bg-[#5B3D7A] px-6 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-white transition-opacity hover:opacity-90"
+                    className="flex h-12 items-center justify-center rounded-full border border-[#e4e4e7] bg-white px-6 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors hover:bg-[#f9f9f9]"
                   >
-                    앱 만들기
+                    의견 보내기
                   </button>
                 </div>
               </div>
             </div>
 
-            {/* 2. 통계 행: 4개 컬럼 */}
-            <div className="flex border-y border-[#e4e4e7]">
-              {[
-                { label: "사용 중인 앱", value: "12" },
-                { label: "내가 만든 앱", value: "3" },
-                { label: "최근 업데이트", value: "5" },
-                { label: "팀 멤버", value: "8" },
-              ].map((stat, i) => (
-                <div key={stat.label} className="flex flex-1 items-start">
-                  {i > 0 && <div className="w-px self-stretch bg-[#e4e4e7]" />}
-                  <div className="flex flex-1 flex-col gap-2 p-7">
-                    <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">{stat.label}</p>
-                    <p className="text-[32px] font-semibold leading-[1.2] text-[#3f3f46]">{stat.value}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* 3. 워크스페이스 섹션 */}
+            {/* 2. 내 업무공간 섹션 */}
             <div className="flex flex-col gap-5">
               {/* 섹션 헤더 */}
-              <div className="flex flex-col gap-1">
-                <p className="text-sm font-normal text-[#5B3D7A]">WORKSPACE</p>
-                <p className="text-2xl font-semibold text-black">민영님의 업무공간</p>
+              <div className="flex flex-col gap-2">
+                <p className="text-2xl font-semibold leading-[1.2] text-black">내 업무공간</p>
+                <p className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">사용 중인 앱을 모았어요</p>
               </div>
 
               {/* 앱 그리드 */}
@@ -265,75 +252,59 @@ export default function HomePageB() {
               </div>
             </div>
 
-            {/* 4. 하단 섹션: NEW + TRENDING 나란히 */}
-            <div className="flex gap-[60px]">
-              {/* NEW 섹션 (40%) */}
-              <div className="flex w-[40%] shrink-0 flex-col gap-6">
-                {/* 헤더 */}
-                <div className="flex flex-col gap-1">
-                  <p className="text-sm font-normal text-[#5B3D7A]">NEW</p>
-                  <p className="text-2xl font-semibold text-black">새로 나온 앱</p>
+            {/* 4. 내가 개발한 앱 섹션 */}
+            <div className="flex flex-col gap-5">
+              {/* 섹션 헤더 + 앱 만들기 버튼 */}
+              <div className="flex items-center gap-5">
+                <div className="flex flex-1 flex-col gap-2">
+                  <p className="text-2xl font-semibold leading-[1.2] text-black">내가 개발한 앱</p>
+                  <p className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">관리자 권한을 갖고 있는 앱이에요</p>
                 </div>
-
-                {/* 앱 목록 5개 */}
-                <div>
-                  {[
-                    { name: "HR 봇", category: "인사관리" },
-                    { name: "리포트 자동화", category: "데이터분석" },
-                    { name: "재고 관리", category: "물류관리" },
-                    { name: "출장 예약", category: "경영재무" },
-                    { name: "피드백 허브", category: "협업도구" },
-                  ].map((app, i) => (
-                    <div key={i} className="flex cursor-pointer items-center gap-4 border-t border-[#f6f6f6] py-4">
-                      <div className="size-[52px] shrink-0 rounded-lg bg-[#e4e4e7]" />
-                      <div className="flex flex-1 flex-col gap-1">
-                        <p className="text-base font-semibold tracking-[-0.16px] text-black">{app.name}</p>
-                        <p className="text-sm font-normal tracking-[-0.14px] text-[#71717a]">{app.category}</p>
-                      </div>
-                      <Image src="/icons/version-b/arrow-right-sm.svg" alt="" width={14} height={14} className="shrink-0" />
-                    </div>
-                  ))}
-                </div>
+                <button
+                  type="button"
+                  onClick={() => setMakeAppModalOpen(true)}
+                  className="flex h-9 shrink-0 items-center justify-center rounded-full bg-[#18181b] px-5 py-3 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+                >
+                  앱 만들기
+                </button>
               </div>
 
-              {/* TRENDING 섹션 (60%) */}
-              <div className="flex w-[60%] flex-col gap-6">
-                {/* 헤더 */}
-                <div className="flex flex-col gap-1">
-                  <p className="text-sm font-normal text-[#5B3D7A]">TRENDING</p>
-                  <p className="text-2xl font-semibold text-black">지금 동료들이 많이 찾는 앱</p>
-                </div>
-
-                {/* 랭킹 목록 5개 */}
-                <div>
-                  {[
-                    { name: "경비 정산 자동화", category: "경영재무", users: "120" },
-                    { name: "스마트 캘린더", category: "협업도구", users: "115" },
-                    { name: "매출 대시보드", category: "데이터분석", users: "110" },
-                    { name: "프로젝트 트래커", category: "프로젝트관리", users: "90" },
-                    { name: "AI 문서 요약", category: "AI도구", users: "88" },
-                  ].map((app, i) => (
-                    <div key={i} className="flex cursor-pointer items-center gap-5 border-t border-[#f6f6f6] py-4">
-                      <p
-                        className="w-10 text-[28px] font-bold"
-                        style={{ color: i < 3 ? "#18181b" : "#a1a1aa" }}
+              {/* 앱 목록 */}
+              <div className="flex flex-col gap-2">
+                {[
+                  { name: "경비 정산 자동화", category: "경영재무", status: "운영중", gradient: "linear-gradient(135deg, #9B7AB8, #5B3D7A)" },
+                  { name: "스마트 캘린더", category: "협업도구", status: "개발중", gradient: "linear-gradient(135deg, #DBA869, #5B3D7A)" },
+                ].map((app, i) => {
+                  const isLive = app.status === "운영중";
+                  return (
+                    <div key={i} className="flex cursor-pointer items-center gap-3 rounded-2xl p-3 transition-colors hover:bg-[#f9f9f9]">
+                      <div
+                        className="size-12 shrink-0 rounded-[12px]"
+                        style={{ background: app.gradient }}
+                      />
+                      <div className="flex flex-1 items-center gap-2">
+                        <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-black">{app.name}</p>
+                        <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#5B3D7A]">{app.category}</p>
+                      </div>
+                      <span
+                        className="flex shrink-0 items-center justify-center rounded-full px-3 py-2 text-xs font-semibold leading-[1.3] tracking-[-0.12px]"
+                        style={{
+                          backgroundColor: isLive ? "#e9faf1" : "#fffbe1",
+                          color: isLive ? "#1fa24e" : "#f6c205",
+                        }}
                       >
-                        {String(i + 1).padStart(2, "0")}
-                      </p>
-                      <div className="flex flex-1 items-center gap-4">
-                        <div className="size-[52px] shrink-0 rounded-lg bg-[#e4e4e7]" />
-                        <div className="flex w-[168px] flex-col gap-1">
-                          <p className="text-base font-semibold text-black">{app.name}</p>
-                          <p className="text-sm font-normal text-[#71717a]">{app.category}</p>
-                        </div>
-                      </div>
-                      <div className="flex w-[60px] items-center gap-1">
-                        <Image src="/icons/version-b/thumb-up.svg" alt="" width={16} height={16} className="shrink-0" />
-                        <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">{app.users}</p>
-                      </div>
+                        {app.status}
+                      </span>
+                      <Image
+                        src="/icons/version-b/arrow-right-sm.svg"
+                        alt=""
+                        width={16}
+                        height={16}
+                        className="shrink-0"
+                      />
                     </div>
-                  ))}
-                </div>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -356,6 +327,109 @@ export default function HomePageB() {
               사용 중
             </button>
           </div>
+
+          {/* 앱 만들기 모달 */}
+          {makeAppModalOpen && (
+            <div
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 transition-opacity duration-250"
+              style={{ opacity: makeAppModalClosing ? 0 : 1 }}
+              onClick={closeMakeAppModal}
+            >
+              <div
+                className="flex w-[520px] flex-col items-end gap-6 rounded-2xl bg-white p-6"
+                style={{
+                  boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)",
+                  backdropFilter: "blur(20px)",
+                  animation: makeAppModalClosing ? "modalScaleOut 0.25s ease-in forwards" : "modalScaleIn 0.3s ease-out",
+                }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* 제목 */}
+                <p className="w-full text-xl font-semibold leading-[1.3] tracking-[-0.2px] text-black">앱 만들기</p>
+
+                {/* 앱 이름 */}
+                <div className="flex w-full flex-col gap-2">
+                  <label htmlFor="make-app-name" className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+                    앱 이름
+                  </label>
+                  <input
+                    id="make-app-name"
+                    type="text"
+                    value={makeAppName}
+                    onChange={(e) => setMakeAppName(e.target.value)}
+                    placeholder="이름 입력"
+                    className="min-h-12 w-full rounded-full border border-[#e4e4e7] bg-white px-4 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#5B3D7A] focus:outline-none"
+                  />
+                </div>
+
+                {/* 카테고리 */}
+                <div className="relative flex w-full flex-col gap-2">
+                  <p className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#71717a]">카테고리</p>
+                  <button
+                    type="button"
+                    onClick={() => setCategoryDropdownOpen((v) => !v)}
+                    className="flex min-h-12 w-full items-center justify-between rounded-full border border-[#e4e4e7] bg-white pl-4 pr-4 text-left transition-colors hover:border-[#d4d4d8] focus:border-[#5B3D7A] focus:outline-none"
+                  >
+                    <span
+                      className={`text-base font-normal leading-[1.5] tracking-[-0.16px] ${
+                        makeAppCategory ? "text-[#18181b]" : "text-[#a1a1aa]"
+                      }`}
+                    >
+                      {makeAppCategory || "카테고리 선택"}
+                    </span>
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      className={`shrink-0 transition-transform duration-200 ${categoryDropdownOpen ? "rotate-180" : ""}`}
+                    >
+                      <path d="M5 7.5L10 12.5L15 7.5" stroke="#71717a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
+                  {categoryDropdownOpen && (
+                    <div className="absolute left-0 right-0 top-[calc(100%+4px)] z-10 max-h-[200px] overflow-y-auto rounded-2xl border border-[#e4e4e7] bg-white p-2 shadow-lg">
+                      {categoryOptions.map((option) => (
+                        <button
+                          key={option}
+                          type="button"
+                          onClick={() => {
+                            setMakeAppCategory(option);
+                            setCategoryDropdownOpen(false);
+                          }}
+                          className={`flex w-full items-center rounded-lg px-3 py-2 text-left text-base font-normal leading-[1.5] tracking-[-0.16px] transition-colors hover:bg-[#f4f4f5] ${
+                            makeAppCategory === option ? "text-[#5B3D7A]" : "text-[#18181b]"
+                          }`}
+                        >
+                          {option}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* 액션 버튼 */}
+                <div className="flex items-start gap-2">
+                  <button
+                    type="button"
+                    onClick={closeMakeAppModal}
+                    className="flex h-9 items-center justify-center rounded-full bg-[#f6f6f6] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#ececec]"
+                  >
+                    취소
+                  </button>
+                  <button
+                    type="button"
+                    disabled={!isMakeAppValid}
+                    onClick={() => { if (isMakeAppValid) closeMakeAppModal(); }}
+                    className="relative flex h-9 items-center justify-center overflow-hidden rounded-full bg-[#5B3D7A] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+                  >
+                    만들기
+                    {!isMakeAppValid && <span className="pointer-events-none absolute inset-0 rounded-full bg-white/70" />}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* 초기 시작 가이드 모달 */}
           {guideModalOpen && (
