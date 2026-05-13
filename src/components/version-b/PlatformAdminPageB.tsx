@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { TENANTS, tenantRouteSlug } from "@/lib/tenants";
+import PlatformAdminSidebar from "./PlatformAdminSidebar";
 
 export default function PlatformAdminPageB() {
   const [search, setSearch] = useState("");
@@ -28,7 +29,7 @@ export default function PlatformAdminPageB() {
     <main className="flex min-h-screen w-full flex-col bg-white" data-node-id="4821:2132">
       {/* 상단 헤더 */}
       <header
-        className="flex h-[60px] w-full shrink-0 items-center gap-3 border-b border-[rgba(82,82,91,0.08)] bg-white px-5"
+        className="sticky top-0 z-10 flex h-[60px] w-full shrink-0 items-center gap-3 border-b border-[rgba(82,82,91,0.08)] bg-white px-5"
         data-node-id="4821:2182"
       >
         <span className="text-2xl font-bold leading-[1.2] text-[#18181b]">AXHub</span>
@@ -37,11 +38,13 @@ export default function PlatformAdminPageB() {
         </span>
       </header>
 
-      {/* 본문 */}
-      <section
-        className="mx-auto flex w-full max-w-[1439px] flex-col gap-10 px-14 pb-[120px] pt-10"
-        data-node-id="4821:2194"
-      >
+      {/* 사이드 + 본문 */}
+      <div className="mx-auto flex w-full max-w-[1439px] items-start">
+        <PlatformAdminSidebar active="tenants" />
+        <section
+          className="flex min-w-0 flex-1 flex-col gap-10 px-14 pb-[120px] pt-10"
+          data-node-id="4821:2194"
+        >
         {/* 페이지 제목 + 새 테넌트 버튼 */}
         <div className="flex w-full items-center justify-between">
           <div className="flex items-center gap-2">
@@ -110,14 +113,14 @@ export default function PlatformAdminPageB() {
               <div className="flex w-[200px] items-center">
                 <span className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">슬러그</span>
               </div>
-              <div className="flex w-[200px] items-center">
-                <span className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">생성일</span>
+              <div className="flex w-20 items-center">
+                <span className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">멤버 수</span>
               </div>
               <div className="flex w-20 items-center">
                 <span className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">앱 개수</span>
               </div>
               <div className="flex w-20 items-center">
-                <span className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">멤버 수</span>
+                <span className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">생성일</span>
               </div>
               <span className="size-7 shrink-0" aria-hidden="true" />
             </div>
@@ -145,16 +148,6 @@ export default function PlatformAdminPageB() {
                       {tenant.slug}
                     </span>
                   </div>
-                  <div className="flex w-[200px] items-center">
-                    <span className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">
-                      {tenant.createdAt}
-                    </span>
-                  </div>
-                  <div className="flex w-20 items-center">
-                    <span className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#18181b]">
-                      {tenant.apps}
-                    </span>
-                  </div>
                   <div className="flex w-20 items-center gap-1">
                     <Image
                       src="/icons/version-b/member-icon.svg"
@@ -165,6 +158,16 @@ export default function PlatformAdminPageB() {
                     />
                     <span className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#18181b]">
                       {tenant.members}
+                    </span>
+                  </div>
+                  <div className="flex w-20 items-center">
+                    <span className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#18181b]">
+                      {tenant.apps}
+                    </span>
+                  </div>
+                  <div className="flex w-20 items-center">
+                    <span className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+                      {tenant.createdAt}
                     </span>
                   </div>
                   <span
@@ -186,7 +189,8 @@ export default function PlatformAdminPageB() {
             </div>
           </div>
         </div>
-      </section>
+        </section>
+      </div>
 
       {tenantModalOpen && (
         <div

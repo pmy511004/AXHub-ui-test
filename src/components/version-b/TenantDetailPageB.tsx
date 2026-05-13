@@ -3,6 +3,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import PlatformAdminSidebar from "./PlatformAdminSidebar";
 
 type Tenant = {
   name: string;
@@ -211,8 +212,10 @@ export default function TenantDetailPageB({ tenant }: { tenant: Tenant }) {
         </span>
       </header>
 
-      {/* 본문 */}
-      <section className="mx-auto flex w-full max-w-[1439px] flex-col gap-10 px-14 pb-[120px] pt-10">
+      {/* 사이드 + 본문 */}
+      <div className="mx-auto flex w-full max-w-[1439px] items-start">
+        <PlatformAdminSidebar active="tenants" />
+        <section className="flex min-w-0 flex-1 flex-col gap-10 px-14 pb-[120px] pt-10">
         {/* Breadcrumbs */}
         <Link
           href="/platform-admin"
@@ -473,7 +476,8 @@ export default function TenantDetailPageB({ tenant }: { tenant: Tenant }) {
             )}
           </div>
         </div>
-      </section>
+        </section>
+      </div>
 
       <button
         type="button"
