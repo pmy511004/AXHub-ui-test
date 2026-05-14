@@ -125,7 +125,7 @@ export default function LoginPageB() {
           onClick={closeSignupModal}
         >
           <div
-            className="relative flex w-[400px] flex-col items-center gap-5 overflow-hidden rounded-2xl bg-white p-5"
+            className="relative flex w-[400px] flex-col items-center gap-5 rounded-2xl bg-white p-5"
             style={{
               boxShadow:
                 "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)",
