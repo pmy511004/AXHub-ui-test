@@ -20,6 +20,32 @@ export default function HomePageB() {
   const [adminMenu, setAdminMenu] = useState<AdminActiveMenu>("대시보드");
   const [teamName, setTeamName] = useState("조코딩AX파트너스");
   const [teamDescription, setTeamDescription] = useState("");
+  const [inviteModalOpen, setInviteModalOpen] = useState(false);
+  const [inviteModalClosing, setInviteModalClosing] = useState(false);
+  const [inviteRows, setInviteRows] = useState<Array<{ email: string; role: "사용자" | "관리자" }>>([
+    { email: "", role: "사용자" },
+  ]);
+  const [openInviteRoleIdx, setOpenInviteRoleIdx] = useState<number | null>(null);
+
+  const openInviteModal = () => {
+    setInviteRows([{ email: "", role: "사용자" }]);
+    setOpenInviteRoleIdx(null);
+    setInviteModalOpen(true);
+  };
+  const closeInviteModal = () => {
+    setInviteModalClosing(true);
+    setTimeout(() => {
+      setInviteModalOpen(false);
+      setInviteModalClosing(false);
+      setOpenInviteRoleIdx(null);
+    }, 250);
+  };
+  const canAddInviteRow = inviteRows.every((r) => r.email.trim() !== "");
+  const canSendInvite = inviteRows.some((r) => r.email.trim() !== "");
+  const addInviteRow = () => {
+    if (!canAddInviteRow) return;
+    setInviteRows((prev) => [...prev, { email: "", role: "사용자" }]);
+  };
   const [makeAppModalOpen, setMakeAppModalOpen] = useState(false);
   const [makeAppModalClosing, setMakeAppModalClosing] = useState(false);
   const [makeAppName, setMakeAppName] = useState("");
@@ -273,6 +299,7 @@ export default function HomePageB() {
                 </div>
                 <button
                   type="button"
+                  onClick={openInviteModal}
                   className="flex h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-[#18181b] px-8 py-3 transition-opacity hover:opacity-90"
                   data-node-id="4940:6973"
                 >
@@ -709,6 +736,192 @@ export default function HomePageB() {
                   >
                     만들기
                     {!isMakeAppValid && <span className="pointer-events-none absolute inset-0 rounded-full bg-white/70" />}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 멤버 초대 모달 (T3, Figma 4988:7276) */}
+          {inviteModalOpen && (
+            <div
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 transition-opacity duration-250"
+              style={{ opacity: inviteModalClosing ? 0 : 1 }}
+              onClick={closeInviteModal}
+            >
+              <div
+                className="flex w-[566px] flex-col items-end gap-6 rounded-2xl bg-white p-6"
+                style={{
+                  boxShadow:
+                    "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)",
+                  backdropFilter: "blur(20px)",
+                  animation: inviteModalClosing
+                    ? "modalScaleOut 0.25s ease-in forwards"
+                    : "modalScaleIn 0.3s ease-out",
+                }}
+                onClick={(e) => e.stopPropagation()}
+                data-node-id="4988:7276"
+              >
+                {/* 제목 */}
+                <p className="w-full text-xl font-semibold leading-[1.3] tracking-[-0.2px] text-[#18181b]">
+                  멤버 초대하기
+                </p>
+
+                {/* 입력 행 + + 버튼 */}
+                <div className="flex w-full flex-col items-center gap-4">
+                  {inviteRows.map((row, idx) => (
+                    <div key={idx} className="flex w-full items-end gap-3">
+                      <div className="flex w-[300px] min-w-[116px] flex-col items-start gap-2">
+                        {idx === 0 && (
+                          <label
+                            htmlFor={`invite-email-${idx}`}
+                            className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#3f3f46]"
+                          >
+                            이메일
+                          </label>
+                        )}
+                        <input
+                          id={`invite-email-${idx}`}
+                          type="email"
+                          value={row.email}
+                          onChange={(e) =>
+                            setInviteRows((prev) =>
+                              prev.map((r, i) =>
+                                i === idx ? { ...r, email: e.target.value } : r
+                              )
+                            )
+                          }
+                          placeholder="이메일 입력"
+                          className="min-h-12 w-full rounded-3xl border border-[#e4e4e7] bg-white px-5 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#5B3D7A] focus:outline-none"
+                        />
+                      </div>
+                      <div className="relative flex flex-1 min-w-[116px] flex-col items-start gap-2">
+                        {idx === 0 && (
+                          <span className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#3f3f46]">
+                            권한
+                          </span>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setOpenInviteRoleIdx(openInviteRoleIdx === idx ? null : idx)
+                          }
+                          className="flex h-12 w-full items-center justify-between rounded-3xl border border-[#e4e4e7] bg-white px-5 text-left transition-colors hover:border-[#d4d4d8]"
+                        >
+                          <span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#18181b]">
+                            {row.role}
+                          </span>
+                          <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            className={`shrink-0 transition-transform duration-200 ${
+                              openInviteRoleIdx === idx ? "rotate-180" : ""
+                            }`}
+                          >
+                            <path
+                              d="M5 7.5L10 12.5L15 7.5"
+                              stroke="#18181b"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </button>
+                        {openInviteRoleIdx === idx && (
+                          <div className="absolute left-0 right-0 top-[calc(100%+4px)] z-10 overflow-hidden rounded-2xl border border-[#e4e4e7] bg-white p-2 shadow-lg">
+                            {(["사용자", "관리자"] as const).map((option) => (
+                              <button
+                                key={option}
+                                type="button"
+                                onClick={() => {
+                                  setInviteRows((prev) =>
+                                    prev.map((r, i) =>
+                                      i === idx ? { ...r, role: option } : r
+                                    )
+                                  );
+                                  setOpenInviteRoleIdx(null);
+                                }}
+                                className={`flex w-full items-center rounded-lg px-3 py-2 text-left text-base font-normal leading-[1.5] tracking-[-0.16px] transition-colors hover:bg-[#f4f4f5] ${
+                                  row.role === option ? "text-[#5B3D7A]" : "text-[#18181b]"
+                                }`}
+                              >
+                                {option}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+
+                  <button
+                    type="button"
+                    onClick={addInviteRow}
+                    disabled={!canAddInviteRow}
+                    aria-label="이메일 행 추가"
+                    className="relative flex size-10 items-center justify-center overflow-hidden rounded-[12px] bg-[rgba(24,24,27,0.03)] transition-colors hover:bg-[rgba(24,24,27,0.06)] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-[rgba(24,24,27,0.03)]"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path
+                        d="M10 4.375v11.25M4.375 10h11.25"
+                        stroke="#18181b"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </button>
+                </div>
+
+                {/* 도메인 helper */}
+                <div
+                  className="flex w-full flex-col items-start gap-2 overflow-hidden rounded-xl bg-[#f4f4f5] p-5"
+                  data-node-id="4988:8184"
+                >
+                  <div className="flex w-full items-start gap-2">
+                    <p className="flex-1 whitespace-pre-wrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#3f3f46]">
+                      구글 워크스페이스 쓰시나요? {"\n"}
+                      명단을 한 번에 불러올 수 있어요!
+                    </p>
+                    <button
+                      type="button"
+                      className="flex h-8 shrink-0 items-center justify-center rounded-full bg-[#18181b] px-5 py-3 transition-opacity hover:opacity-90"
+                    >
+                      <span className="whitespace-nowrap text-sm font-medium leading-[1.5] tracking-[-0.14px] text-white">
+                        파일 올리기
+                      </span>
+                    </button>
+                  </div>
+                  <p className="w-full text-xs leading-[1.3] tracking-[-0.12px] text-[#71717a]">
+                    <span className="font-semibold">디렉토리</span> &gt;{" "}
+                    <span className="font-semibold">사용자</span> &gt;{" "}
+                    <span className="font-semibold">사용자 다운로드</span>
+                    <span>로 받은 파일을 올려주세요</span>
+                  </p>
+                </div>
+
+                {/* 액션 버튼 */}
+                <div className="flex items-start gap-2">
+                  <button
+                    type="button"
+                    onClick={closeInviteModal}
+                    className="flex h-9 items-center justify-center rounded-full bg-[#f6f6f6] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#ececec]"
+                  >
+                    닫기
+                  </button>
+                  <button
+                    type="button"
+                    disabled={!canSendInvite}
+                    onClick={() => {
+                      if (canSendInvite) closeInviteModal();
+                    }}
+                    className="relative flex h-9 items-center justify-center overflow-hidden rounded-full bg-[#5B3D7A] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+                  >
+                    초대하기
+                    {!canSendInvite && (
+                      <span className="pointer-events-none absolute inset-0 rounded-full bg-white/70" />
+                    )}
                   </button>
                 </div>
               </div>
