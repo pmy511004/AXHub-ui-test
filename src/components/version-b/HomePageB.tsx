@@ -772,7 +772,7 @@ export default function HomePageB() {
                   <div className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col gap-4 overflow-y-auto">
                   {inviteRows.map((row, idx) => (
                     <div key={idx} className="flex w-full items-end gap-3">
-                      <div className="flex w-[334px] flex-col items-start gap-2">
+                      <div className="flex flex-1 min-w-0 flex-col items-start gap-2">
                         {idx === 0 && (
                           <label
                             htmlFor={`invite-email-${idx}`}
