@@ -767,8 +767,9 @@ export default function HomePageB() {
                   멤버 초대하기
                 </p>
 
-                {/* 입력 행 + + 버튼 (목록은 max-h 안에서 스크롤) */}
-                <div className="flex w-full min-h-0 flex-1 flex-col items-center gap-4 overflow-y-auto sidebar-scroll">
+                {/* 입력 행 (스크롤) + + 버튼 (항상 노출) */}
+                <div className="flex w-full min-h-0 flex-1 flex-col items-center gap-4">
+                  <div className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col gap-4 overflow-y-auto">
                   {inviteRows.map((row, idx) => (
                     <div key={idx} className="flex w-full items-end gap-3">
                       <div className="flex w-[300px] min-w-[116px] flex-col items-start gap-2">
@@ -855,13 +856,14 @@ export default function HomePageB() {
                       </div>
                     </div>
                   ))}
+                  </div>
 
                   <button
                     type="button"
                     onClick={addInviteRow}
                     disabled={!canAddInviteRow}
                     aria-label="이메일 행 추가"
-                    className="relative flex size-10 items-center justify-center overflow-hidden rounded-[12px] bg-[rgba(24,24,27,0.03)] transition-colors hover:bg-[rgba(24,24,27,0.06)] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-[rgba(24,24,27,0.03)]"
+                    className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-[12px] bg-[rgba(24,24,27,0.03)] transition-colors hover:bg-[rgba(24,24,27,0.06)] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-[rgba(24,24,27,0.03)]"
                   >
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                       <path
