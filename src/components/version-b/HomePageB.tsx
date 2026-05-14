@@ -3,6 +3,27 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import PageSidebar, { type AdminActiveMenu } from "./PageSidebar";
+
+type MemberRole = "관리자" | "사용자";
+type MemberStatus = "활성" | "초대중" | "비활성";
+type Member = {
+  id: string;
+  initials: string;
+  fullName: string;
+  email: string;
+  role: MemberRole;
+  status: MemberStatus;
+  lastAccess: string;
+  avatarColor: string;
+};
+
+const AVATAR_COLORS = ["#5b3d7a", "#0f5fcc", "#f6c205", "#e765be", "#4a78b8"];
+const STATUS_STYLES: Record<MemberStatus, { bg: string; text: string }> = {
+  활성: { bg: "#e7f1fe", text: "#1571f3" },
+  초대중: { bg: "#f6f6f6", text: "#71717a" },
+  비활성: { bg: "#fee8ea", text: "#c90f22" },
+};
+const TODAY = "2026-05-14";
 import NotificationButton from "./NotificationButton";
 import { useDarkMode } from "@/hooks/useDarkMode";
 
@@ -22,10 +43,62 @@ export default function HomePageB() {
   const [teamDescription, setTeamDescription] = useState("");
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
   const [inviteModalClosing, setInviteModalClosing] = useState(false);
-  const [inviteRows, setInviteRows] = useState<Array<{ email: string; role: "사용자" | "관리자" }>>([
+  const [inviteRows, setInviteRows] = useState<Array<{ email: string; role: MemberRole }>>([
     { email: "", role: "사용자" },
   ]);
   const [openInviteRoleIdx, setOpenInviteRoleIdx] = useState<number | null>(null);
+  const [members, setMembers] = useState<Member[]>([
+    {
+      id: "minion",
+      initials: "민영",
+      fullName: "박민영",
+      email: "minion@jocodingax.ai",
+      role: "관리자",
+      status: "활성",
+      lastAccess: "2026-05-13",
+      avatarColor: "#5b3d7a",
+    },
+  ]);
+  const [openMemberRoleId, setOpenMemberRoleId] = useState<string | null>(null);
+  const [openMemberStatusId, setOpenMemberStatusId] = useState<string | null>(null);
+
+  const updateMemberRole = (id: string, role: MemberRole) => {
+    setMembers((prev) => prev.map((m) => (m.id === id ? { ...m, role } : m)));
+    setOpenMemberRoleId(null);
+  };
+  const updateMemberStatus = (id: string, status: MemberStatus) => {
+    setMembers((prev) =>
+      prev.map((m) => {
+        if (m.id !== id) return m;
+        let lastAccess = m.lastAccess;
+        if (status === "초대중") lastAccess = "-";
+        else if (lastAccess === "-") lastAccess = TODAY;
+        return { ...m, status, lastAccess };
+      })
+    );
+    setOpenMemberStatusId(null);
+  };
+  const submitInvite = () => {
+    const validRows = inviteRows.filter((r) => r.email.trim() !== "");
+    if (validRows.length === 0) return;
+    const stamp = Date.now();
+    const newMembers: Member[] = validRows.map((r, i) => {
+      const local = r.email.trim().split("@")[0];
+      return {
+        id: `${stamp}-${i}`,
+        initials: local.slice(0, 2),
+        fullName: local,
+        email: r.email.trim(),
+        role: r.role,
+        status: "초대중",
+        lastAccess: "-",
+        avatarColor:
+          AVATAR_COLORS[(members.length + i) % AVATAR_COLORS.length],
+      };
+    });
+    setMembers((prev) => [...prev, ...newMembers]);
+    closeInviteModal();
+  };
 
   const openInviteModal = () => {
     setInviteRows([{ email: "", role: "사용자" }]);
@@ -324,7 +397,7 @@ export default function HomePageB() {
                       멤버
                     </span>
                     <span className="flex items-center rounded-full bg-[rgba(91,61,122,0.1)] px-2 py-0.5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#5B3D7A]">
-                      1
+                      {members.length}
                     </span>
                   </div>
                   <div className="flex items-center gap-2 px-3 py-2">
@@ -359,41 +432,123 @@ export default function HomePageB() {
                   </div>
                   {/* 바디 */}
                   <div className="flex w-full flex-col items-start justify-center overflow-hidden rounded-lg bg-white" data-node-id="4940:7005">
-                    <div className="relative flex h-14 w-full items-center gap-4 px-4 py-3" data-node-id="4940:7007">
-                      <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-[#e4e4e7] opacity-50" />
-                      <div className="flex flex-1 items-center gap-3">
-                        <div className="flex size-8 items-center justify-center rounded-full bg-[#5B3D7A] p-2">
-                          <span className="whitespace-nowrap text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white">
-                            민영
-                          </span>
+                    {members.map((m) => (
+                      <div key={m.id} className="relative flex h-14 w-full items-center gap-4 px-4 py-3">
+                        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-[#e4e4e7] opacity-50" />
+                        <div className="flex flex-1 items-center gap-3">
+                          <div
+                            className="flex size-8 items-center justify-center rounded-full p-2"
+                            style={{ backgroundColor: m.avatarColor }}
+                          >
+                            <span className="whitespace-nowrap text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white">
+                              {m.initials}
+                            </span>
+                          </div>
+                          <div className="flex flex-col items-start justify-center whitespace-nowrap">
+                            <p className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#3f3f46]">
+                              {m.fullName}
+                            </p>
+                            <p className="text-xs font-normal leading-[1.3] tracking-[-0.12px] text-[#71717a]">
+                              {m.email}
+                            </p>
+                          </div>
                         </div>
-                        <div className="flex flex-col items-start justify-center whitespace-nowrap">
-                          <p className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#3f3f46]">박민영</p>
-                          <p className="text-xs font-normal leading-[1.3] tracking-[-0.12px] text-[#71717a]">minion@jocodingax.ai</p>
+                        {/* 권한 토글 */}
+                        <div className="relative flex flex-1 items-center">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setOpenMemberRoleId(
+                                openMemberRoleId === m.id ? null : m.id
+                              )
+                            }
+                            className="-m-1 flex items-center gap-1 rounded-md p-1 transition-colors hover:bg-[#f4f4f5]"
+                          >
+                            {m.role === "관리자" && (
+                              <Image
+                                src="/icons/version-b/role-shield.svg"
+                                alt=""
+                                width={18}
+                                height={18}
+                              />
+                            )}
+                            <p className="whitespace-nowrap text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#3f3f46]">
+                              {m.role}
+                            </p>
+                          </button>
+                          {openMemberRoleId === m.id && (
+                            <div className="absolute left-0 top-[calc(100%+4px)] z-20 w-[140px] overflow-hidden rounded-lg border border-[#e4e4e7] bg-white p-1 shadow-lg">
+                              {(["관리자", "사용자"] as const).map((option) => (
+                                <button
+                                  key={option}
+                                  type="button"
+                                  onClick={() => updateMemberRole(m.id, option)}
+                                  className={`flex w-full items-center rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-[#f4f4f5] ${
+                                    m.role === option
+                                      ? "font-semibold text-[#5B3D7A]"
+                                      : "font-normal text-[#18181b]"
+                                  }`}
+                                >
+                                  {option}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                        {/* 계정 상태 토글 */}
+                        <div className="relative flex flex-1 items-center">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setOpenMemberStatusId(
+                                openMemberStatusId === m.id ? null : m.id
+                              )
+                            }
+                            className="flex w-[47px] items-center justify-center whitespace-nowrap rounded-full px-2 py-1 text-xs font-semibold leading-[1.3] tracking-[-0.12px] transition-opacity hover:opacity-80"
+                            style={{
+                              backgroundColor: STATUS_STYLES[m.status].bg,
+                              color: STATUS_STYLES[m.status].text,
+                            }}
+                          >
+                            {m.status}
+                          </button>
+                          {openMemberStatusId === m.id && (
+                            <div className="absolute left-0 top-[calc(100%+4px)] z-20 w-[140px] overflow-hidden rounded-lg border border-[#e4e4e7] bg-white p-1 shadow-lg">
+                              {(["활성", "초대중", "비활성"] as const).map((option) => (
+                                <button
+                                  key={option}
+                                  type="button"
+                                  onClick={() =>
+                                    updateMemberStatus(m.id, option)
+                                  }
+                                  className={`flex w-full items-center rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-[#f4f4f5] ${
+                                    m.status === option
+                                      ? "font-semibold text-[#5B3D7A]"
+                                      : "font-normal text-[#18181b]"
+                                  }`}
+                                >
+                                  {option}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex flex-1 items-center">
+                          <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+                            {m.lastAccess}
+                          </p>
+                        </div>
+                        <div className="flex size-7 items-center justify-center">
+                          <Image
+                            src="/icons/version-b/row-chevron-right.svg"
+                            alt=""
+                            width={28}
+                            height={28}
+                            className="-rotate-90"
+                          />
                         </div>
                       </div>
-                      <div className="flex flex-1 items-center gap-1">
-                        <Image src="/icons/version-b/role-shield.svg" alt="" width={18} height={18} />
-                        <p className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#3f3f46]">관리자</p>
-                      </div>
-                      <div className="flex flex-1 items-center">
-                        <span className="flex w-[47px] items-center justify-center whitespace-nowrap rounded-full bg-[#e7f1fe] px-2 py-1 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#1571f3]">
-                          활성
-                        </span>
-                      </div>
-                      <div className="flex flex-1 items-center">
-                        <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">2026-05-13</p>
-                      </div>
-                      <div className="flex size-7 items-center justify-center">
-                        <Image
-                          src="/icons/version-b/row-chevron-right.svg"
-                          alt=""
-                          width={28}
-                          height={28}
-                          className="-rotate-90"
-                        />
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -915,9 +1070,7 @@ export default function HomePageB() {
                   <button
                     type="button"
                     disabled={!canSendInvite}
-                    onClick={() => {
-                      if (canSendInvite) closeInviteModal();
-                    }}
+                    onClick={submitInvite}
                     className="relative flex h-9 items-center justify-center overflow-hidden rounded-full bg-[#5B3D7A] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
                   >
                     초대하기
