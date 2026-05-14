@@ -94,9 +94,9 @@ export default function PageSidebar({ activeMenu, initialMode = "user" }: Props)
       </div>
 
       {/* 하단: 사용자 / 관리자 전환 */}
-      <div className="overflow-hidden bg-[#f6f6f6] px-3 pb-3 pt-2">
-        <div className="flex h-9 items-center rounded-lg bg-[rgba(24,24,27,0.06)] p-0.5">
-          {(["user", "admin"] as const).map((key, i) => {
+      <div className="bg-[#f6f6f6] p-3">
+        <div className="flex w-full items-center gap-[2px] overflow-hidden rounded-full bg-[#e4e4e7] px-2 py-1">
+          {(["user", "admin"] as const).map((key) => {
             const label = key === "user" ? "사용자" : "관리자";
             const isActive = mode === key;
             return (
@@ -104,15 +104,24 @@ export default function PageSidebar({ activeMenu, initialMode = "user" }: Props)
                 key={key}
                 type="button"
                 onClick={() => setMode(key)}
-                className={`flex h-8 flex-1 items-center justify-center rounded-md text-xs font-semibold leading-[1.3] tracking-[-0.12px] transition-colors ${
-                  isActive
-                    ? "bg-white text-[#18181b] shadow-[0px_1px_2px_rgba(0,0,0,0.06)]"
-                    : "text-[#71717a]"
-                }`}
+                className="relative flex flex-1 items-center justify-center px-3 py-2"
                 aria-pressed={isActive}
-                style={i === 0 ? { marginRight: 0 } : undefined}
               >
-                {label}
+                {isActive && (
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-y-0 -left-1 -right-1 rounded-full bg-white"
+                  />
+                )}
+                <span
+                  className={`relative text-xs leading-[1.3] tracking-[-0.12px] ${
+                    isActive
+                      ? "font-semibold text-black"
+                      : "font-medium text-[#71717a]"
+                  }`}
+                >
+                  {label}
+                </span>
               </button>
             );
           })}
