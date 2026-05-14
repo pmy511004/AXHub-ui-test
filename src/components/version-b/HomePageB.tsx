@@ -23,7 +23,6 @@ const STATUS_STYLES: Record<MemberStatus, { bg: string; text: string }> = {
   초대중: { bg: "#f6f6f6", text: "#71717a" },
   비활성: { bg: "#fee8ea", text: "#c90f22" },
 };
-const TODAY = "2026-05-14";
 import NotificationButton from "./NotificationButton";
 import { useDarkMode } from "@/hooks/useDarkMode";
 
@@ -59,25 +58,16 @@ export default function HomePageB() {
       avatarColor: "#5b3d7a",
     },
   ]);
-  const [openMemberRoleId, setOpenMemberRoleId] = useState<string | null>(null);
-  const [openMemberStatusId, setOpenMemberStatusId] = useState<string | null>(null);
+  const [roleFilter, setRoleFilter] = useState<MemberRole | null>(null);
+  const [statusFilter, setStatusFilter] = useState<MemberStatus | null>(null);
+  const [openRoleFilter, setOpenRoleFilter] = useState(false);
+  const [openStatusFilter, setOpenStatusFilter] = useState(false);
 
-  const updateMemberRole = (id: string, role: MemberRole) => {
-    setMembers((prev) => prev.map((m) => (m.id === id ? { ...m, role } : m)));
-    setOpenMemberRoleId(null);
-  };
-  const updateMemberStatus = (id: string, status: MemberStatus) => {
-    setMembers((prev) =>
-      prev.map((m) => {
-        if (m.id !== id) return m;
-        let lastAccess = m.lastAccess;
-        if (status === "초대중") lastAccess = "-";
-        else if (lastAccess === "-") lastAccess = TODAY;
-        return { ...m, status, lastAccess };
-      })
-    );
-    setOpenMemberStatusId(null);
-  };
+  const filteredMembers = members.filter(
+    (m) =>
+      (roleFilter === null || m.role === roleFilter) &&
+      (statusFilter === null || m.status === statusFilter)
+  );
   const submitInvite = () => {
     const validRows = inviteRows.filter((r) => r.email.trim() !== "");
     if (validRows.length === 0) return;
@@ -417,13 +407,103 @@ export default function HomePageB() {
                     <div className="flex flex-1 items-center">
                       <p className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">멤버</p>
                     </div>
-                    <div className="flex flex-1 items-center gap-2">
-                      <p className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">권한</p>
-                      <Image src="/icons/version-b/sort-chevron.svg" alt="" width={18} height={18} />
+                    {/* 권한 필터 */}
+                    <div className="relative flex flex-1 items-center">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setOpenRoleFilter((v) => !v);
+                          setOpenStatusFilter(false);
+                        }}
+                        className="-m-1 flex items-center gap-2 rounded p-1 transition-colors hover:bg-[#ececec]"
+                      >
+                        <p className="whitespace-nowrap text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">
+                          {roleFilter ?? "권한"}
+                        </p>
+                        <Image
+                          src="/icons/version-b/sort-chevron.svg"
+                          alt=""
+                          width={18}
+                          height={18}
+                          className={`transition-transform duration-200 ${openRoleFilter ? "rotate-180" : ""}`}
+                        />
+                      </button>
+                      {openRoleFilter && (
+                        <>
+                          <div
+                            className="fixed inset-0 z-10"
+                            onClick={() => setOpenRoleFilter(false)}
+                          />
+                          <div className="absolute left-0 top-[calc(100%+4px)] z-20 w-[140px] overflow-hidden rounded-lg border border-[#e4e4e7] bg-white p-1 shadow-lg">
+                            {([null, "관리자", "사용자"] as const).map((option) => (
+                              <button
+                                key={option ?? "all"}
+                                type="button"
+                                onClick={() => {
+                                  setRoleFilter(option);
+                                  setOpenRoleFilter(false);
+                                }}
+                                className={`flex w-full items-center rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-[#f4f4f5] ${
+                                  roleFilter === option
+                                    ? "font-semibold text-[#5B3D7A]"
+                                    : "font-normal text-[#18181b]"
+                                }`}
+                              >
+                                {option ?? "전체"}
+                              </button>
+                            ))}
+                          </div>
+                        </>
+                      )}
                     </div>
-                    <div className="flex flex-1 items-center gap-2">
-                      <p className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">계정 상태</p>
-                      <Image src="/icons/version-b/sort-chevron.svg" alt="" width={18} height={18} />
+                    {/* 계정 상태 필터 */}
+                    <div className="relative flex flex-1 items-center">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setOpenStatusFilter((v) => !v);
+                          setOpenRoleFilter(false);
+                        }}
+                        className="-m-1 flex items-center gap-2 rounded p-1 transition-colors hover:bg-[#ececec]"
+                      >
+                        <p className="whitespace-nowrap text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">
+                          {statusFilter ?? "계정 상태"}
+                        </p>
+                        <Image
+                          src="/icons/version-b/sort-chevron.svg"
+                          alt=""
+                          width={18}
+                          height={18}
+                          className={`transition-transform duration-200 ${openStatusFilter ? "rotate-180" : ""}`}
+                        />
+                      </button>
+                      {openStatusFilter && (
+                        <>
+                          <div
+                            className="fixed inset-0 z-10"
+                            onClick={() => setOpenStatusFilter(false)}
+                          />
+                          <div className="absolute left-0 top-[calc(100%+4px)] z-20 w-[140px] overflow-hidden rounded-lg border border-[#e4e4e7] bg-white p-1 shadow-lg">
+                            {([null, "활성", "초대중", "비활성"] as const).map((option) => (
+                              <button
+                                key={option ?? "all"}
+                                type="button"
+                                onClick={() => {
+                                  setStatusFilter(option);
+                                  setOpenStatusFilter(false);
+                                }}
+                                className={`flex w-full items-center rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-[#f4f4f5] ${
+                                  statusFilter === option
+                                    ? "font-semibold text-[#5B3D7A]"
+                                    : "font-normal text-[#18181b]"
+                                }`}
+                              >
+                                {option ?? "전체"}
+                              </button>
+                            ))}
+                          </div>
+                        </>
+                      )}
                     </div>
                     <div className="flex flex-1 items-center">
                       <p className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">마지막 접속일</p>
@@ -432,7 +512,7 @@ export default function HomePageB() {
                   </div>
                   {/* 바디 */}
                   <div className="flex w-full flex-col items-start justify-center overflow-hidden rounded-lg bg-white" data-node-id="4940:7005">
-                    {members.map((m) => (
+                    {filteredMembers.map((m) => (
                       <div key={m.id} className="relative flex h-14 w-full items-center gap-4 px-4 py-3">
                         <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-[#e4e4e7] opacity-50" />
                         <div className="flex flex-1 items-center gap-3">
@@ -453,85 +533,31 @@ export default function HomePageB() {
                             </p>
                           </div>
                         </div>
-                        {/* 권한 토글 */}
-                        <div className="relative flex flex-1 items-center">
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setOpenMemberRoleId(
-                                openMemberRoleId === m.id ? null : m.id
-                              )
-                            }
-                            className="-m-1 flex items-center gap-1 rounded-md p-1 transition-colors hover:bg-[#f4f4f5]"
-                          >
-                            {m.role === "관리자" && (
-                              <Image
-                                src="/icons/version-b/role-shield.svg"
-                                alt=""
-                                width={18}
-                                height={18}
-                              />
-                            )}
-                            <p className="whitespace-nowrap text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#3f3f46]">
-                              {m.role}
-                            </p>
-                          </button>
-                          {openMemberRoleId === m.id && (
-                            <div className="absolute left-0 top-[calc(100%+4px)] z-20 w-[140px] overflow-hidden rounded-lg border border-[#e4e4e7] bg-white p-1 shadow-lg">
-                              {(["관리자", "사용자"] as const).map((option) => (
-                                <button
-                                  key={option}
-                                  type="button"
-                                  onClick={() => updateMemberRole(m.id, option)}
-                                  className={`flex w-full items-center rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-[#f4f4f5] ${
-                                    m.role === option
-                                      ? "font-semibold text-[#5B3D7A]"
-                                      : "font-normal text-[#18181b]"
-                                  }`}
-                                >
-                                  {option}
-                                </button>
-                              ))}
-                            </div>
+                        {/* 권한 */}
+                        <div className="flex flex-1 items-center gap-1">
+                          {m.role === "관리자" && (
+                            <Image
+                              src="/icons/version-b/role-shield.svg"
+                              alt=""
+                              width={18}
+                              height={18}
+                            />
                           )}
+                          <p className="whitespace-nowrap text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#3f3f46]">
+                            {m.role}
+                          </p>
                         </div>
-                        {/* 계정 상태 토글 */}
-                        <div className="relative flex flex-1 items-center">
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setOpenMemberStatusId(
-                                openMemberStatusId === m.id ? null : m.id
-                              )
-                            }
-                            className="flex w-[47px] items-center justify-center whitespace-nowrap rounded-full px-2 py-1 text-xs font-semibold leading-[1.3] tracking-[-0.12px] transition-opacity hover:opacity-80"
+                        {/* 계정 상태 */}
+                        <div className="flex flex-1 items-center">
+                          <span
+                            className="flex w-[47px] items-center justify-center whitespace-nowrap rounded-full px-2 py-1 text-xs font-semibold leading-[1.3] tracking-[-0.12px]"
                             style={{
                               backgroundColor: STATUS_STYLES[m.status].bg,
                               color: STATUS_STYLES[m.status].text,
                             }}
                           >
                             {m.status}
-                          </button>
-                          {openMemberStatusId === m.id && (
-                            <div className="absolute left-0 top-[calc(100%+4px)] z-20 w-[140px] overflow-hidden rounded-lg border border-[#e4e4e7] bg-white p-1 shadow-lg">
-                              {(["활성", "초대중", "비활성"] as const).map((option) => (
-                                <button
-                                  key={option}
-                                  type="button"
-                                  onClick={() =>
-                                    updateMemberStatus(m.id, option)
-                                  }
-                                  className={`flex w-full items-center rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-[#f4f4f5] ${
-                                    m.status === option
-                                      ? "font-semibold text-[#5B3D7A]"
-                                      : "font-normal text-[#18181b]"
-                                  }`}
-                                >
-                                  {option}
-                                </button>
-                              ))}
-                            </div>
-                          )}
+                          </span>
                         </div>
                         <div className="flex flex-1 items-center">
                           <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">
