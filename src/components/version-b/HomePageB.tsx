@@ -158,7 +158,7 @@ export default function HomePageB() {
               data-node-id="4910:4893"
             >
               {/* 배경 그라데이션 이미지 */}
-              <div className="pointer-events-none absolute bottom-0 left-1/2 h-[320px] w-[997px] max-w-none -translate-x-1/2 opacity-50">
+              <div className="pointer-events-none absolute bottom-0 left-1/2 h-[320px] w-[997px] max-w-none -translate-x-1/2 opacity-80">
                 <Image
                   src="/icons/version-b/admin-bg.png"
                   alt=""
@@ -195,7 +195,7 @@ export default function HomePageB() {
                   </div>
                   <button
                     type="button"
-                    className="flex h-8 items-center justify-center rounded-full border border-[#e4e4e7] bg-white px-5 py-3 text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#f9f9f9]"
+                    className="flex h-8 items-center justify-center whitespace-nowrap rounded-full border border-[#e4e4e7] bg-white px-5 py-3 text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#f9f9f9]"
                   >
                     이미지 업로드
                   </button>
