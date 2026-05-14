@@ -27,18 +27,20 @@ const menuSection: Item[] = [
 
 export default function PageSidebar({ activeMenu, initialMode = "user" }: Props) {
   const [mode, setMode] = useState<ViewMode>(initialMode);
-  const tabRefs = useRef<Record<ViewMode, HTMLButtonElement | null>>({
-    user: null,
-    admin: null,
-  });
-  const [pillStyle, setPillStyle] = useState({ left: 0, width: 0 });
+  const toggleRef = useRef<HTMLDivElement | null>(null);
+  const [toggleWidth, setToggleWidth] = useState(0);
   const [mounted, setMounted] = useState(false);
 
   useLayoutEffect(() => {
-    const el = tabRefs.current[mode];
+    const el = toggleRef.current;
     if (!el) return;
-    setPillStyle({ left: el.offsetLeft, width: el.offsetWidth });
-  }, [mode]);
+    setToggleWidth(el.offsetWidth);
+    const observer = new ResizeObserver(() => {
+      setToggleWidth(el.offsetWidth);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => setMounted(true));
@@ -112,13 +114,16 @@ export default function PageSidebar({ activeMenu, initialMode = "user" }: Props)
 
       {/* 하단: 사용자 / 관리자 전환 */}
       <div className="bg-[#f6f6f6] p-3">
-        <div className="relative flex w-full items-center gap-[2px] overflow-hidden rounded-full bg-[#e4e4e7] px-2 py-1">
+        <div
+          ref={toggleRef}
+          className="relative flex w-full items-center gap-[2px] overflow-hidden rounded-full bg-[#e4e4e7] px-2 py-1"
+        >
           <span
             aria-hidden
             className="pointer-events-none absolute inset-y-1 rounded-full bg-white"
             style={{
-              width: pillStyle.width + 8,
-              transform: `translateX(${pillStyle.left - 4}px)`,
+              width: toggleWidth / 2,
+              transform: `translateX(${mode === "user" ? 0 : toggleWidth / 2}px)`,
               transition: mounted
                 ? "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
                 : "none",
@@ -130,9 +135,6 @@ export default function PageSidebar({ activeMenu, initialMode = "user" }: Props)
             return (
               <button
                 key={key}
-                ref={(el) => {
-                  tabRefs.current[key] = el;
-                }}
                 type="button"
                 onClick={() => setMode(key)}
                 className="relative flex flex-1 items-center justify-center px-3 py-2"
