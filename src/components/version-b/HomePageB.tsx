@@ -772,7 +772,7 @@ export default function HomePageB() {
                   <div className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col gap-4 overflow-y-auto">
                   {inviteRows.map((row, idx) => (
                     <div key={idx} className="flex w-full items-end gap-3">
-                      <div className="flex w-[300px] min-w-[116px] flex-col items-start gap-2">
+                      <div className="flex w-[334px] flex-col items-start gap-2">
                         {idx === 0 && (
                           <label
                             htmlFor={`invite-email-${idx}`}
@@ -796,7 +796,7 @@ export default function HomePageB() {
                           className="min-h-12 w-full rounded-3xl border border-[#e4e4e7] bg-white px-5 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#5B3D7A] focus:outline-none"
                         />
                       </div>
-                      <div className="relative flex flex-1 min-w-[116px] flex-col items-start gap-2">
+                      <div className="relative flex w-[116px] flex-col items-start gap-2">
                         {idx === 0 && (
                           <span className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#3f3f46]">
                             권한
