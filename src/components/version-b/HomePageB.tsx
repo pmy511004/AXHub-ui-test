@@ -750,7 +750,7 @@ export default function HomePageB() {
               onClick={closeInviteModal}
             >
               <div
-                className="flex w-[566px] flex-col items-end gap-6 rounded-2xl bg-white p-6"
+                className="flex max-h-[90vh] w-[566px] flex-col items-end gap-6 overflow-hidden rounded-2xl bg-white p-6"
                 style={{
                   boxShadow:
                     "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)",
@@ -763,12 +763,12 @@ export default function HomePageB() {
                 data-node-id="4988:7276"
               >
                 {/* 제목 */}
-                <p className="w-full text-xl font-semibold leading-[1.3] tracking-[-0.2px] text-[#18181b]">
+                <p className="w-full shrink-0 text-xl font-semibold leading-[1.3] tracking-[-0.2px] text-[#18181b]">
                   멤버 초대하기
                 </p>
 
-                {/* 입력 행 + + 버튼 */}
-                <div className="flex w-full flex-col items-center gap-4">
+                {/* 입력 행 + + 버튼 (목록은 max-h 안에서 스크롤) */}
+                <div className="flex w-full min-h-0 flex-1 flex-col items-center gap-4 overflow-y-auto sidebar-scroll">
                   {inviteRows.map((row, idx) => (
                     <div key={idx} className="flex w-full items-end gap-3">
                       <div className="flex w-[300px] min-w-[116px] flex-col items-start gap-2">
@@ -876,7 +876,7 @@ export default function HomePageB() {
 
                 {/* 도메인 helper */}
                 <div
-                  className="flex w-full flex-col items-start gap-2 overflow-hidden rounded-xl bg-[#f4f4f5] p-5"
+                  className="flex w-full shrink-0 flex-col items-start gap-2 overflow-hidden rounded-xl bg-[#f4f4f5] p-5"
                   data-node-id="4988:8184"
                 >
                   <div className="flex w-full items-start gap-2">
@@ -902,7 +902,7 @@ export default function HomePageB() {
                 </div>
 
                 {/* 액션 버튼 */}
-                <div className="flex items-start gap-2">
+                <div className="flex shrink-0 items-start gap-2">
                   <button
                     type="button"
                     onClick={closeInviteModal}
