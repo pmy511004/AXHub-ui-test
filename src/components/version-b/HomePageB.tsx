@@ -93,7 +93,7 @@ export default function HomePageB() {
                 aria-label="프로필"
                 data-node-id="4940:6970"
               >
-                <span className="text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white">
+                <span className="whitespace-nowrap text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white">
                   민영
                 </span>
               </button>

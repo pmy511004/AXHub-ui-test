@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -27,6 +27,17 @@ const menuSection: Item[] = [
 
 export default function PageSidebar({ activeMenu, initialMode = "user" }: Props) {
   const [mode, setMode] = useState<ViewMode>(initialMode);
+  const tabRefs = useRef<Record<ViewMode, HTMLButtonElement | null>>({
+    user: null,
+    admin: null,
+  });
+  const [pillStyle, setPillStyle] = useState({ left: 0, width: 0 });
+
+  useLayoutEffect(() => {
+    const el = tabRefs.current[mode];
+    if (!el) return;
+    setPillStyle({ left: el.offsetLeft, width: el.offsetWidth });
+  }, [mode]);
   const renderItem = (item: Item) => {
     const isActive = activeMenu === item.label;
     return (
@@ -95,26 +106,33 @@ export default function PageSidebar({ activeMenu, initialMode = "user" }: Props)
 
       {/* 하단: 사용자 / 관리자 전환 */}
       <div className="bg-[#f6f6f6] p-3">
-        <div className="flex w-full items-center gap-[2px] overflow-hidden rounded-full bg-[#e4e4e7] px-2 py-1">
+        <div className="relative flex w-full items-center gap-[2px] rounded-full bg-[#e4e4e7] px-2 py-1">
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-y-1 rounded-full bg-white"
+            style={{
+              width: pillStyle.width + 8,
+              transform: `translateX(${pillStyle.left - 4}px)`,
+              transition:
+                "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+            }}
+          />
           {(["user", "admin"] as const).map((key) => {
             const label = key === "user" ? "사용자" : "관리자";
             const isActive = mode === key;
             return (
               <button
                 key={key}
+                ref={(el) => {
+                  tabRefs.current[key] = el;
+                }}
                 type="button"
                 onClick={() => setMode(key)}
                 className="relative flex flex-1 items-center justify-center px-3 py-2"
                 aria-pressed={isActive}
               >
-                {isActive && (
-                  <span
-                    aria-hidden
-                    className="pointer-events-none absolute inset-y-0 -left-1 -right-1 rounded-full bg-white"
-                  />
-                )}
                 <span
-                  className={`relative text-xs leading-[1.3] tracking-[-0.12px] ${
+                  className={`relative text-xs leading-[1.3] tracking-[-0.12px] transition-colors duration-200 ${
                     isActive
                       ? "font-semibold text-black"
                       : "font-medium text-[#71717a]"
