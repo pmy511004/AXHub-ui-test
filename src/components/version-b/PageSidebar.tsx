@@ -4,29 +4,53 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-type ActiveMenu = "홈" | "디스커버리" | "신청 내역" | "앱 만들기" | "배포 신청";
+type ActiveMenu =
+  | "홈"
+  | "디스커버리"
+  | "신청 내역"
+  | "앱 만들기"
+  | "배포 신청"
+  | "대시보드"
+  | "멤버";
 type ViewMode = "user" | "admin";
 
 interface Props {
   activeMenu: ActiveMenu;
   initialMode?: ViewMode;
+  mode?: ViewMode;
+  onModeChange?: (mode: ViewMode) => void;
 }
 
 type Item = { label: ActiveMenu; icon: string; href: string; badge?: number };
 
-const topItems: Item[] = [
+const userTopItems: Item[] = [
   { label: "홈", icon: "/icons/version-b/snb-home.svg", href: "/" },
   { label: "디스커버리", icon: "/icons/version-b/snb-discovery.svg", href: "/discovery" },
   { label: "신청 내역", icon: "/icons/version-b/snb-request.svg", href: "#", badge: 2 },
 ];
 
-const menuSection: Item[] = [
+const userMenuSection: Item[] = [
   { label: "앱 만들기", icon: "/icons/version-b/snb-app.svg", href: "/make" },
   { label: "배포 신청", icon: "/icons/version-b/snb-app.svg", href: "/admin" },
 ];
 
-export default function PageSidebar({ activeMenu, initialMode = "user" }: Props) {
-  const [mode, setMode] = useState<ViewMode>(initialMode);
+const adminItems: Item[] = [
+  { label: "대시보드", icon: "/icons/version-b/snb-dashboard.svg", href: "#" },
+  { label: "멤버", icon: "/icons/version-b/snb-member.svg", href: "#" },
+];
+
+export default function PageSidebar({
+  activeMenu,
+  initialMode = "user",
+  mode: modeProp,
+  onModeChange,
+}: Props) {
+  const [internalMode, setInternalMode] = useState<ViewMode>(initialMode);
+  const mode = modeProp ?? internalMode;
+  const setMode = (next: ViewMode) => {
+    if (modeProp === undefined) setInternalMode(next);
+    onModeChange?.(next);
+  };
   const renderItem = (item: Item) => {
     const isActive = activeMenu === item.label;
     return (
@@ -80,16 +104,22 @@ export default function PageSidebar({ activeMenu, initialMode = "user" }: Props)
       {/* 본문 */}
       <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-[#f6f6f6]">
         <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 py-2">
-          {topItems.map(renderItem)}
+          {mode === "admin" ? (
+            adminItems.map(renderItem)
+          ) : (
+            <>
+              {userTopItems.map(renderItem)}
 
-          {/* 섹션 헤더: 메뉴 */}
-          <div className="flex w-full items-center pt-4 px-3">
-            <span className="whitespace-nowrap text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#71717a]">
-              메뉴
-            </span>
-          </div>
+              {/* 섹션 헤더: 메뉴 */}
+              <div className="flex w-full items-center pt-4 px-3">
+                <span className="whitespace-nowrap text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#71717a]">
+                  메뉴
+                </span>
+              </div>
 
-          {menuSection.map(renderItem)}
+              {userMenuSection.map(renderItem)}
+            </>
+          )}
         </nav>
       </div>
 

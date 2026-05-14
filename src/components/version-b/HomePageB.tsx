@@ -16,6 +16,9 @@ export default function HomePageB() {
   const [guideDirection, setGuideDirection] = useState<"forward" | "back">("forward");
   const [profileOpen, setProfileOpen] = useState(false);
   const [darkMode] = useDarkMode();
+  const [sidebarMode, setSidebarMode] = useState<"user" | "admin">("user");
+  const [teamName, setTeamName] = useState("조코딩AX파트너스");
+  const [teamDescription, setTeamDescription] = useState("");
   const [makeAppModalOpen, setMakeAppModalOpen] = useState(false);
   const [makeAppModalClosing, setMakeAppModalClosing] = useState(false);
   const [makeAppName, setMakeAppName] = useState("");
@@ -54,7 +57,11 @@ export default function HomePageB() {
       } as React.CSSProperties}
     >
       {/* L. Sidebar */}
-      <PageSidebar activeMenu="홈" />
+      <PageSidebar
+        activeMenu={sidebarMode === "admin" ? "대시보드" : "홈"}
+        mode={sidebarMode}
+        onModeChange={setSidebarMode}
+      />
 
       {/* R. Header + Main */}
       <div className="relative flex h-full min-w-0 flex-1 flex-col overflow-hidden bg-white">
@@ -68,7 +75,7 @@ export default function HomePageB() {
               className="px-1 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]"
               data-node-id="4940:6705"
             >
-              홈
+              {sidebarMode === "admin" ? "대시보드" : "홈"}
             </span>
           </div>
           <div className="flex h-full items-center gap-3">
@@ -144,7 +151,104 @@ export default function HomePageB() {
 
         {/* Main scrollable */}
         <div className="relative flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden bg-white">
-          {viewVersion === "first-time" ? (
+          {sidebarMode === "admin" ? (
+            /* T1. 테넌트 설정 (Figma 4910:4830) */
+            <div
+              className="relative flex flex-1 flex-col items-center justify-center gap-[60px] overflow-hidden px-14 pb-[120px] pt-10"
+              data-node-id="4910:4893"
+            >
+              {/* 배경 그라데이션 이미지 */}
+              <div className="pointer-events-none absolute bottom-0 left-1/2 h-[320px] w-[997px] max-w-none -translate-x-1/2 opacity-50">
+                <Image
+                  src="/icons/version-b/admin-bg.png"
+                  alt=""
+                  fill
+                  sizes="997px"
+                  className="object-cover object-top"
+                  priority
+                />
+              </div>
+
+              {/* 히어로 */}
+              <div className="relative z-10 flex w-[556px] flex-col items-center gap-3" data-node-id="4940:6106">
+                <div className="flex items-start justify-center gap-2 whitespace-nowrap">
+                  <p className="text-[40px] font-bold leading-[1.2] text-[#18181b]">팀 허브를 열고</p>
+                  <p className="text-[40px] font-bold leading-[1.2] text-[#a1a1aa]">동료들을 초대하세요</p>
+                </div>
+                <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">
+                  나중에 설정해도 괜찮아요
+                </p>
+              </div>
+
+              {/* 폼: 이미지 업로드 + 입력 필드 */}
+              <div className="relative z-10 flex w-[556px] items-center gap-10" data-node-id="4940:6107">
+                {/* 이미지 업로드 */}
+                <div className="flex min-w-[116px] flex-col items-start justify-center gap-2" data-node-id="4940:6064">
+                  <div className="relative size-[116px] overflow-hidden rounded-2xl bg-[#f6f6f6]">
+                    <Image
+                      src="/icons/version-b/team-building-large.svg"
+                      alt=""
+                      width={80}
+                      height={80}
+                      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    className="flex h-8 items-center justify-center rounded-full border border-[#e4e4e7] bg-white px-5 py-3 text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#f9f9f9]"
+                  >
+                    이미지 업로드
+                  </button>
+                </div>
+
+                {/* 입력 필드들 */}
+                <div className="flex flex-col gap-5" data-node-id="4940:6136">
+                  <div className="flex w-[400px] flex-col justify-center gap-2" data-node-id="4940:6108">
+                    <label htmlFor="team-name" className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#3f3f46]">
+                      팀 이름
+                    </label>
+                    <input
+                      id="team-name"
+                      type="text"
+                      value={teamName}
+                      onChange={(e) => setTeamName(e.target.value)}
+                      className="min-h-12 w-full rounded-3xl border border-[#e4e4e7] bg-white px-5 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#5B3D7A] focus:outline-none"
+                    />
+                  </div>
+                  <div className="flex w-[400px] flex-col justify-center gap-2" data-node-id="4940:6085">
+                    <label htmlFor="team-desc" className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#3f3f46]">
+                      팀 설명
+                    </label>
+                    <textarea
+                      id="team-desc"
+                      value={teamDescription}
+                      onChange={(e) => setTeamDescription(e.target.value)}
+                      placeholder="팀에 대해 짧게 소개해 주세요"
+                      rows={2}
+                      className="min-h-12 w-full resize-none rounded-3xl border border-[#e4e4e7] bg-white px-5 py-3 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#5B3D7A] focus:outline-none"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* CTA */}
+              <div className="relative z-10 flex w-[556px] items-center justify-center" data-node-id="4940:6154">
+                <button
+                  type="button"
+                  className="flex h-12 items-center justify-center gap-2 rounded-full bg-[#18181b] px-8 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-white transition-opacity hover:opacity-90"
+                  data-node-id="4940:6155"
+                >
+                  동료 초대하기
+                  <Image
+                    src="/icons/version-b/btn-arrow-right.svg"
+                    alt=""
+                    width={16}
+                    height={16}
+                  />
+                </button>
+              </div>
+            </div>
+          ) : viewVersion === "first-time" ? (
             /* 최초접속 버전 */
             <div className="relative flex min-h-full w-full flex-1 items-center justify-center overflow-hidden px-10 py-10">
               {/* 배경 이미지 (하단 중앙) */}
@@ -331,7 +435,8 @@ export default function HomePageB() {
           </div>
           )}
 
-          {/* 버전 토글 (우측 하단 플로팅) */}
+          {/* 버전 토글 (우측 하단 플로팅, user 모드에서만) */}
+          {sidebarMode === "user" && (
           <div className="fixed bottom-6 right-6 z-50 flex items-center gap-1 rounded-full border border-[#e4e4e7] bg-white p-1" style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px 14px 28px rgba(0,0,0,0.04)" }}>
             <button
               type="button"
@@ -348,6 +453,7 @@ export default function HomePageB() {
               사용 중
             </button>
           </div>
+          )}
 
           {/* 앱 만들기 모달 */}
           {makeAppModalOpen && (
