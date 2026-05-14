@@ -76,14 +76,12 @@ export default function HomePageB() {
           data-node-id="4940:6702"
         >
           <div className="flex items-center" data-node-id="4940:6703">
-            {(sidebarMode === "user" || adminMenu === "대시보드") && (
-              <span
-                className="px-1 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]"
-                data-node-id="4940:6705"
-              >
-                {sidebarMode === "admin" ? "대시보드" : "홈"}
-              </span>
-            )}
+            <span
+              className="px-1 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]"
+              data-node-id="4940:6705"
+            >
+              {sidebarMode === "admin" ? adminMenu : "홈"}
+            </span>
           </div>
           <div className="flex h-full items-center gap-3">
             <button
@@ -382,6 +380,7 @@ export default function HomePageB() {
                 </p>
                 <button
                   type="button"
+                  onClick={() => setAdminMenu("환경설정")}
                   className="flex h-12 items-center justify-center gap-2 rounded-full bg-[#f6f6f6] px-6 py-3 transition-colors hover:bg-[#ececec]"
                   data-node-id="4988:8155"
                 >
