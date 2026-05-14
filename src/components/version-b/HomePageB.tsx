@@ -195,13 +195,17 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
   const isMakeAppValid = makeAppName.trim() !== "" && makeAppCategory !== "";
 
   useEffect(() => {
+    if (sidebarMode === "admin") {
+      setGuideModalOpen(false);
+      return;
+    }
     if (viewVersion === "first-time") {
       setGuideModalStep("os-select");
       setGuideModalOpen(true);
     } else {
       setGuideModalOpen(false);
     }
-  }, [viewVersion]);
+  }, [viewVersion, sidebarMode]);
   const closeGuideModal = () => {
     setGuideModalClosing(true);
     setTimeout(() => { setGuideModalOpen(false); setGuideModalClosing(false); setGuideModalStep("os-select"); }, 250);
