@@ -931,7 +931,7 @@ export default function HomePageB() {
               onClick={closeInviteModal}
             >
               <div
-                className="flex max-h-[90vh] w-[566px] flex-col items-end gap-6 overflow-hidden rounded-2xl bg-white p-6"
+                className="flex max-h-[80vh] w-[566px] flex-col items-end gap-6 overflow-hidden rounded-2xl bg-white p-6"
                 style={{
                   boxShadow:
                     "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)",
