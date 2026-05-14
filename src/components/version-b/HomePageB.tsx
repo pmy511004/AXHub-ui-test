@@ -1625,7 +1625,9 @@ export default function HomePageB() {
                 type="button"
                 onClick={onDeactivateClick}
                 className="flex h-12 w-full items-center justify-center rounded-full bg-[#f6f6f6] px-6 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] transition-colors hover:bg-[#ececec]"
-                style={{ color: "#ef1026" }}
+                style={{
+                  color: detailMember.status === "비활성" ? "#1571F3" : "#ef1026",
+                }}
               >
                 {detailMember.status === "비활성"
                   ? "계정 활성화"
