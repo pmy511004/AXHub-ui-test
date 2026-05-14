@@ -62,12 +62,47 @@ export default function HomePageB() {
   const [statusFilter, setStatusFilter] = useState<MemberStatus | null>(null);
   const [openRoleFilter, setOpenRoleFilter] = useState(false);
   const [openStatusFilter, setOpenStatusFilter] = useState(false);
+  const [detailMemberId, setDetailMemberId] = useState<string | null>(null);
+  const [detailDraftRole, setDetailDraftRole] = useState<MemberRole>("사용자");
+  const [detailRoleOpen, setDetailRoleOpen] = useState(false);
 
   const filteredMembers = members.filter(
     (m) =>
       (roleFilter === null || m.role === roleFilter) &&
       (statusFilter === null || m.status === statusFilter)
   );
+  const detailMember = members.find((m) => m.id === detailMemberId) ?? null;
+
+  const openMemberDetail = (m: Member) => {
+    setDetailMemberId(m.id);
+    setDetailDraftRole(m.role);
+    setDetailRoleOpen(false);
+  };
+  const closeMemberDetail = () => {
+    setDetailMemberId(null);
+    setDetailRoleOpen(false);
+  };
+  const saveMemberDetail = () => {
+    if (!detailMember) return;
+    setMembers((prev) =>
+      prev.map((m) =>
+        m.id === detailMember.id ? { ...m, role: detailDraftRole } : m
+      )
+    );
+    closeMemberDetail();
+  };
+  const toggleMemberActive = () => {
+    if (!detailMember) return;
+    const next: MemberStatus = detailMember.status === "비활성" ? "활성" : "비활성";
+    setMembers((prev) =>
+      prev.map((m) => {
+        if (m.id !== detailMember.id) return m;
+        const lastAccess =
+          next === "활성" && m.lastAccess === "-" ? "2026-05-14" : m.lastAccess;
+        return { ...m, status: next, lastAccess };
+      })
+    );
+  };
   const submitInvite = () => {
     const validRows = inviteRows.filter((r) => r.email.trim() !== "");
     if (validRows.length === 0) return;
@@ -513,7 +548,21 @@ export default function HomePageB() {
                   {/* 바디 */}
                   <div className="flex w-full flex-col items-start justify-center overflow-hidden rounded-lg bg-white" data-node-id="4940:7005">
                     {filteredMembers.map((m) => (
-                      <div key={m.id} className="relative flex h-14 w-full items-center gap-4 px-4 py-3">
+                      <div
+                        key={m.id}
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => openMemberDetail(m)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            openMemberDetail(m);
+                          }
+                        }}
+                        className={`relative flex h-14 w-full cursor-pointer items-center gap-4 px-4 py-3 transition-colors ${
+                          detailMemberId === m.id ? "bg-[#f9f9f9]" : "hover:bg-[#fafafa]"
+                        }`}
+                      >
                         <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-[#e4e4e7] opacity-50" />
                         <div className="flex flex-1 items-center gap-3">
                           <div
@@ -1337,6 +1386,163 @@ export default function HomePageB() {
           )}
 
         </div>
+
+        {/* 멤버 상세 사이드 패널 (Figma 4988:7843) */}
+        {detailMember && (
+          <div
+            className="absolute right-0 top-0 z-30 flex h-full w-[350px] flex-col items-end gap-6 bg-white p-6"
+            style={{ boxShadow: "-1px 0 5px rgba(0,0,0,0.1)" }}
+            data-node-id="4988:7843"
+          >
+            {/* 헤더 */}
+            <div className="flex w-full items-start gap-6">
+              <div className="flex flex-1 items-center gap-2">
+                <div
+                  className="flex size-8 items-center justify-center rounded-full p-2"
+                  style={{ backgroundColor: detailMember.avatarColor }}
+                >
+                  <span className="whitespace-nowrap text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white">
+                    {detailMember.initials}
+                  </span>
+                </div>
+                <p className="flex-1 truncate text-2xl font-bold leading-[1.2] text-[#18181b]">
+                  {detailMember.fullName}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={closeMemberDetail}
+                aria-label="닫기"
+                className="flex size-6 items-center justify-center"
+              >
+                <Image
+                  src="/icons/version-b/close-icon.svg"
+                  alt=""
+                  width={24}
+                  height={24}
+                />
+              </button>
+            </div>
+
+            {/* 디테일 */}
+            <div className="flex w-full flex-1 flex-col gap-6 py-5">
+              <div className="flex w-full items-center gap-6">
+                <p className="w-[100px] shrink-0 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">
+                  이메일
+                </p>
+                <p className="whitespace-nowrap text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#18181b]">
+                  {detailMember.email}
+                </p>
+              </div>
+
+              <div className="flex w-full items-center gap-6">
+                <p className="w-[100px] shrink-0 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">
+                  권한
+                </p>
+                <div className="relative flex-1">
+                  <button
+                    type="button"
+                    onClick={() => setDetailRoleOpen((v) => !v)}
+                    className="flex h-12 w-full items-center justify-between rounded-3xl border border-[#e4e4e7] bg-white px-5 transition-colors hover:border-[#d4d4d8]"
+                  >
+                    <span className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#18181b]">
+                      {detailDraftRole}
+                    </span>
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      className={`shrink-0 transition-transform duration-200 ${
+                        detailRoleOpen ? "rotate-180" : ""
+                      }`}
+                    >
+                      <path
+                        d="M5 7.5L10 12.5L15 7.5"
+                        stroke="#18181b"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </button>
+                  {detailRoleOpen && (
+                    <>
+                      <div
+                        className="fixed inset-0 z-10"
+                        onClick={() => setDetailRoleOpen(false)}
+                      />
+                      <div className="absolute left-0 right-0 top-[calc(100%+4px)] z-20 overflow-hidden rounded-2xl border border-[#e4e4e7] bg-white p-2 shadow-lg">
+                        {(["관리자", "사용자"] as const).map((option) => (
+                          <button
+                            key={option}
+                            type="button"
+                            onClick={() => {
+                              setDetailDraftRole(option);
+                              setDetailRoleOpen(false);
+                            }}
+                            className={`flex w-full items-center rounded-lg px-3 py-2 text-left text-base transition-colors hover:bg-[#f4f4f5] ${
+                              detailDraftRole === option
+                                ? "font-semibold text-[#5B3D7A]"
+                                : "font-normal text-[#18181b]"
+                            }`}
+                          >
+                            {option}
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex w-full items-center gap-6">
+                <p className="w-[100px] shrink-0 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">
+                  계정 상태
+                </p>
+                <span
+                  className="flex items-center justify-center whitespace-nowrap rounded-full px-4 py-1 text-base font-semibold leading-[1.5] tracking-[-0.16px]"
+                  style={{
+                    backgroundColor: STATUS_STYLES[detailMember.status].bg,
+                    color: STATUS_STYLES[detailMember.status].text,
+                  }}
+                >
+                  {detailMember.status}
+                </span>
+              </div>
+
+              <div className="flex w-full items-center gap-6">
+                <p className="w-[100px] shrink-0 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">
+                  마지막 접속일
+                </p>
+                <p className="whitespace-nowrap text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#18181b]">
+                  {detailMember.lastAccess}
+                </p>
+              </div>
+            </div>
+
+            {/* 액션 버튼 */}
+            <div className="flex w-full flex-col gap-2">
+              <button
+                type="button"
+                onClick={saveMemberDetail}
+                className="flex h-12 w-full items-center justify-center rounded-full bg-[#18181b] px-6 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-white transition-opacity hover:opacity-90"
+              >
+                저장
+              </button>
+              <button
+                type="button"
+                onClick={toggleMemberActive}
+                className="flex h-12 w-full items-center justify-center rounded-full bg-[#f6f6f6] px-6 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] transition-colors hover:bg-[#ececec]"
+                style={{ color: "#ef1026" }}
+              >
+                {detailMember.status === "비활성"
+                  ? "계정 활성화"
+                  : "계정 비활성화"}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
