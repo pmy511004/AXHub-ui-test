@@ -112,13 +112,13 @@ export default function PageSidebar({ activeMenu, initialMode = "user" }: Props)
 
       {/* 하단: 사용자 / 관리자 전환 */}
       <div className="bg-[#f6f6f6] p-3">
-        <div className="relative flex w-full items-center gap-[2px] rounded-full bg-[#e4e4e7] px-2 py-1">
+        <div className="relative flex w-full items-center gap-[2px] overflow-hidden rounded-full bg-[#e4e4e7] px-2 py-1">
           <span
             aria-hidden
             className="pointer-events-none absolute inset-y-1 rounded-full bg-white"
             style={{
-              width: pillStyle.width,
-              transform: `translateX(${pillStyle.left}px)`,
+              width: pillStyle.width + 8,
+              transform: `translateX(${pillStyle.left - 4}px)`,
               transition: mounted
                 ? "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
                 : "none",
