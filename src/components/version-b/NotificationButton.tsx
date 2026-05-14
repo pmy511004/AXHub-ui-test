@@ -23,7 +23,7 @@ export default function NotificationButton({ variant = "sidebar" }: Props) {
         onClick={() => setOpen((v) => !v)}
         className={
           isHeader
-            ? "flex size-8 items-center justify-center rounded-full transition-colors hover:bg-[#f4f4f5]"
+            ? "flex size-9 items-center justify-center rounded-full transition-colors hover:bg-[#f4f4f5]"
             : "flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10"
         }
         aria-label="알림"

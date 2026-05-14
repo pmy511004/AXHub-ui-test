@@ -75,7 +75,7 @@ export default function HomePageB() {
             <button
               type="button"
               aria-label="검색"
-              className="flex size-8 items-center justify-center rounded-full transition-colors hover:bg-[#f4f4f5]"
+              className="flex size-9 items-center justify-center rounded-full transition-colors hover:bg-[#f4f4f5]"
             >
               <Image
                 src="/icons/version-b/header-search.svg"
@@ -89,7 +89,7 @@ export default function HomePageB() {
               <button
                 type="button"
                 onClick={() => setProfileOpen(!profileOpen)}
-                className="flex size-8 items-center justify-center rounded-full bg-[#5B3D7A] p-2 transition-opacity hover:opacity-80"
+                className="flex size-9 items-center justify-center rounded-full bg-[#5B3D7A] p-2 transition-opacity hover:opacity-80"
                 aria-label="프로필"
                 data-node-id="4940:6970"
               >
