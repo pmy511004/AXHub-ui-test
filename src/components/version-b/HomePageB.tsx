@@ -15,7 +15,7 @@ export default function HomePageB() {
   const [selectedOS, setSelectedOS] = useState<"mac" | "windows">("mac");
   const [guideDirection, setGuideDirection] = useState<"forward" | "back">("forward");
   const [profileOpen, setProfileOpen] = useState(false);
-  const [darkMode, setDarkMode] = useDarkMode();
+  const [darkMode] = useDarkMode();
   const [makeAppModalOpen, setMakeAppModalOpen] = useState(false);
   const [makeAppModalClosing, setMakeAppModalClosing] = useState(false);
   const [makeAppName, setMakeAppName] = useState("");
@@ -85,33 +85,17 @@ export default function HomePageB() {
               />
             </button>
             <NotificationButton variant="header" />
-            <button
-              type="button"
-              onClick={() => setDarkMode(!darkMode)}
-              aria-label={darkMode ? "라이트모드로 전환" : "다크모드로 전환"}
-              className="flex size-8 items-center justify-center rounded-full transition-colors hover:bg-[#f4f4f5]"
-            >
-              <Image
-                src={darkMode ? "/icons/version-b/nav-sun.svg" : "/icons/version-b/nav-moon.svg"}
-                alt=""
-                width={20}
-                height={20}
-              />
-            </button>
             <div className="relative">
               <button
                 type="button"
                 onClick={() => setProfileOpen(!profileOpen)}
-                className="relative size-8 overflow-hidden rounded-full transition-opacity hover:opacity-80"
+                className="flex size-8 items-center justify-center rounded-full bg-[#5B3D7A] p-2 transition-opacity hover:opacity-80"
                 aria-label="프로필"
+                data-node-id="4940:6970"
               >
-                <Image
-                  src="/icons/version-b/profile-new.png"
-                  alt=""
-                  fill
-                  sizes="32px"
-                  className="rounded-full object-cover"
-                />
+                <span className="text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white">
+                  민영
+                </span>
               </button>
               {profileOpen && (
                 <>
