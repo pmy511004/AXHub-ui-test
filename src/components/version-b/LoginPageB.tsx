@@ -5,9 +5,9 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { setAuthed } from "@/lib/auth";
 
-const TEAMS: ReadonlyArray<{ name: string; gradient: string }> = [
-  { name: "조코딩 AX 파트너스", gradient: "linear-gradient(135deg, #9B7AB8, #5B3D7A)" },
-  { name: "대모산개발단", gradient: "linear-gradient(135deg, #DBA869, #5B3D7A)" },
+const TEAMS: ReadonlyArray<{ name: string }> = [
+  { name: "조코딩 AX 파트너스" },
+  { name: "대모산개발단" },
 ];
 
 export default function LoginPageB() {
@@ -125,7 +125,7 @@ export default function LoginPageB() {
           onClick={closeSignupModal}
         >
           <div
-            className="relative flex w-[400px] flex-col gap-10 rounded-2xl bg-white p-5"
+            className="relative flex w-[400px] flex-col items-center gap-5 overflow-hidden rounded-2xl bg-white p-5"
             style={{
               boxShadow:
                 "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)",
@@ -137,23 +137,29 @@ export default function LoginPageB() {
             onClick={(e) => e.stopPropagation()}
             data-node-id="4790:1477"
           >
-            <div className="flex w-full flex-col items-center gap-6">
-              <div className="flex w-full flex-col gap-2">
-                <div className="flex w-full items-center justify-end">
-                  <button
-                    type="button"
-                    onClick={closeSignupModal}
-                    aria-label="닫기"
-                    className="flex size-7 items-center justify-center rounded-full"
-                  >
-                    <Image
-                      src="/icons/version-b/close-icon.svg"
-                      alt=""
-                      width={24}
-                      height={24}
-                    />
-                  </button>
-                </div>
+            <button
+              type="button"
+              onClick={closeSignupModal}
+              aria-label="닫기"
+              className="absolute right-5 top-[21px] flex size-6 items-center justify-center"
+              data-node-id="4845:4597"
+            >
+              <Image
+                src="/icons/version-b/close-icon.svg"
+                alt=""
+                width={24}
+                height={24}
+              />
+            </button>
+
+            <div
+              className="flex w-full flex-col items-center gap-6 py-10"
+              data-node-id="4790:1695"
+            >
+              <div
+                className="flex w-full flex-col gap-2"
+                data-node-id="4790:1478"
+              >
                 <p className="w-full text-center text-[22px] font-bold leading-[1.3] tracking-[-0.22px] text-[#18181b]">
                   먼저, 가입 권한을 얻어주세요
                 </p>
@@ -180,8 +186,11 @@ export default function LoginPageB() {
               </button>
             </div>
 
-            <div className="flex w-full flex-col gap-4 rounded-xl bg-[#fafafa] p-4">
-              <p className="text-sm font-semibold leading-[1.3] tracking-[-0.14px] text-[#3f3f46]">
+            <div
+              className="flex w-full flex-col gap-4 rounded-xl bg-[#fafafa] p-4"
+              data-node-id="4790:1681"
+            >
+              <p className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#3f3f46]">
                 직접 연락주셔도 좋아요!
               </p>
               <div className="flex flex-col gap-2">
@@ -236,12 +245,12 @@ export default function LoginPageB() {
 
       {teamModalOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 transition-opacity duration-250"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-white/60 transition-opacity duration-250"
           style={{ opacity: teamModalClosing ? 0 : 1 }}
           onClick={closeTeamModal}
         >
           <div
-            className="flex w-[400px] flex-col gap-10 rounded-2xl bg-white p-5"
+            className="relative flex w-[400px] flex-col items-center overflow-hidden rounded-2xl bg-white p-5"
             style={{
               boxShadow:
                 "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)",
@@ -251,49 +260,64 @@ export default function LoginPageB() {
                 : "modalScaleIn 0.3s ease-out",
             }}
             onClick={(e) => e.stopPropagation()}
-            data-node-id="4790:1715"
+            data-node-id="4845:4600"
           >
-            <div className="flex w-full flex-col gap-2">
-              <div className="flex w-full items-center justify-end">
-                <button
-                  type="button"
-                  onClick={closeTeamModal}
-                  aria-label="닫기"
-                  className="flex size-7 items-center justify-center rounded-full"
-                >
-                  <Image
-                    src="/icons/version-b/close-icon.svg"
-                    alt=""
-                    width={24}
-                    height={24}
-                  />
-                </button>
+            <button
+              type="button"
+              onClick={closeTeamModal}
+              aria-label="닫기"
+              className="absolute right-5 top-5 flex size-6 items-center justify-center"
+              data-node-id="4845:4622"
+            >
+              <Image
+                src="/icons/version-b/close-icon.svg"
+                alt=""
+                width={24}
+                height={24}
+              />
+            </button>
+
+            <div
+              className="flex w-full flex-col items-center py-10"
+              data-node-id="4845:4601"
+            >
+              <div
+                className="flex w-full flex-col gap-2"
+                data-node-id="4845:4602"
+              >
+                <p className="w-full text-center text-[22px] font-bold leading-[1.3] tracking-[-0.22px] text-[#18181b]">
+                  어느 팀으로 시작할까요?
+                </p>
+                <p className="w-full text-center text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">
+                  나중에 바꿀 수 있어요
+                </p>
               </div>
-              <p className="w-full text-center text-[22px] font-bold leading-[1.3] tracking-[-0.22px] text-[#18181b]">
-                어느 팀으로 시작할까요?
-              </p>
-              <p className="w-full text-center text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">
-                나중에 바꿀 수 있어요
-              </p>
             </div>
 
-            <div className="flex w-full flex-col">
+            <div
+              className="flex w-full flex-col gap-2 px-10 py-5"
+              data-node-id="4845:4624"
+            >
               {TEAMS.map((team) => (
                 <button
                   key={team.name}
                   type="button"
                   onClick={() => selectTeam(team.name)}
-                  className="group flex w-full items-center gap-3 rounded-2xl p-3 transition-colors hover:bg-[#f9f9f9]"
+                  className="group flex w-full items-center gap-3 rounded-2xl border border-[#e4e4e7] p-4 transition-colors hover:bg-[#fafafa]"
                 >
-                  <div
-                    className="size-10 shrink-0 rounded-[10px]"
-                    style={{ background: team.gradient }}
-                  />
+                  <div className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-[10px] bg-[#f6f6f6]">
+                    <Image
+                      src="/icons/version-b/team-building.svg"
+                      alt=""
+                      width={24}
+                      height={24}
+                    />
+                  </div>
                   <p className="flex-1 text-left text-lg font-normal leading-[1.4] tracking-[-0.18px] text-[#18181b]">
                     {team.name}
                   </p>
                   <span
-                    className="-rotate-90 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                    className="flex size-7 -rotate-90 items-center justify-center opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                     aria-hidden="true"
                   >
                     <Image
