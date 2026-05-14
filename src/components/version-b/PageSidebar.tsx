@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -27,25 +27,6 @@ const menuSection: Item[] = [
 
 export default function PageSidebar({ activeMenu, initialMode = "user" }: Props) {
   const [mode, setMode] = useState<ViewMode>(initialMode);
-  const toggleRef = useRef<HTMLDivElement | null>(null);
-  const [toggleWidth, setToggleWidth] = useState(0);
-  const [mounted, setMounted] = useState(false);
-
-  useLayoutEffect(() => {
-    const el = toggleRef.current;
-    if (!el) return;
-    setToggleWidth(el.offsetWidth);
-    const observer = new ResizeObserver(() => {
-      setToggleWidth(el.offsetWidth);
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const id = requestAnimationFrame(() => setMounted(true));
-    return () => cancelAnimationFrame(id);
-  }, []);
   const renderItem = (item: Item) => {
     const isActive = activeMenu === item.label;
     return (
@@ -114,21 +95,7 @@ export default function PageSidebar({ activeMenu, initialMode = "user" }: Props)
 
       {/* 하단: 사용자 / 관리자 전환 */}
       <div className="bg-[#f6f6f6] p-3">
-        <div
-          ref={toggleRef}
-          className="relative flex w-full items-center gap-[2px] overflow-hidden rounded-full bg-[#e4e4e7] px-2 py-1"
-        >
-          <span
-            aria-hidden
-            className="pointer-events-none absolute inset-y-1 rounded-full bg-white"
-            style={{
-              width: toggleWidth / 2,
-              transform: `translateX(${mode === "user" ? 0 : toggleWidth / 2}px)`,
-              transition: mounted
-                ? "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
-                : "none",
-            }}
-          />
+        <div className="relative flex w-full items-center gap-[2px] overflow-hidden rounded-full bg-[#e4e4e7] px-2 py-1">
           {(["user", "admin"] as const).map((key) => {
             const label = key === "user" ? "사용자" : "관리자";
             const isActive = mode === key;
@@ -140,8 +107,14 @@ export default function PageSidebar({ activeMenu, initialMode = "user" }: Props)
                 className="relative flex flex-1 items-center justify-center px-3 py-2"
                 aria-pressed={isActive}
               >
+                {isActive && (
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-y-0 -left-1 -right-1 rounded-full bg-white"
+                  />
+                )}
                 <span
-                  className={`relative text-xs leading-[1.3] tracking-[-0.12px] transition-colors duration-200 ${
+                  className={`relative text-xs leading-[1.3] tracking-[-0.12px] ${
                     isActive
                       ? "font-semibold text-black"
                       : "font-medium text-[#71717a]"
