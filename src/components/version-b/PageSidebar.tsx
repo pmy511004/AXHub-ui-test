@@ -4,14 +4,15 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
+export type AdminActiveMenu = "대시보드" | "멤버 • 그룹" | "환경설정";
+
 type ActiveMenu =
   | "홈"
   | "디스커버리"
   | "신청 내역"
   | "앱 만들기"
   | "배포 신청"
-  | "대시보드"
-  | "멤버";
+  | AdminActiveMenu;
 type ViewMode = "user" | "admin";
 
 interface Props {
@@ -19,6 +20,7 @@ interface Props {
   initialMode?: ViewMode;
   mode?: ViewMode;
   onModeChange?: (mode: ViewMode) => void;
+  onAdminMenuChange?: (menu: AdminActiveMenu) => void;
 }
 
 type Item = { label: ActiveMenu; icon: string; href: string; badge?: number };
@@ -34,9 +36,10 @@ const userMenuSection: Item[] = [
   { label: "배포 신청", icon: "/icons/version-b/snb-app.svg", href: "/admin" },
 ];
 
-const adminItems: Item[] = [
-  { label: "대시보드", icon: "/icons/version-b/snb-dashboard.svg", href: "#" },
-  { label: "멤버", icon: "/icons/version-b/snb-member.svg", href: "#" },
+const adminItems: { label: AdminActiveMenu; icon: string }[] = [
+  { label: "대시보드", icon: "/icons/version-b/snb-dashboard.svg" },
+  { label: "멤버 • 그룹", icon: "/icons/version-b/snb-member.svg" },
+  { label: "환경설정", icon: "/icons/version-b/snb-settings.svg" },
 ];
 
 export default function PageSidebar({
@@ -44,6 +47,7 @@ export default function PageSidebar({
   initialMode = "user",
   mode: modeProp,
   onModeChange,
+  onAdminMenuChange,
 }: Props) {
   const [internalMode, setInternalMode] = useState<ViewMode>(initialMode);
   const mode = modeProp ?? internalMode;
@@ -105,7 +109,33 @@ export default function PageSidebar({
       <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-[#f6f6f6]">
         <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 py-2">
           {mode === "admin" ? (
-            adminItems.map(renderItem)
+            adminItems.map((item) => {
+              const isActive = activeMenu === item.label;
+              return (
+                <button
+                  key={item.label}
+                  type="button"
+                  onClick={() => onAdminMenuChange?.(item.label)}
+                  className="flex h-[37px] w-full items-center gap-2 rounded-lg px-3 py-2 transition-colors hover:bg-black/[0.03]"
+                >
+                  <span
+                    className={`menu-icon${isActive ? " menu-active-accent" : ""}`}
+                    style={{
+                      maskImage: `url(${item.icon})`,
+                      WebkitMaskImage: `url(${item.icon})`,
+                      ...(isActive ? {} : { color: "#d4d4d8" }),
+                    }}
+                  />
+                  <span
+                    className={`flex-1 whitespace-nowrap text-left text-sm leading-[1.5] tracking-[-0.14px] ${
+                      isActive ? "font-semibold menu-active-accent" : "font-normal text-[#18181b]"
+                    }`}
+                  >
+                    {item.label}
+                  </span>
+                </button>
+              );
+            })
           ) : (
             <>
               {userTopItems.map(renderItem)}

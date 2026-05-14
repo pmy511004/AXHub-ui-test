@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import PageSidebar from "./PageSidebar";
+import PageSidebar, { type AdminActiveMenu } from "./PageSidebar";
 import NotificationButton from "./NotificationButton";
 import { useDarkMode } from "@/hooks/useDarkMode";
 
@@ -17,6 +17,7 @@ export default function HomePageB() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [darkMode] = useDarkMode();
   const [sidebarMode, setSidebarMode] = useState<"user" | "admin">("user");
+  const [adminMenu, setAdminMenu] = useState<AdminActiveMenu>("대시보드");
   const [teamName, setTeamName] = useState("조코딩AX파트너스");
   const [teamDescription, setTeamDescription] = useState("");
   const [makeAppModalOpen, setMakeAppModalOpen] = useState(false);
@@ -58,9 +59,13 @@ export default function HomePageB() {
     >
       {/* L. Sidebar */}
       <PageSidebar
-        activeMenu={sidebarMode === "admin" ? "대시보드" : "홈"}
+        activeMenu={sidebarMode === "admin" ? adminMenu : "홈"}
         mode={sidebarMode}
-        onModeChange={setSidebarMode}
+        onModeChange={(next) => {
+          setSidebarMode(next);
+          if (next === "admin") setAdminMenu("대시보드");
+        }}
+        onAdminMenuChange={setAdminMenu}
       />
 
       {/* R. Header + Main */}
@@ -71,12 +76,14 @@ export default function HomePageB() {
           data-node-id="4940:6702"
         >
           <div className="flex items-center" data-node-id="4940:6703">
-            <span
-              className="px-1 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]"
-              data-node-id="4940:6705"
-            >
-              {sidebarMode === "admin" ? "대시보드" : "홈"}
-            </span>
+            {(sidebarMode === "user" || adminMenu === "대시보드") && (
+              <span
+                className="px-1 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]"
+                data-node-id="4940:6705"
+              >
+                {sidebarMode === "admin" ? "대시보드" : "홈"}
+              </span>
+            )}
           </div>
           <div className="flex h-full items-center gap-3">
             <button
@@ -152,6 +159,7 @@ export default function HomePageB() {
         {/* Main scrollable */}
         <div className="relative flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden bg-white">
           {sidebarMode === "admin" ? (
+            adminMenu === "대시보드" ? (
             /* T1. 테넌트 설정 (Figma 4910:4830) */
             <div
               className="relative flex flex-1 flex-col items-center justify-center gap-[60px] overflow-hidden px-14 pb-[120px] pt-10"
@@ -235,6 +243,7 @@ export default function HomePageB() {
               <div className="relative z-10 flex w-[556px] items-center justify-center" data-node-id="4940:6154">
                 <button
                   type="button"
+                  onClick={() => setAdminMenu("멤버 • 그룹")}
                   className="flex h-12 items-center justify-center gap-2 rounded-full bg-[#18181b] px-8 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-white transition-opacity hover:opacity-90"
                   data-node-id="4940:6155"
                 >
@@ -248,6 +257,155 @@ export default function HomePageB() {
                 </button>
               </div>
             </div>
+            ) : adminMenu === "멤버 • 그룹" ? (
+            /* T2. 유저 관리 (Figma 4940:6166) */
+            <div
+              className="relative flex flex-1 flex-col items-start gap-10 overflow-y-auto px-10 pb-[120px] pt-10"
+              data-node-id="4940:6224"
+            >
+              {/* 헤더 행 */}
+              <div className="flex w-full items-end gap-5" data-node-id="4940:6978">
+                <div className="flex flex-1 flex-col items-start gap-3">
+                  <p className="text-[32px] font-bold leading-[1.2] text-[#18181b]" data-node-id="4940:7052">
+                    멤버 • 그룹
+                  </p>
+                  <p className="text-lg font-normal leading-[1.4] tracking-[-0.18px] text-[#71717a]" data-node-id="4940:6495">
+                    멤버 권한과 그룹을 관리해요
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  className="flex h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-[#18181b] px-8 py-3 transition-opacity hover:opacity-90"
+                  data-node-id="4940:6973"
+                >
+                  <Image
+                    src="/icons/version-b/plus-white.svg"
+                    alt=""
+                    width={20}
+                    height={20}
+                  />
+                  <span className="whitespace-nowrap text-base font-semibold leading-[1.5] tracking-[-0.16px] text-white">
+                    초대하기
+                  </span>
+                </button>
+              </div>
+
+              {/* 서브 탭 + 테이블 */}
+              <div className="flex w-full flex-col gap-5" data-node-id="4940:7188">
+                {/* 서브 탭 */}
+                <div className="flex w-full items-start gap-2" data-node-id="4940:7169">
+                  <div className="flex items-center gap-2 border-b-2 border-[#5B3D7A] px-3 py-2">
+                    <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">
+                      멤버
+                    </span>
+                    <span className="flex items-center rounded-full bg-[rgba(91,61,122,0.1)] px-2 py-0.5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#5B3D7A]">
+                      1
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 px-3 py-2">
+                    <span className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[rgba(24,24,27,0.9)]">
+                      그룹
+                    </span>
+                    <span className="flex items-center rounded-full bg-[#f6f6f6] px-2 py-0.5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+                      0
+                    </span>
+                  </div>
+                </div>
+
+                {/* 테이블 */}
+                <div className="flex w-full flex-col items-center rounded-lg bg-[#f6f6f6] p-1" data-node-id="4940:6993">
+                  {/* 헤더 */}
+                  <div className="flex w-full items-center gap-4 px-4 py-2.5" data-node-id="4940:6994">
+                    <div className="flex flex-1 items-center">
+                      <p className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">멤버</p>
+                    </div>
+                    <div className="flex flex-1 items-center gap-2">
+                      <p className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">권한</p>
+                      <Image src="/icons/version-b/sort-chevron.svg" alt="" width={18} height={18} />
+                    </div>
+                    <div className="flex flex-1 items-center gap-2">
+                      <p className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">계정 상태</p>
+                      <Image src="/icons/version-b/sort-chevron.svg" alt="" width={18} height={18} />
+                    </div>
+                    <div className="flex flex-1 items-center">
+                      <p className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">마지막 접속일</p>
+                    </div>
+                    <div className="size-7" />
+                  </div>
+                  {/* 바디 */}
+                  <div className="flex w-full flex-col items-start justify-center overflow-hidden rounded-lg bg-white" data-node-id="4940:7005">
+                    <div className="relative flex h-14 w-full items-center gap-4 px-4 py-3" data-node-id="4940:7007">
+                      <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-[#e4e4e7] opacity-50" />
+                      <div className="flex flex-1 items-center gap-3">
+                        <div className="flex size-8 items-center justify-center rounded-full bg-[#5B3D7A] p-2">
+                          <span className="whitespace-nowrap text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white">
+                            민영
+                          </span>
+                        </div>
+                        <div className="flex flex-col items-start justify-center whitespace-nowrap">
+                          <p className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#3f3f46]">박민영</p>
+                          <p className="text-xs font-normal leading-[1.3] tracking-[-0.12px] text-[#71717a]">minion@jocodingax.ai</p>
+                        </div>
+                      </div>
+                      <div className="flex flex-1 items-center gap-1">
+                        <Image src="/icons/version-b/role-shield.svg" alt="" width={18} height={18} />
+                        <p className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#3f3f46]">관리자</p>
+                      </div>
+                      <div className="flex flex-1 items-center">
+                        <span className="flex w-[47px] items-center justify-center whitespace-nowrap rounded-full bg-[#e7f1fe] px-2 py-1 text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#1571f3]">
+                          활성
+                        </span>
+                      </div>
+                      <div className="flex flex-1 items-center">
+                        <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">2026-05-13</p>
+                      </div>
+                      <div className="flex size-7 items-center justify-center">
+                        <Image
+                          src="/icons/version-b/row-chevron-right.svg"
+                          alt=""
+                          width={28}
+                          height={28}
+                          className="-rotate-90"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 하단 도메인 CTA */}
+              <div className="flex w-full flex-col items-center gap-3 py-5" data-node-id="4988:8170">
+                <p className="text-center text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+                  관리자 초대없이
+                  <br />
+                  회사 이메일로 자동 가입하게 할까요?
+                </p>
+                <button
+                  type="button"
+                  className="flex h-12 items-center justify-center gap-2 rounded-full bg-[#f6f6f6] px-6 py-3 transition-colors hover:bg-[#ececec]"
+                  data-node-id="4988:8155"
+                >
+                  <span className="text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b]">
+                    도메인 설정하기
+                  </span>
+                  <Image
+                    src="/icons/version-b/btn-arrow-right.svg"
+                    alt=""
+                    width={16}
+                    height={16}
+                    className="[filter:brightness(0)]"
+                  />
+                </button>
+              </div>
+            </div>
+            ) : (
+            /* 환경설정 (준비 중) */
+            <div className="flex flex-1 items-center justify-center px-10 py-10">
+              <p className="text-2xl font-semibold leading-[1.2] text-[#71717a]">
+                환경설정 화면은 준비 중이에요
+              </p>
+            </div>
+            )
           ) : viewVersion === "first-time" ? (
             /* 최초접속 버전 */
             <div className="relative flex min-h-full w-full flex-1 items-center justify-center overflow-hidden px-10 py-10">
