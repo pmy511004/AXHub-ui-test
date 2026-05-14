@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -32,19 +32,18 @@ export default function PageSidebar({ activeMenu, initialMode = "user" }: Props)
     admin: null,
   });
   const [pillStyle, setPillStyle] = useState({ left: 0, width: 0 });
-  const initRef = useRef(true);
-  const [transitionsOn, setTransitionsOn] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useLayoutEffect(() => {
     const el = tabRefs.current[mode];
     if (!el) return;
     setPillStyle({ left: el.offsetLeft, width: el.offsetWidth });
-    if (initRef.current) {
-      initRef.current = false;
-      const id = requestAnimationFrame(() => setTransitionsOn(true));
-      return () => cancelAnimationFrame(id);
-    }
   }, [mode]);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
   const renderItem = (item: Item) => {
     const isActive = activeMenu === item.label;
     return (
@@ -118,9 +117,9 @@ export default function PageSidebar({ activeMenu, initialMode = "user" }: Props)
             aria-hidden
             className="pointer-events-none absolute inset-y-1 rounded-full bg-white"
             style={{
-              width: pillStyle.width + 8,
-              transform: `translateX(${pillStyle.left - 4}px)`,
-              transition: transitionsOn
+              width: pillStyle.width,
+              transform: `translateX(${pillStyle.left}px)`,
+              transition: mounted
                 ? "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
                 : "none",
             }}
