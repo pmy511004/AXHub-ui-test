@@ -32,11 +32,18 @@ export default function PageSidebar({ activeMenu, initialMode = "user" }: Props)
     admin: null,
   });
   const [pillStyle, setPillStyle] = useState({ left: 0, width: 0 });
+  const initRef = useRef(true);
+  const [transitionsOn, setTransitionsOn] = useState(false);
 
   useLayoutEffect(() => {
     const el = tabRefs.current[mode];
     if (!el) return;
     setPillStyle({ left: el.offsetLeft, width: el.offsetWidth });
+    if (initRef.current) {
+      initRef.current = false;
+      const id = requestAnimationFrame(() => setTransitionsOn(true));
+      return () => cancelAnimationFrame(id);
+    }
   }, [mode]);
   const renderItem = (item: Item) => {
     const isActive = activeMenu === item.label;
@@ -113,8 +120,9 @@ export default function PageSidebar({ activeMenu, initialMode = "user" }: Props)
             style={{
               width: pillStyle.width + 8,
               transform: `translateX(${pillStyle.left - 4}px)`,
-              transition:
-                "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+              transition: transitionsOn
+                ? "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+                : "none",
             }}
           />
           {(["user", "admin"] as const).map((key) => {
