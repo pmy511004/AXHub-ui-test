@@ -1,11 +1,15 @@
 "use client";
 
+import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 
 type ActiveMenu = "홈" | "디스커버리" | "신청 내역" | "앱 만들기" | "배포 신청";
+type ViewMode = "user" | "admin";
 
 interface Props {
   activeMenu: ActiveMenu;
+  initialMode?: ViewMode;
 }
 
 type Item = { label: ActiveMenu; icon: string; href: string; badge?: number };
@@ -21,7 +25,8 @@ const menuSection: Item[] = [
   { label: "배포 신청", icon: "/icons/version-b/snb-app.svg", href: "/admin" },
 ];
 
-export default function PageSidebar({ activeMenu }: Props) {
+export default function PageSidebar({ activeMenu, initialMode = "user" }: Props) {
+  const [mode, setMode] = useState<ViewMode>(initialMode);
   const renderItem = (item: Item) => {
     const isActive = activeMenu === item.label;
     return (
@@ -57,13 +62,23 @@ export default function PageSidebar({ activeMenu }: Props) {
   return (
     <div className="flex h-full w-[200px] shrink-0 flex-col">
       {/* 헤더 */}
-      <div className="flex h-[60px] items-center overflow-hidden rounded-tl-xl bg-[#f6f6f6] px-3">
-        <p className="overflow-hidden text-ellipsis whitespace-nowrap text-lg font-bold leading-[1.4] tracking-[-0.18px] text-[#18181b]">
+      <button
+        type="button"
+        className="flex h-[60px] w-full items-center justify-between overflow-hidden bg-[#f6f6f6] px-5 py-3 transition-colors hover:bg-[#ececec]"
+      >
+        <p className="overflow-hidden text-ellipsis whitespace-nowrap text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">
           조코딩AX파트너스
         </p>
-      </div>
+        <Image
+          src="/icons/version-b/team-chevron-down.svg"
+          alt=""
+          width={20}
+          height={20}
+          className="shrink-0"
+        />
+      </button>
       {/* 본문 */}
-      <div className="flex flex-1 min-h-0 flex-col overflow-hidden rounded-bl-xl bg-[#f6f6f6]">
+      <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-[#f6f6f6]">
         <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 py-2">
           {topItems.map(renderItem)}
 
@@ -76,6 +91,32 @@ export default function PageSidebar({ activeMenu }: Props) {
 
           {menuSection.map(renderItem)}
         </nav>
+      </div>
+
+      {/* 하단: 사용자 / 관리자 전환 */}
+      <div className="overflow-hidden bg-[#f6f6f6] px-3 pb-3 pt-2">
+        <div className="flex h-9 items-center rounded-lg bg-[rgba(24,24,27,0.06)] p-0.5">
+          {(["user", "admin"] as const).map((key, i) => {
+            const label = key === "user" ? "사용자" : "관리자";
+            const isActive = mode === key;
+            return (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setMode(key)}
+                className={`flex h-8 flex-1 items-center justify-center rounded-md text-xs font-semibold leading-[1.3] tracking-[-0.12px] transition-colors ${
+                  isActive
+                    ? "bg-white text-[#18181b] shadow-[0px_1px_2px_rgba(0,0,0,0.06)]"
+                    : "text-[#71717a]"
+                }`}
+                aria-pressed={isActive}
+                style={i === 0 ? { marginRight: 0 } : undefined}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

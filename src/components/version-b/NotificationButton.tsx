@@ -6,24 +6,43 @@ import { useLayoutEffect, useRef, useState } from "react";
 const NOTIFICATION_TABS = ["전체", "읽지 않음", "승인요청", "추천"] as const;
 type NotificationTab = (typeof NOTIFICATION_TABS)[number];
 
-export default function NotificationButton() {
+type NotificationVariant = "sidebar" | "header";
+
+interface Props {
+  variant?: NotificationVariant;
+}
+
+export default function NotificationButton({ variant = "sidebar" }: Props) {
   const [open, setOpen] = useState(false);
+  const isHeader = variant === "header";
 
   return (
     <div className="relative">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10"
+        className={
+          isHeader
+            ? "flex size-8 items-center justify-center rounded-full transition-colors hover:bg-[#f4f4f5]"
+            : "flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10"
+        }
         aria-label="알림"
       >
-        <Image src="/icons/version-b/nav-bell.svg" alt="" width={44} height={44} />
+        {isHeader ? (
+          <Image src="/icons/version-b/header-bell.svg" alt="" width={32} height={32} />
+        ) : (
+          <Image src="/icons/version-b/nav-bell.svg" alt="" width={44} height={44} />
+        )}
       </button>
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
           <div
-            className="absolute bottom-0 left-[calc(100%+8px)] z-50 flex h-[520px] w-[400px] flex-col items-start gap-5 overflow-hidden rounded-2xl bg-white p-5"
+            className={`absolute z-50 flex h-[520px] w-[400px] flex-col items-start gap-5 overflow-hidden rounded-2xl bg-white p-5 ${
+              isHeader
+                ? "right-0 top-[calc(100%+8px)]"
+                : "bottom-0 left-[calc(100%+8px)]"
+            }`}
             style={{
               boxShadow:
                 "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)",

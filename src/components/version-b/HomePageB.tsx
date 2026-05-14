@@ -14,7 +14,6 @@ export default function HomePageB() {
   const [guideModalClosing, setGuideModalClosing] = useState(false);
   const [selectedOS, setSelectedOS] = useState<"mac" | "windows">("mac");
   const [guideDirection, setGuideDirection] = useState<"forward" | "back">("forward");
-  const [activeTeam, setActiveTeam] = useState<"JO" | "DE">("JO");
   const [profileOpen, setProfileOpen] = useState(false);
   const [darkMode, setDarkMode] = useDarkMode();
   const [makeAppModalOpen, setMakeAppModalOpen] = useState(false);
@@ -32,7 +31,6 @@ export default function HomePageB() {
     }, 250);
   };
   const isMakeAppValid = makeAppName.trim() !== "" && makeAppCategory !== "";
-  const openGuideModal = () => { setGuideModalStep("os-select"); setGuideModalOpen(true); };
 
   useEffect(() => {
     if (viewVersion === "first-time") {
@@ -55,77 +53,116 @@ export default function HomePageB() {
         "--page-primary": darkMode ? "#6E4A94" : "#5B3D7A",
       } as React.CSSProperties}
     >
-      {/* L. Global Nav (팀 프로필 셀렉터) */}
-      <div className="flex h-full w-[76px] shrink-0 flex-col items-center justify-between">
-        {/* 상단: 팀 목록 */}
-        <div className="flex w-full flex-col items-center gap-4 px-3 py-4">
-          {(["JO", "DE"] as const).map((team) => {
-            const isActive = activeTeam === team;
-            return (
-              <button
-                key={team}
-                type="button"
-                onClick={() => setActiveTeam(team)}
-                className={`relative flex size-11 items-center justify-center overflow-hidden rounded-xl bg-[#5B3D7A] p-1 transition-shadow ${isActive ? "shadow-[0px_0px_0px_1px_white]" : ""}`}
-                aria-label={`팀 ${team}`}
-              >
-                <p className="flex-1 text-center text-base font-bold leading-[1.5] tracking-[-0.16px] text-white">{team}</p>
-                {!isActive && <span className="pointer-events-none absolute inset-0 rounded-xl bg-[rgba(24,24,27,0.48)]" />}
-              </button>
-            );
-          })}
-          {/* + 팀 추가 */}
-          <button type="button" aria-label="팀 추가" className="flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M12 5v14M5 12h14" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
-          </button>
-        </div>
+      {/* L. Sidebar */}
+      <PageSidebar activeMenu="홈" />
 
-        {/* 하단: 검색(+설정팝오버)/알림/프로필 */}
-        <div className="flex w-full flex-col items-center gap-2 px-3 py-4">
-          {/* 다크모드 토글 */}
-          <button type="button" onClick={() => setDarkMode(!darkMode)} className="flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10" aria-label={darkMode ? "라이트모드로 전환" : "다크모드로 전환"}>
-            <Image src={darkMode ? "/icons/version-b/nav-sun.svg" : "/icons/version-b/nav-moon.svg"} alt="" width={24} height={24} />
-          </button>
-
-          <NotificationButton />
-
-          <div className="relative">
-            <button type="button" onClick={() => setProfileOpen(!profileOpen)} className="relative size-10 overflow-hidden rounded-full transition-opacity hover:opacity-80" aria-label="프로필">
-              <Image src="/icons/version-b/profile-new.png" alt="" fill sizes="40px" className="rounded-full object-cover" />
+      {/* R. Header + Main */}
+      <div className="relative flex h-full min-w-0 flex-1 flex-col overflow-hidden bg-white">
+        {/* Header (60px) */}
+        <div
+          className="flex h-[60px] shrink-0 items-center justify-between border-b border-[rgba(82,82,91,0.08)] bg-white px-5"
+          data-node-id="4940:6702"
+        >
+          <div className="flex items-center" data-node-id="4940:6703">
+            <span
+              className="px-1 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]"
+              data-node-id="4940:6705"
+            >
+              홈
+            </span>
+          </div>
+          <div className="flex h-full items-center gap-3">
+            <button
+              type="button"
+              aria-label="검색"
+              className="flex size-8 items-center justify-center rounded-full transition-colors hover:bg-[#f4f4f5]"
+            >
+              <Image
+                src="/icons/version-b/header-search.svg"
+                alt=""
+                width={32}
+                height={32}
+              />
             </button>
-            {profileOpen && (
-              <>
-                <div className="fixed inset-0 z-40" onClick={() => setProfileOpen(false)} />
-                <div className="absolute bottom-0 left-[calc(100%+8px)] z-50 w-[220px] rounded-2xl bg-white p-3 shadow-lg" style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)" }}>
-                  <div className="flex flex-col gap-3">
-                    <div className="flex flex-col gap-1 rounded-2xl px-3 py-2">
-                      <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">박민영</p>
-                      <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">minion@jocodingax.ai</p>
-                    </div>
-                    <div className="h-px w-full bg-[#e4e4e7]" />
-                    <div className="flex flex-col">
-                      <button type="button" className="w-full rounded-lg px-3 py-2 text-left text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f4f4f5]">내 정보</button>
-                      <button type="button" className="w-full rounded-lg px-3 py-2 text-left text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f4f4f5]">로그아웃</button>
+            <NotificationButton variant="header" />
+            <button
+              type="button"
+              onClick={() => setDarkMode(!darkMode)}
+              aria-label={darkMode ? "라이트모드로 전환" : "다크모드로 전환"}
+              className="flex size-8 items-center justify-center rounded-full transition-colors hover:bg-[#f4f4f5]"
+            >
+              <Image
+                src={darkMode ? "/icons/version-b/nav-sun.svg" : "/icons/version-b/nav-moon.svg"}
+                alt=""
+                width={20}
+                height={20}
+              />
+            </button>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setProfileOpen(!profileOpen)}
+                className="relative size-8 overflow-hidden rounded-full transition-opacity hover:opacity-80"
+                aria-label="프로필"
+              >
+                <Image
+                  src="/icons/version-b/profile-new.png"
+                  alt=""
+                  fill
+                  sizes="32px"
+                  className="rounded-full object-cover"
+                />
+              </button>
+              {profileOpen && (
+                <>
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setProfileOpen(false)}
+                  />
+                  <div
+                    className="absolute right-0 top-[calc(100%+8px)] z-50 w-[220px] rounded-2xl bg-white p-3"
+                    style={{
+                      boxShadow:
+                        "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)",
+                    }}
+                  >
+                    <div className="flex flex-col gap-3">
+                      <div className="flex flex-col gap-1 rounded-2xl px-3 py-2">
+                        <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">
+                          박민영
+                        </p>
+                        <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+                          minion@jocodingax.ai
+                        </p>
+                      </div>
+                      <div className="h-px w-full bg-[#e4e4e7]" />
+                      <div className="flex flex-col">
+                        <button
+                          type="button"
+                          className="w-full rounded-lg px-3 py-2 text-left text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f4f4f5]"
+                        >
+                          내 정보
+                        </button>
+                        <button
+                          type="button"
+                          className="w-full rounded-lg px-3 py-2 text-left text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f4f4f5]"
+                        >
+                          로그아웃
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </>
-            )}
+                </>
+              )}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* M + R. Sidebar + Main area */}
-      <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden pr-2 py-2">
-        <PageSidebar activeMenu="홈" />
-
-        {/* Right: Main content */}
-        <div className="relative flex h-full min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden rounded-br-2xl rounded-tr-2xl border-r border-[#f6f6f6] bg-white">
+        {/* Main scrollable */}
+        <div className="relative flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden bg-white">
           {viewVersion === "first-time" ? (
             /* 최초접속 버전 */
-            <div className="relative flex min-h-full w-full flex-1 items-center justify-center overflow-hidden px-14 py-10">
+            <div className="relative flex min-h-full w-full flex-1 items-center justify-center overflow-hidden px-10 py-10">
               {/* 배경 이미지 (하단 중앙) */}
               <div className="pointer-events-none absolute bottom-0 left-1/2 h-[400px] w-[997px] max-w-none -translate-x-1/2">
                 <Image
@@ -166,7 +203,7 @@ export default function HomePageB() {
             </div>
           ) : (
           /* 사용 중 버전: 단일 스크롤 영역 */
-          <div className="mx-auto flex w-full flex-col gap-[80px] px-14 py-10 pb-[240px] min-[1441px]:max-w-[1280px]">
+          <div className="mx-auto flex w-full flex-col gap-[80px] px-10 py-10 pb-[240px] min-[1441px]:max-w-[1280px]">
 
             {/* 1. 헤더 섹션 */}
             <div className="flex flex-col gap-10">
@@ -433,7 +470,7 @@ export default function HomePageB() {
 
           {/* 초기 시작 가이드 모달 */}
           {guideModalOpen && (
-            <div className="absolute inset-0 z-50 flex items-center justify-center overflow-hidden rounded-br-2xl rounded-tr-2xl bg-white/50 transition-opacity duration-250" style={{ opacity: guideModalClosing ? 0 : 1 }} onClick={closeGuideModal}>
+            <div className="absolute inset-0 z-50 flex items-center justify-center overflow-hidden bg-white/50 transition-opacity duration-250" style={{ opacity: guideModalClosing ? 0 : 1 }} onClick={closeGuideModal}>
               <div className="flex h-[724px] w-[546px] flex-col overflow-hidden rounded-2xl bg-white" style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)", backdropFilter: "blur(20px)", animation: guideModalClosing ? "modalScaleOut 0.25s ease-in forwards" : "modalScaleIn 0.3s ease-out" }} onClick={(e) => e.stopPropagation()}>
                 {guideModalStep === "os-select" ? (
                   /* 첫 번째 모달: OS 선택 */
