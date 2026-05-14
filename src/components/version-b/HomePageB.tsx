@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import PageSidebar, { type AdminActiveMenu } from "./PageSidebar";
 
 type MemberRole = "관리자" | "사용자";
@@ -26,7 +27,10 @@ const STATUS_STYLES: Record<MemberStatus, { bg: string; text: string }> = {
 import NotificationButton from "./NotificationButton";
 import { useDarkMode } from "@/hooks/useDarkMode";
 
-export default function HomePageB() {
+type HomePageBProps = { initialSidebarMode?: "user" | "admin" };
+
+export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProps = {}) {
+  const router = useRouter();
   const [appsExpanded, setAppsExpanded] = useState(false);
   const [viewVersion, setViewVersion] = useState<"first-time" | "in-use">("first-time");
   const [guideModalOpen, setGuideModalOpen] = useState(false);
@@ -36,7 +40,7 @@ export default function HomePageB() {
   const [guideDirection, setGuideDirection] = useState<"forward" | "back">("forward");
   const [profileOpen, setProfileOpen] = useState(false);
   const [darkMode] = useDarkMode();
-  const [sidebarMode, setSidebarMode] = useState<"user" | "admin">("user");
+  const [sidebarMode, setSidebarMode] = useState<"user" | "admin">(initialSidebarMode);
   const [adminMenu, setAdminMenu] = useState<AdminActiveMenu>("대시보드");
   const [teamName, setTeamName] = useState("조코딩AX파트너스");
   const [teamDescription, setTeamDescription] = useState("");
@@ -216,8 +220,14 @@ export default function HomePageB() {
         activeMenu={sidebarMode === "admin" ? adminMenu : "홈"}
         mode={sidebarMode}
         onModeChange={(next) => {
+          if (next === sidebarMode) return;
           setSidebarMode(next);
-          if (next === "admin") setAdminMenu("대시보드");
+          if (next === "admin") {
+            setAdminMenu("대시보드");
+            router.push("/manage");
+          } else {
+            router.push("/");
+          }
         }}
         onAdminMenuChange={setAdminMenu}
       />
