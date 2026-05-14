@@ -63,6 +63,7 @@ export default function HomePageB() {
   const [openRoleFilter, setOpenRoleFilter] = useState(false);
   const [openStatusFilter, setOpenStatusFilter] = useState(false);
   const [detailMemberId, setDetailMemberId] = useState<string | null>(null);
+  const [detailClosing, setDetailClosing] = useState(false);
   const [detailDraftRole, setDetailDraftRole] = useState<MemberRole>("사용자");
   const [detailRoleOpen, setDetailRoleOpen] = useState(false);
 
@@ -74,13 +75,18 @@ export default function HomePageB() {
   const detailMember = members.find((m) => m.id === detailMemberId) ?? null;
 
   const openMemberDetail = (m: Member) => {
+    setDetailClosing(false);
     setDetailMemberId(m.id);
     setDetailDraftRole(m.role);
     setDetailRoleOpen(false);
   };
   const closeMemberDetail = () => {
-    setDetailMemberId(null);
+    setDetailClosing(true);
     setDetailRoleOpen(false);
+    setTimeout(() => {
+      setDetailMemberId(null);
+      setDetailClosing(false);
+    }, 300);
   };
   const saveMemberDetail = () => {
     if (!detailMember) return;
@@ -91,6 +97,8 @@ export default function HomePageB() {
     );
     closeMemberDetail();
   };
+  const canSaveDetail =
+    detailMember !== null && detailDraftRole !== detailMember.role;
   const toggleMemberActive = () => {
     if (!detailMember) return;
     const next: MemberStatus = detailMember.status === "비활성" ? "활성" : "비활성";
@@ -1390,8 +1398,13 @@ export default function HomePageB() {
         {/* 멤버 상세 사이드 패널 (Figma 4988:7843) */}
         {detailMember && (
           <div
-            className="absolute right-0 top-0 z-30 flex h-full w-[350px] flex-col items-end gap-6 bg-white p-6"
-            style={{ boxShadow: "-1px 0 5px rgba(0,0,0,0.1)" }}
+            className="absolute right-0 top-0 z-30 flex h-full w-[350px] flex-col items-end gap-6 bg-white p-8"
+            style={{
+              boxShadow: "-1px 0 5px rgba(0,0,0,0.1)",
+              animation: detailClosing
+                ? "slideOutRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards"
+                : "slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+            }}
             data-node-id="4988:7843"
           >
             {/* 헤더 */}
@@ -1526,9 +1539,13 @@ export default function HomePageB() {
               <button
                 type="button"
                 onClick={saveMemberDetail}
-                className="flex h-12 w-full items-center justify-center rounded-full bg-[#18181b] px-6 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-white transition-opacity hover:opacity-90"
+                disabled={!canSaveDetail}
+                className="relative flex h-12 w-full items-center justify-center overflow-hidden rounded-full bg-[#18181b] px-6 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-white transition-opacity hover:opacity-90"
               >
                 저장
+                {!canSaveDetail && (
+                  <span className="pointer-events-none absolute inset-0 rounded-full bg-white/70" />
+                )}
               </button>
               <button
                 type="button"
