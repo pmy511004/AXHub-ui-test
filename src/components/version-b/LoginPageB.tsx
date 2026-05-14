@@ -120,7 +120,7 @@ export default function LoginPageB() {
 
       {signupModalOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 transition-opacity duration-250"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-white/60 transition-opacity duration-250"
           style={{ opacity: signupModalClosing ? 0 : 1 }}
           onClick={closeSignupModal}
         >
