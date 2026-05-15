@@ -165,7 +165,7 @@ export default function PageSidebar({
           >
             {/* 본체 (너비/높이 hug) */}
             <div
-              className="flex flex-col justify-center gap-3 whitespace-nowrap rounded-lg bg-[#2d64fa] p-5"
+              className="flex flex-col justify-center gap-3 whitespace-nowrap rounded-lg bg-[#2d64fa] p-7"
               style={{ filter: "drop-shadow(0px 0px 20px rgba(0,0,0,0.1))" }}
               data-node-id="5037:8813"
             >
