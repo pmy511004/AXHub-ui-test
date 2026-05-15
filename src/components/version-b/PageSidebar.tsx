@@ -183,14 +183,14 @@ export default function PageSidebar({
                 <p>관리자 페이지를 열어주세요</p>
               </div>
             </div>
-            {/* 아래로 향한 화살표 (Figma 5037:8816, 본체 너비 중앙 정렬) */}
-            <div className="flex h-4 w-full justify-center" data-node-id="5037:8816">
+            {/* 아래로 향한 화살표 (관리자 탭 중앙 가리킴) */}
+            <div className="relative h-4 w-full" data-node-id="5037:8816">
               <Image
                 src="/icons/version-b/tooltip-arrow.svg"
                 alt=""
                 width={16}
                 height={16}
-                className="-scale-y-100"
+                className="absolute left-[30.5px] -scale-y-100"
               />
             </div>
           </div>
