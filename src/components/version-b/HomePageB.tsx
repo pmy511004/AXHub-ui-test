@@ -354,11 +354,63 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
         <div className="relative flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden bg-white">
           {sidebarMode === "admin" ? (
             adminMenu === "AXHub 시작하기" ? (
-            /* AXHub 시작하기 (준비 중) */
-            <div className="flex flex-1 items-center justify-center px-10 py-10">
-              <p className="text-2xl font-semibold leading-[1.2] text-[#71717a]">
-                AXHub 시작하기 화면은 준비 중이에요
-              </p>
+            /* AXHub 시작하기 (Figma 4910:4893) */
+            <div
+              className="flex flex-1 flex-col items-center justify-center gap-[60px] border-r border-[#f6f6f6] bg-white px-14 pb-[120px] pt-10"
+              data-node-id="4910:4893"
+            >
+              {/* 헤더 */}
+              <div className="flex w-[556px] flex-col items-center gap-3">
+                <div className="flex items-start justify-center gap-2 whitespace-nowrap">
+                  <p className="text-[40px] font-bold leading-[1.2] text-[#18181b]">
+                    팀 허브를 열고
+                  </p>
+                  <p className="text-[40px] font-bold leading-[1.2] text-[#a1a1aa]">
+                    동료들을 초대하세요
+                  </p>
+                </div>
+                <p className="whitespace-nowrap text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">
+                  두 단계만 하면 돼요
+                </p>
+              </div>
+
+              {/* 단계 카드 */}
+              <div className="flex flex-col items-start gap-5">
+                <div className="flex w-[556px] items-center gap-3 rounded-xl bg-[#f6f7f9] p-6">
+                  <div className="flex flex-1 flex-col items-start gap-2 whitespace-nowrap">
+                    <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">
+                      기본 설정
+                    </p>
+                    <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b]/70">
+                      팀 아이콘과 소개, 자동 가입을 설정합니다
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setAdminMenu("대시보드")}
+                    className="flex h-8 items-center justify-center rounded-full bg-[#2d64fa] px-4 py-3 text-sm font-medium leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+                  >
+                    이동
+                  </button>
+                </div>
+                <div className="flex w-[556px] items-center gap-3 rounded-xl bg-[#f6f7f9] p-6">
+                  <div className="flex flex-1 flex-col items-start gap-2 whitespace-nowrap">
+                    <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">
+                      동료 초대
+                    </p>
+                    <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b]/70">
+                      회사 동료들을 초대하고, 권한을 설정합니다
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setAdminMenu("멤버 • 그룹")}
+                    className="flex h-8 items-center justify-center rounded-full bg-[#2d64fa] px-4 py-3 text-sm font-medium leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+                  >
+                    이동
+                  </button>
+                </div>
+              </div>
             </div>
             ) : adminMenu === "대시보드" ? (
             /* T1. 테넌트 설정 (Figma 4910:4830) */

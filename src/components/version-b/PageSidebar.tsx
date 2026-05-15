@@ -128,7 +128,7 @@ export default function PageSidebar({
                     key={item.label}
                     type="button"
                     onClick={() => onAdminMenuChange?.(item.label)}
-                    className={`flex h-[37px] w-full items-center gap-2 rounded-lg px-3 py-2 transition-colors ${
+                    className={`flex h-[37px] w-full items-center gap-2 rounded-lg px-3 py-2 transition-all duration-200 ease-out hover:scale-[1.04] ${
                       isActive
                         ? "bg-white shadow-[0px_1px_2px_rgba(0,0,0,0.05)]"
                         : "hover:bg-black/[0.03]"
