@@ -183,15 +183,57 @@ export default function PageSidebar({
                 <p>관리자 페이지를 열어주세요</p>
               </div>
             </div>
-            {/* 아래로 향한 화살표 (관리자 탭 중앙 가리킴) */}
+            {/* 아래로 향한 화살표 + 잔상 진동 애니메이션 (관리자 탭 중앙) */}
             <div className="relative h-4 w-full" data-node-id="5037:8816">
-              <Image
-                src="/icons/version-b/tooltip-arrow.svg"
-                alt=""
-                width={16}
-                height={16}
-                className="absolute left-[30.5px] -scale-y-100"
-              />
+              {/* 잔상 2 (가장 흐림, 더 늦게 따라옴) */}
+              <span
+                aria-hidden
+                className="pointer-events-none absolute left-[30.5px] top-0"
+                style={{
+                  animation:
+                    "tooltipArrowBounce 1.2s ease-in-out 0.24s infinite",
+                }}
+              >
+                <Image
+                  src="/icons/version-b/tooltip-arrow.svg"
+                  alt=""
+                  width={16}
+                  height={16}
+                  className="-scale-y-100 opacity-20"
+                />
+              </span>
+              {/* 잔상 1 (중간 농도) */}
+              <span
+                aria-hidden
+                className="pointer-events-none absolute left-[30.5px] top-0"
+                style={{
+                  animation:
+                    "tooltipArrowBounce 1.2s ease-in-out 0.12s infinite",
+                }}
+              >
+                <Image
+                  src="/icons/version-b/tooltip-arrow.svg"
+                  alt=""
+                  width={16}
+                  height={16}
+                  className="-scale-y-100 opacity-40"
+                />
+              </span>
+              {/* 메인 화살표 */}
+              <span
+                className="pointer-events-none absolute left-[30.5px] top-0"
+                style={{
+                  animation: "tooltipArrowBounce 1.2s ease-in-out infinite",
+                }}
+              >
+                <Image
+                  src="/icons/version-b/tooltip-arrow.svg"
+                  alt=""
+                  width={16}
+                  height={16}
+                  className="-scale-y-100"
+                />
+              </span>
             </div>
           </div>
         )}
