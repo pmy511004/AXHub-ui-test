@@ -160,25 +160,40 @@ export default function PageSidebar({
         {/* 시작 가이드 툴팁 (사용자 모드에서만 표시, Figma 5037:8812) */}
         {mode === "user" && (
           <div
-            className="pointer-events-none absolute bottom-full left-[102px] z-40 flex w-[223px] flex-col gap-1"
+            className="pointer-events-none absolute bottom-full left-[102px] z-40 flex w-[223px] flex-col items-start gap-1"
             data-node-id="5037:8812"
           >
+            {/* 본체 */}
             <div
-              className="flex flex-col gap-2 rounded-lg bg-[#27272a] p-5"
+              className="flex w-full flex-col justify-center gap-2 whitespace-nowrap rounded-lg bg-[#2d64fa] p-5"
               style={{ filter: "drop-shadow(0px 0px 20px rgba(0,0,0,0.1))" }}
+              data-node-id="5037:8813"
             >
-              <p className="whitespace-nowrap text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-white">
-                안녕하세요 관리자님,
-                <br />
-                시작 가이드를 준비했어요!
-              </p>
-              <p className="whitespace-nowrap text-base font-normal leading-[1.5] tracking-[-0.16px] text-white/70">
-                관리자 페이지를 열어주세요
-              </p>
+              <div
+                className="flex flex-col justify-center text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-white"
+                data-node-id="5037:8814"
+              >
+                <p>안녕하세요 관리자님,</p>
+                <p>시작 가이드를 준비했어요!</p>
+              </div>
+              <div
+                className="flex flex-col justify-center text-base font-normal leading-[1.5] tracking-[-0.16px] text-white/70"
+                data-node-id="5037:8815"
+              >
+                <p>관리자 페이지를 열어주세요</p>
+              </div>
             </div>
-            {/* 아래로 향한 화살표 */}
-            <div className="flex h-4 justify-center">
-              <div className="size-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-[#27272a]" />
+            {/* 아래로 향한 화살표 (Figma 5037:8816) */}
+            <div className="relative h-4 w-[77.5px]" data-node-id="5037:8816">
+              <div className="absolute left-[calc(50%+0.25px)] top-0 flex size-4 -translate-x-1/2 items-center justify-center">
+                <Image
+                  src="/icons/version-b/tooltip-arrow.svg"
+                  alt=""
+                  width={16}
+                  height={16}
+                  className="-scale-y-100"
+                />
+              </div>
             </div>
           </div>
         )}
