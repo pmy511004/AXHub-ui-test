@@ -43,7 +43,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
   const [profileOpen, setProfileOpen] = useState(false);
   const [darkMode] = useDarkMode();
   const [sidebarMode, setSidebarMode] = useState<"user" | "admin">(initialSidebarMode);
-  const [adminMenu, setAdminMenu] = useState<AdminActiveMenu>("대시보드");
+  const [adminMenu, setAdminMenu] = useState<AdminActiveMenu>("AXHub 시작하기");
   const [teamName, setTeamName] = useState("조코딩AX파트너스");
   const [teamDescription, setTeamDescription] = useState("");
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
@@ -255,7 +255,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
           if (next === sidebarMode) return;
           setSidebarMode(next);
           if (next === "admin") {
-            setAdminMenu("대시보드");
+            setAdminMenu("AXHub 시작하기");
             router.push("/manage");
           } else {
             router.push("/");
@@ -353,7 +353,14 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
         {/* Main scrollable */}
         <div className="relative flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden bg-white">
           {sidebarMode === "admin" ? (
-            adminMenu === "대시보드" ? (
+            adminMenu === "AXHub 시작하기" ? (
+            /* AXHub 시작하기 (준비 중) */
+            <div className="flex flex-1 items-center justify-center px-10 py-10">
+              <p className="text-2xl font-semibold leading-[1.2] text-[#71717a]">
+                AXHub 시작하기 화면은 준비 중이에요
+              </p>
+            </div>
+            ) : adminMenu === "대시보드" ? (
             /* T1. 테넌트 설정 (Figma 4910:4830) */
             <div
               className="relative flex flex-1 flex-col items-center justify-center gap-[60px] overflow-hidden px-14 pb-[120px] pt-10"

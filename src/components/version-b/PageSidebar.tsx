@@ -4,7 +4,11 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-export type AdminActiveMenu = "대시보드" | "멤버 • 그룹" | "환경설정";
+export type AdminActiveMenu =
+  | "AXHub 시작하기"
+  | "대시보드"
+  | "멤버 • 그룹"
+  | "환경설정";
 
 type ActiveMenu =
   | "홈"
@@ -38,7 +42,11 @@ const userMenuSection: Item[] = [
   { label: "내가 사용하는 앱", icon: "/icons/version-b/snb-collection.svg", href: "#" },
 ];
 
-const adminItems: { label: AdminActiveMenu; icon: string }[] = [
+const adminTopItems: { label: AdminActiveMenu; icon: string }[] = [
+  { label: "AXHub 시작하기", icon: "/icons/version-b/snb-axhub-start.svg" },
+];
+
+const adminBottomItems: { label: AdminActiveMenu; icon: string }[] = [
   { label: "대시보드", icon: "/icons/version-b/snb-dashboard.svg" },
   { label: "멤버 • 그룹", icon: "/icons/version-b/snb-member.svg" },
   { label: "환경설정", icon: "/icons/version-b/snb-settings.svg" },
@@ -111,33 +119,75 @@ export default function PageSidebar({
       <div className="flex flex-1 min-h-0 flex-col overflow-hidden bg-[#f6f6f6]">
         <nav className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col items-stretch gap-2 overflow-y-auto px-2 py-2">
           {mode === "admin" ? (
-            adminItems.map((item) => {
-              const isActive = activeMenu === item.label;
-              return (
-                <button
-                  key={item.label}
-                  type="button"
-                  onClick={() => onAdminMenuChange?.(item.label)}
-                  className="flex h-[37px] w-full items-center gap-2 rounded-lg px-3 py-2 transition-colors hover:bg-black/[0.03]"
-                >
-                  <span
-                    className={`menu-icon${isActive ? " menu-active-accent" : ""}`}
-                    style={{
-                      maskImage: `url(${item.icon})`,
-                      WebkitMaskImage: `url(${item.icon})`,
-                      ...(isActive ? {} : { color: "#d4d4d8" }),
-                    }}
-                  />
-                  <span
-                    className={`flex-1 whitespace-nowrap text-left text-sm leading-[1.5] tracking-[-0.14px] ${
-                      isActive ? "font-semibold menu-active-accent" : "font-normal text-[#18181b]"
+            <>
+              {/* 상단 그룹: AXHub 시작하기 (활성 시 흰색 배경 + 그림자 + 파랑 액센트) */}
+              {adminTopItems.map((item) => {
+                const isActive = activeMenu === item.label;
+                return (
+                  <button
+                    key={item.label}
+                    type="button"
+                    onClick={() => onAdminMenuChange?.(item.label)}
+                    className={`flex h-[37px] w-full items-center gap-2 rounded-lg px-3 py-2 transition-colors ${
+                      isActive
+                        ? "bg-white shadow-[0px_1px_2px_rgba(0,0,0,0.05)]"
+                        : "hover:bg-black/[0.03]"
                     }`}
                   >
-                    {item.label}
-                  </span>
-                </button>
-              );
-            })
+                    <span
+                      className="menu-icon"
+                      style={{
+                        maskImage: `url(${item.icon})`,
+                        WebkitMaskImage: `url(${item.icon})`,
+                        color: isActive ? "#2d64fa" : "#d4d4d8",
+                      }}
+                    />
+                    <span
+                      className="flex-1 whitespace-nowrap text-left text-sm leading-[1.5] tracking-[-0.14px]"
+                      style={
+                        isActive
+                          ? { color: "#2d64fa", fontWeight: 600 }
+                          : { color: "#18181b", fontWeight: 400 }
+                      }
+                    >
+                      {item.label}
+                    </span>
+                  </button>
+                );
+              })}
+
+              {/* 그룹 간 간격 */}
+              <div className="h-1 shrink-0" />
+
+              {/* 하단 그룹: 대시보드 / 멤버•그룹 / 환경설정 */}
+              {adminBottomItems.map((item) => {
+                const isActive = activeMenu === item.label;
+                return (
+                  <button
+                    key={item.label}
+                    type="button"
+                    onClick={() => onAdminMenuChange?.(item.label)}
+                    className="flex h-[37px] w-full items-center gap-2 rounded-lg px-3 py-2 transition-colors hover:bg-black/[0.03]"
+                  >
+                    <span
+                      className={`menu-icon${isActive ? " menu-active-accent" : ""}`}
+                      style={{
+                        maskImage: `url(${item.icon})`,
+                        WebkitMaskImage: `url(${item.icon})`,
+                        ...(isActive ? {} : { color: "#d4d4d8" }),
+                      }}
+                    />
+                    <span
+                      className={`flex-1 whitespace-nowrap text-left text-sm leading-[1.5] tracking-[-0.14px] ${
+                        isActive ? "font-semibold menu-active-accent" : "font-normal text-[#18181b]"
+                      }`}
+                    >
+                      {item.label}
+                    </span>
+                  </button>
+                );
+              })}
+            </>
           ) : (
             <>
               {userTopItems.map(renderItem)}
