@@ -218,8 +218,10 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
   };
   const isMakeAppValid = makeAppName.trim() !== "" && makeAppCategory !== "";
 
+  // 최초접속 가이드 모달은 임시 비활성화 (코드는 유지)
+  const SHOW_FIRST_TIME_GUIDE = false;
   useEffect(() => {
-    if (sidebarMode === "admin") {
+    if (sidebarMode === "admin" || !SHOW_FIRST_TIME_GUIDE) {
       setGuideModalOpen(false);
       return;
     }
@@ -811,51 +813,19 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                 <p className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">사용 중인 앱을 모았어요</p>
               </div>
 
-              {/* 앱 그리드 */}
-              {(() => {
-                const gradients = [
-                  "linear-gradient(135deg, #9B7AB8, #5B3D7A)",
-                  "linear-gradient(135deg, #DBA869, #5B3D7A)",
-                  "linear-gradient(135deg, #D68FBB, #5B3D7A)",
-                  "linear-gradient(135deg, #7AA3D4, #5B3D7A)",
-                ];
-                const allApps = [
-                  "경비 정산", "스마트 캘린더", "매출 대시보드", "문서 검색", "프로젝트 트래커", "회의실 예약", "전자 결재",
-                  "고객 CRM", "워크플로우", "AI 요약", "팀 메신저", "데이터 시각화", "재고 관리", "출장 예약", "HR 봇", "전자 서명", "피드백 허브",
-                ].map((name, i) => ({ name, gradient: gradients[i % gradients.length] }));
-                const rows: typeof allApps[] = [];
-                for (let i = 0; i < allApps.length; i += 7) rows.push(allApps.slice(i, i + 7));
-                // 1줄 높이: 96px(아이콘) + 8px(gap) + 21px(텍스트) + 16px(패딩) ≈ 141px
-                return (
-                  <div className="overflow-hidden transition-[max-height] duration-500 ease-in-out" style={{ maxHeight: appsExpanded ? `${rows.length * 165}px` : "141px" }}>
-                    <div className="flex flex-col gap-6">
-                      {rows.map((row, ri) => (
-                        <div key={ri} className="flex gap-6">
-                          {row.map((app, i) => (
-                            <div key={i} className="group flex flex-1 cursor-pointer flex-col items-center gap-2 p-2">
-                              <div className="size-[96px] rounded-[12px] transition-transform duration-200 ease-out group-hover:scale-110" style={{ background: app.gradient }} />
-                              <p className="text-center text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a] transition-colors duration-200 group-hover:text-[#18181b]">{app.name}</p>
-                            </div>
-                          ))}
-                          {row.length < 7 && Array.from({ length: 7 - row.length }).map((_, j) => (
-                            <div key={`empty-${j}`} className="flex-1 p-2" />
-                          ))}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })()}
-
-              {/* 펼치기/접기 버튼 */}
-              <div className="flex justify-center">
-                <button
-                  type="button"
-                  onClick={() => setAppsExpanded(!appsExpanded)}
-                  className="h-8 rounded-full border border-[#e4e4e7] px-5 text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#f9f9f9]"
-                >
-                  {appsExpanded ? "접기" : "펼치기"}
-                </button>
+              {/* 빈 상태 카드 */}
+              <div className="flex h-[150px] w-full items-center justify-center rounded-xl bg-[#f9f9f9] p-3">
+                <div className="flex flex-col items-center justify-center gap-2">
+                  <Image
+                    src="/icons/version-b/empty-stack.svg"
+                    alt=""
+                    width={53}
+                    height={48}
+                  />
+                  <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">
+                    사용 중인 앱이 없어요
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -876,42 +846,19 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                 </button>
               </div>
 
-              {/* 앱 목록 */}
-              <div className="flex flex-col gap-2">
-                {[
-                  { name: "경비 정산 자동화", category: "경영재무", status: "운영중", gradient: "linear-gradient(135deg, #9B7AB8, #5B3D7A)" },
-                  { name: "스마트 캘린더", category: "협업도구", status: "개발중", gradient: "linear-gradient(135deg, #DBA869, #5B3D7A)" },
-                ].map((app, i) => {
-                  const isLive = app.status === "운영중";
-                  return (
-                    <div key={i} className="flex cursor-pointer items-center gap-3 rounded-2xl p-3 transition-colors hover:bg-[#f9f9f9]">
-                      <div
-                        className="size-12 shrink-0 rounded-[12px]"
-                        style={{ background: app.gradient }}
-                      />
-                      <div className="flex flex-1 items-center gap-2">
-                        <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-black">{app.name}</p>
-                        <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#5B3D7A]">{app.category}</p>
-                      </div>
-                      <span
-                        className="flex shrink-0 items-center justify-center rounded-full px-3 py-2 text-xs font-semibold leading-[1.3] tracking-[-0.12px]"
-                        style={{
-                          backgroundColor: isLive ? "#e9faf1" : "#fffbe1",
-                          color: isLive ? "#1fa24e" : "#f6c205",
-                        }}
-                      >
-                        {app.status}
-                      </span>
-                      <Image
-                        src="/icons/version-b/arrow-right-sm.svg"
-                        alt=""
-                        width={16}
-                        height={16}
-                        className="shrink-0"
-                      />
-                    </div>
-                  );
-                })}
+              {/* 빈 상태 카드 */}
+              <div className="flex h-[150px] w-full items-center justify-center rounded-xl bg-[#f9f9f9] p-3">
+                <div className="flex flex-col items-center justify-center gap-2">
+                  <Image
+                    src="/icons/version-b/empty-stack.svg"
+                    alt=""
+                    width={53}
+                    height={48}
+                  />
+                  <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">
+                    관리하고 있는 앱이 없어요
+                  </p>
+                </div>
               </div>
             </div>
           </div>
