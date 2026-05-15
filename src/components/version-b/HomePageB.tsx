@@ -108,18 +108,8 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
 
   const onDeactivateClick = () => {
     if (!detailMember) return;
-    if (detailMember.status === "비활성") {
-      setMembers((prev) =>
-        prev.map((m) => {
-          if (m.id !== detailMember.id) return m;
-          const lastAccess = m.lastAccess === "-" ? "2026-05-14" : m.lastAccess;
-          return { ...m, status: "활성" as MemberStatus, lastAccess };
-        })
-      );
-    } else {
-      setDeactivateModalOpen(true);
-      setDeactivateModalClosing(false);
-    }
+    setDeactivateModalOpen(true);
+    setDeactivateModalClosing(false);
   };
   const closeDeactivateModal = () => {
     setDeactivateModalClosing(true);
@@ -128,13 +118,25 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
       setDeactivateModalClosing(false);
     }, 250);
   };
-  const confirmDeactivate = () => {
+  const confirmStatusToggle = () => {
     if (!detailMember) return;
-    setMembers((prev) =>
-      prev.map((m) =>
-        m.id === detailMember.id ? { ...m, status: "비활성" as MemberStatus } : m
-      )
-    );
+    if (detailMember.status === "비활성") {
+      setMembers((prev) =>
+        prev.map((m) => {
+          if (m.id !== detailMember.id) return m;
+          const lastAccess = m.lastAccess === "-" ? "2026-05-15" : m.lastAccess;
+          return { ...m, status: "활성" as MemberStatus, lastAccess };
+        })
+      );
+    } else {
+      setMembers((prev) =>
+        prev.map((m) =>
+          m.id === detailMember.id
+            ? { ...m, status: "비활성" as MemberStatus }
+            : m
+        )
+      );
+    }
     closeDeactivateModal();
   };
   const submitInvite = () => {
@@ -1202,55 +1204,64 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
             </div>
           )}
 
-          {/* 계정 비활성화 확인 모달 (Figma 5005:8241) */}
+          {/* 계정 활성/비활성 확인 모달 (Figma 5005:8241 / 5024:8271) */}
           {deactivateModalOpen && detailMember && (
             <div
               className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 transition-opacity duration-250"
               style={{ opacity: deactivateModalClosing ? 0 : 1 }}
               onClick={closeDeactivateModal}
             >
-              <div
-                className="flex w-[420px] flex-col items-center justify-center gap-10 rounded-2xl bg-white px-6 py-10"
-                style={{
-                  boxShadow:
-                    "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)",
-                  backdropFilter: "blur(20px)",
-                  animation: deactivateModalClosing
-                    ? "modalScaleOut 0.25s ease-in forwards"
-                    : "modalScaleIn 0.3s ease-out",
-                }}
-                onClick={(e) => e.stopPropagation()}
-                data-node-id="5005:8241"
-              >
-                <div className="flex w-full flex-col items-center gap-2">
-                  <p className="w-full text-center text-[22px] font-semibold leading-[1.3] tracking-[-0.22px] text-[#18181b]">
-                    {detailMember.fullName} 님의
-                    <br />
-                    계정을 비활성화 할까요?
-                  </p>
-                  <p className="w-full text-center text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">
-                    조코딩AX파트너스 팀 허브에
-                    <br />
-                    더 이상 접근할 수 없어요
-                  </p>
-                </div>
-                <div className="flex w-full items-center justify-center gap-2">
-                  <button
-                    type="button"
-                    onClick={closeDeactivateModal}
-                    className="flex h-9 items-center justify-center rounded-full bg-[#f6f6f6] px-5 py-3 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#ececec]"
+              {(() => {
+                const isReactivate = detailMember.status === "비활성";
+                const actionLabel = isReactivate ? "활성화" : "비활성화";
+                const subtitle = isReactivate
+                  ? "다시 접근할 수 있어요"
+                  : "더 이상 접근할 수 없어요";
+                return (
+                  <div
+                    className="flex w-[420px] flex-col items-center justify-center gap-10 rounded-2xl bg-white px-6 py-10"
+                    style={{
+                      boxShadow:
+                        "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)",
+                      backdropFilter: "blur(20px)",
+                      animation: deactivateModalClosing
+                        ? "modalScaleOut 0.25s ease-in forwards"
+                        : "modalScaleIn 0.3s ease-out",
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                    data-node-id={isReactivate ? "5024:8271" : "5005:8241"}
                   >
-                    취소
-                  </button>
-                  <button
-                    type="button"
-                    onClick={confirmDeactivate}
-                    className="flex h-9 items-center justify-center rounded-full bg-[#18181b] px-5 py-3 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
-                  >
-                    네, 비활성화 할게요
-                  </button>
-                </div>
-              </div>
+                    <div className="flex w-full flex-col items-center gap-2">
+                      <p className="w-full text-center text-[22px] font-semibold leading-[1.3] tracking-[-0.22px] text-[#18181b]">
+                        {detailMember.fullName} 님의
+                        <br />
+                        계정을 {actionLabel} 할까요?
+                      </p>
+                      <p className="w-full text-center text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">
+                        조코딩AX파트너스 팀 허브에
+                        <br />
+                        {subtitle}
+                      </p>
+                    </div>
+                    <div className="flex w-full items-center justify-center gap-2">
+                      <button
+                        type="button"
+                        onClick={closeDeactivateModal}
+                        className="flex h-9 items-center justify-center rounded-full bg-[#f6f6f6] px-5 py-3 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#ececec]"
+                      >
+                        취소
+                      </button>
+                      <button
+                        type="button"
+                        onClick={confirmStatusToggle}
+                        className="flex h-9 items-center justify-center rounded-full bg-[#18181b] px-5 py-3 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+                      >
+                        네, {actionLabel} 할게요
+                      </button>
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           )}
 
