@@ -376,7 +376,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
 
               {/* 단계 카드 */}
               <div className="flex flex-col items-start gap-5">
-                <div className="flex w-[556px] items-center gap-3 rounded-xl bg-[#f6f7f9] p-6">
+                <div className="flex w-[556px] items-center gap-3 rounded-xl bg-[#f6f7f9] p-6 transition-transform duration-200 ease-out hover:scale-[1.02]">
                   <div className="flex flex-1 flex-col items-start gap-2 whitespace-nowrap">
                     <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">
                       기본 설정
@@ -393,7 +393,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                     이동
                   </button>
                 </div>
-                <div className="flex w-[556px] items-center gap-3 rounded-xl bg-[#f6f7f9] p-6">
+                <div className="flex w-[556px] items-center gap-3 rounded-xl bg-[#f6f7f9] p-6 transition-transform duration-200 ease-out hover:scale-[1.02]">
                   <div className="flex flex-1 flex-col items-start gap-2 whitespace-nowrap">
                     <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">
                       동료 초대
