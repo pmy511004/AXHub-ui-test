@@ -24,7 +24,6 @@ export default function MakePageB() {
   const isDetail = view === "detail";
   const detailApp = searchParams.get("app") || "";
   const detailCategory = searchParams.get("category") || "";
-  const [activeTeam, setActiveTeam] = useState<"JO" | "DE">("JO");
   const [profileOpen, setProfileOpen] = useState(false);
   const [darkMode, setDarkMode] = useDarkMode();
   const [sortOpen, setSortOpen] = useState(false);
@@ -54,71 +53,66 @@ export default function MakePageB() {
     <div
       className={`flex h-screen w-full items-start overflow-hidden${darkMode ? " dark-mode" : ""}`}
       style={{
-        backgroundColor: darkMode ? "#0C0A12" : "#130321",
-        "--page-primary": darkMode ? "#6E4A94" : "#2D64FA",
+        backgroundColor: darkMode ? "#0E1014" : "#F6F7F9",
+        "--page-primary": darkMode ? "#4B7BFF" : "#2D64FA",
       } as React.CSSProperties}
       data-node-id="2471:1262"
     >
-      {/* L. Global Nav (팀 프로필 셀렉터) */}
-      <div className="flex h-full w-[68px] shrink-0 flex-col items-center justify-between">
-        <div className="flex w-full flex-col items-center gap-4 px-3 py-4">
-          {(["JO", "DE"] as const).map((team) => {
-            const isActive = activeTeam === team;
-            return (
-              <button
-                key={team}
-                type="button"
-                onClick={() => setActiveTeam(team)}
-                className={`relative flex size-11 items-center justify-center overflow-hidden rounded-xl bg-[#2D64FA] p-1 transition-shadow ${isActive ? "shadow-[0px_0px_0px_1px_white]" : ""}`}
-                aria-label={`팀 ${team}`}
-              >
-                <p className="flex-1 text-center text-base font-bold leading-[1.5] tracking-[-0.16px] text-white">{team}</p>
-                {!isActive && <span className="pointer-events-none absolute inset-0 rounded-xl bg-[rgba(24,24,27,0.48)]" />}
-              </button>
-            );
-          })}
-          <button type="button" aria-label="팀 추가" className="flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M12 5v14M5 12h14" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
-          </button>
-        </div>
-        <div className="flex w-full flex-col items-center gap-2 px-3 py-4">
-          <button type="button" onClick={() => setDarkMode(!darkMode)} className="flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10" aria-label={darkMode ? "라이트모드로 전환" : "다크모드로 전환"}>
-            <Image src={darkMode ? "/icons/version-b/nav-sun.svg" : "/icons/version-b/nav-moon.svg"} alt="" width={24} height={24} />
-          </button>
-          <NotificationButton />
-          <div className="relative">
-            <button type="button" onClick={() => setProfileOpen(!profileOpen)} className="relative size-10 overflow-hidden rounded-full transition-opacity hover:opacity-80" aria-label="프로필">
-              <Image src="/icons/version-b/profile-new.png" alt="" fill sizes="40px" className="rounded-full object-cover" />
+      {/* L. Sidebar */}
+      <PageSidebar activeMenu="앱 만들기" />
+
+      {/* R. Header + Main (홈 스타일 셸) */}
+      <div className="relative flex h-full min-w-0 flex-1 flex-col overflow-hidden bg-white">
+        {/* Header (60px) */}
+        <div className="flex h-[60px] shrink-0 items-center justify-between border-b border-[rgba(82,82,91,0.08)] bg-white px-5">
+          <div className="flex items-center">
+            <span className="px-1 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">
+              앱 만들기
+            </span>
+          </div>
+          <div className="flex h-full items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setDarkMode(!darkMode)}
+              aria-label={darkMode ? "라이트모드로 전환" : "다크모드로 전환"}
+              className="flex size-9 items-center justify-center rounded-full transition-colors hover:bg-[#f4f4f5]"
+            >
+              <Image src="/icons/version-b/header-search.svg" alt="" width={32} height={32} />
             </button>
-            {profileOpen && (
-              <>
-                <div className="fixed inset-0 z-40" onClick={() => setProfileOpen(false)} />
-                <div className="absolute bottom-0 left-[calc(100%+8px)] z-50 w-[220px] rounded-2xl bg-white p-3 shadow-lg" style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)" }}>
-                  <div className="flex flex-col gap-3">
-                    <div className="flex flex-col gap-1 rounded-2xl px-3 py-2">
-                      <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">박민영</p>
-                      <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">minion@jocodingax.ai</p>
-                    </div>
-                    <div className="h-px w-full bg-[#e4e4e7]" />
-                    <div className="flex flex-col">
-                      <button type="button" className="w-full rounded-lg px-3 py-2 text-left text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f4f4f5]">내 정보</button>
-                      <button type="button" className="w-full rounded-lg px-3 py-2 text-left text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f4f4f5]">로그아웃</button>
+            <NotificationButton variant="header" />
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setProfileOpen(!profileOpen)}
+                className="flex size-9 items-center justify-center rounded-full bg-[#2D64FA] p-2 transition-opacity hover:opacity-80"
+                aria-label="프로필"
+              >
+                <span className="whitespace-nowrap text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white">민영</span>
+              </button>
+              {profileOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setProfileOpen(false)} />
+                  <div className="absolute right-0 top-[calc(100%+8px)] z-50 w-[220px] rounded-2xl bg-white p-3" style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)" }}>
+                    <div className="flex flex-col gap-3">
+                      <div className="flex flex-col gap-1 rounded-2xl px-3 py-2">
+                        <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">박민영</p>
+                        <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">minion@jocodingax.ai</p>
+                      </div>
+                      <div className="h-px w-full bg-[#e4e4e7]" />
+                      <div className="flex flex-col">
+                        <button type="button" className="w-full rounded-lg px-3 py-2 text-left text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f4f4f5]">내 정보</button>
+                        <button type="button" className="w-full rounded-lg px-3 py-2 text-left text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f4f4f5]">로그아웃</button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </>
-            )}
+                </>
+              )}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* M + R. Sidebar + Main area (통합) */}
-      <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden">
-        <PageSidebar activeMenu="앱 만들기" />
-        {/* Right: Main content */}
-        <div className="no-scrollbar relative flex h-full min-w-0 flex-1 flex-col overflow-y-auto bg-white px-14 py-10 pb-[240px]">
+        {/* Main scrollable */}
+        <div className="no-scrollbar relative flex min-w-0 flex-1 flex-col overflow-y-auto bg-white px-14 py-10 pb-[240px]">
           {/* 예시 보기 모달 */}
           {exampleOpen && (
             <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/50 transition-opacity duration-250" style={{ opacity: exampleClosing ? 0 : 1 }} onClick={closeExample}>
@@ -146,8 +140,8 @@ export default function MakePageB() {
           )}
           <div
             key={view || "project"}
-            className="mx-auto flex w-full flex-1 flex-col gap-6 min-[1281px]:max-w-[1280px] animate-[fadeSlideIn_0.4s_ease-out]"
-            style={{ animation: "fadeSlideIn 0.4s ease-out" }}
+            className="mx-auto flex w-full flex-1 flex-col gap-6 min-[1281px]:max-w-[1280px]"
+            style={{ animation: "pageFadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1)" }}
           >
           {/* Header */}
           {isCreate ? (
@@ -178,7 +172,7 @@ export default function MakePageB() {
             /* 앱 만들기 폼 */
             <div className="flex items-start gap-4">
               {/* Step sidebar */}
-              <div className="sticky top-6 flex w-[237px] shrink-0 flex-col rounded-xl bg-[#f6f7f9] p-2">
+              <div className="sticky top-6 flex w-[237px] shrink-0 flex-col rounded-xl bg-surface p-2">
                 <button type="button" onClick={() => setCreateStep(1)} className="flex items-center gap-2 rounded-lg p-3 transition-colors hover:bg-[#f0f0f0]">
                   <span className={`flex size-5 items-center justify-center rounded-full text-sm font-semibold ${createStep === 1 ? "bg-[rgba(231,101,190,0.2)] text-[#2D64FA]" : "bg-[#e4e4e7] text-[#a1a1aa]"}`}>1</span>
                   <span className={`flex-1 text-left text-base font-semibold ${createStep === 1 ? "text-[#2D64FA]" : "text-[#71717a]"}`}>기본 정보</span>
@@ -524,7 +518,7 @@ export default function MakePageB() {
                       onClick={() => router.push(`/make?view=detail&app=${encodeURIComponent(app.name)}&category=${encodeURIComponent(app.category)}`)}
                       className={`flex cursor-pointer flex-col gap-5 rounded-2xl p-5 transition-transform duration-200 ease-out hover:scale-[1.03] ${
                         isArchivedCard
-                          ? "bg-[#f6f7f9]"
+                          ? "bg-surface"
                           : "border border-[#e4e4e7] bg-white"
                       }`}
                     >

@@ -17,7 +17,7 @@ export default function AdminPageB() {
       className={`flex h-screen w-full items-start overflow-hidden${darkMode ? " dark-mode" : ""}`}
       style={{
         backgroundColor: darkMode ? "#0C0A12" : "#130321",
-        "--page-primary": darkMode ? "#6E4A94" : "#2D64FA",
+        "--page-primary": darkMode ? "#4B7BFF" : "#2D64FA",
       } as React.CSSProperties}
       data-node-id="2530:1480"
     >

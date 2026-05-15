@@ -60,7 +60,7 @@ export default function LoginPageB() {
 
   return (
     <main
-      className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-[#f6f7f9] px-6 py-[100px]"
+      className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-surface px-6 py-[100px]"
       data-node-id="4777:1209"
     >
       <div

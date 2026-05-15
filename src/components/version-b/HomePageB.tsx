@@ -27,9 +27,25 @@ const STATUS_STYLES: Record<MemberStatus, { bg: string; text: string }> = {
 import NotificationButton from "./NotificationButton";
 import { useDarkMode } from "@/hooks/useDarkMode";
 
-type HomePageBProps = { initialSidebarMode?: "user" | "admin" };
+type HomePageBProps = {
+  initialSidebarMode?: "user" | "admin";
+  initialAdminMenu?: AdminActiveMenu;
+};
 
-export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProps = {}) {
+// 페이지 로드(reload 포함) 당 한 번만 reload-reset 체크
+let __reloadCheckedThisPageLoad = false;
+
+const ADMIN_MENU_PATHS: Record<AdminActiveMenu, string> = {
+  "AXHub 시작하기": "/manage",
+  "대시보드": "/manage/dashboard",
+  "멤버 • 그룹": "/manage/members",
+  "환경설정": "/manage/settings",
+};
+
+export default function HomePageB({
+  initialSidebarMode = "user",
+  initialAdminMenu = "AXHub 시작하기",
+}: HomePageBProps = {}) {
   const router = useRouter();
   const [appsExpanded, setAppsExpanded] = useState(false);
   // 최초접속/사용중 토글은 임시 비활성화 (사용 중 페이지만 노출)
@@ -41,11 +57,152 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
   const [selectedOS, setSelectedOS] = useState<"mac" | "windows">("mac");
   const [guideDirection, setGuideDirection] = useState<"forward" | "back">("forward");
   const [profileOpen, setProfileOpen] = useState(false);
-  const [darkMode] = useDarkMode();
+  const [darkMode, setDarkMode] = useDarkMode();
   const [sidebarMode, setSidebarMode] = useState<"user" | "admin">(initialSidebarMode);
-  const [adminMenu, setAdminMenu] = useState<AdminActiveMenu>("AXHub 시작하기");
+  const [adminMenu, setAdminMenuState] = useState<AdminActiveMenu>(initialAdminMenu);
+  const setAdminMenu = (next: AdminActiveMenu) => {
+    setAdminMenuState(next);
+    const path = ADMIN_MENU_PATHS[next];
+    if (typeof window !== "undefined" && window.location.pathname !== path) {
+      router.push(path);
+    }
+  };
   const [teamName, setTeamName] = useState("조코딩AX파트너스");
   const [teamDescription, setTeamDescription] = useState("");
+  const [slug] = useState("jocodingax");
+  const [autoJoin, setAutoJoin] = useState(true);
+  const [emailDomain, setEmailDomain] = useState("");
+  const [savedSettings, setSavedSettings] = useState({
+    teamName: "조코딩AX파트너스",
+    teamDescription: "",
+    autoJoin: true,
+    emailDomain: "",
+  });
+  const [basicSetupCompleted, setBasicSetupCompleted] = useState(false);
+  const [basicSetupTooltipDismissed, setBasicSetupTooltipDismissed] = useState(false);
+  const [settingsTooltipDismissed, setSettingsTooltipDismissed] = useState(false);
+  const [inviteTooltipDismissed, setInviteTooltipDismissed] = useState(false);
+  const [inviteCompleted, setInviteCompleted] = useState(false);
+  const [inviteCompletedTooltipDismissed, setInviteCompletedTooltipDismissed] = useState(false);
+  const [axhubMenuRemoved, setAxhubMenuRemoved] = useState(false);
+
+  // 라우트 이동 시 HomePageB 재마운트 → sessionStorage로 진행 상태 복원
+  // 단, AXHub 시작하기 페이지에서 새로고침(reload)이면 모든 진행 상태 초기화 (페이지 로드 당 1회만 평가)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!__reloadCheckedThisPageLoad) {
+      __reloadCheckedThisPageLoad = true;
+      const nav = performance.getEntriesByType("navigation")[0] as
+        | PerformanceNavigationTiming
+        | undefined;
+      if (nav?.type === "reload" && initialAdminMenu === "AXHub 시작하기") {
+        sessionStorage.removeItem("axhub-basic-setup-completed");
+        sessionStorage.removeItem("axhub-saved-settings");
+        sessionStorage.removeItem("axhub-invite-completed");
+        sessionStorage.removeItem("axhub-menu-removed");
+        return;
+      }
+    }
+    if (sessionStorage.getItem("axhub-basic-setup-completed") === "true") {
+      setBasicSetupCompleted(true);
+    }
+    const raw = sessionStorage.getItem("axhub-saved-settings");
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === "object") {
+          setSavedSettings(parsed);
+          if (typeof parsed.teamName === "string") setTeamName(parsed.teamName);
+          if (typeof parsed.teamDescription === "string") setTeamDescription(parsed.teamDescription);
+          if (typeof parsed.autoJoin === "boolean") setAutoJoin(parsed.autoJoin);
+          if (typeof parsed.emailDomain === "string") setEmailDomain(parsed.emailDomain);
+        }
+      } catch {}
+    }
+  }, [initialAdminMenu]);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (basicSetupCompleted) {
+      sessionStorage.setItem("axhub-basic-setup-completed", "true");
+    }
+  }, [basicSetupCompleted]);
+
+  // 환경설정 페이지를 방문하기만 해도 1단계 완료로 처리 (저장은 선택 사항)
+  useEffect(() => {
+    if (sidebarMode === "admin" && adminMenu === "환경설정") {
+      setBasicSetupCompleted(true);
+    }
+  }, [sidebarMode, adminMenu]);
+
+  // inviteCompleted sessionStorage 복원/저장
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (sessionStorage.getItem("axhub-invite-completed") === "true") {
+      setInviteCompleted(true);
+    }
+  }, []);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (inviteCompleted) {
+      sessionStorage.setItem("axhub-invite-completed", "true");
+    }
+  }, [inviteCompleted]);
+
+  // axhubMenuRemoved sessionStorage 복원/저장
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (sessionStorage.getItem("axhub-menu-removed") === "true") {
+      setAxhubMenuRemoved(true);
+    }
+  }, []);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (axhubMenuRemoved) {
+      sessionStorage.setItem("axhub-menu-removed", "true");
+    }
+  }, [axhubMenuRemoved]);
+
+  const onCompleteGuide = () => {
+    setAxhubMenuRemoved(true);
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("axhub-menu-removed", "true");
+    }
+    setAdminMenu("대시보드");
+  };
+  const [saveToast, setSaveToast] = useState<{ closing: boolean } | null>(null);
+  const saveToastTimer = useRef<number | null>(null);
+  const saveToastCloseTimer = useRef<number | null>(null);
+  const showSaveToast = () => {
+    if (saveToastTimer.current) window.clearTimeout(saveToastTimer.current);
+    if (saveToastCloseTimer.current) window.clearTimeout(saveToastCloseTimer.current);
+    setSaveToast({ closing: false });
+    saveToastTimer.current = window.setTimeout(() => {
+      setSaveToast((prev) => (prev ? { ...prev, closing: true } : prev));
+      saveToastCloseTimer.current = window.setTimeout(() => setSaveToast(null), 350);
+    }, 2500);
+  };
+  const isSettingsDirty =
+    teamName !== savedSettings.teamName ||
+    teamDescription !== savedSettings.teamDescription ||
+    autoJoin !== savedSettings.autoJoin ||
+    emailDomain !== savedSettings.emailDomain;
+  const saveSettings = () => {
+    if (!isSettingsDirty) return;
+    const next = { teamName, teamDescription, autoJoin, emailDomain };
+    setSavedSettings(next);
+    setBasicSetupCompleted(true);
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("axhub-saved-settings", JSON.stringify(next));
+    }
+    showSaveToast();
+  };
+  const cancelSettings = () => {
+    if (!isSettingsDirty) return;
+    setTeamName(savedSettings.teamName);
+    setTeamDescription(savedSettings.teamDescription);
+    setAutoJoin(savedSettings.autoJoin);
+    setEmailDomain(savedSettings.emailDomain);
+  };
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
   const [inviteModalClosing, setInviteModalClosing] = useState(false);
   const [inviteRows, setInviteRows] = useState<Array<{ email: string; role: MemberRole }>>([
@@ -182,6 +339,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
       };
     });
     setMembers((prev) => [...prev, ...newMembers]);
+    setInviteCompleted(true);
     closeInviteModal();
   };
 
@@ -243,20 +401,23 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
     <div
       className={`flex h-screen w-full items-start overflow-hidden${darkMode ? " dark-mode" : ""}`}
       style={{
-        backgroundColor: darkMode ? "#0C0A12" : "#130321",
-        "--page-primary": darkMode ? "#6E4A94" : "#2D64FA",
+        backgroundColor: darkMode ? "#0E1014" : "#F6F7F9",
+        "--page-primary": darkMode ? "#4B7BFF" : "#2D64FA",
       } as React.CSSProperties}
     >
       {/* L. Sidebar */}
       <PageSidebar
         activeMenu={sidebarMode === "admin" ? adminMenu : "홈"}
         mode={sidebarMode}
+        hideStartGuide={axhubMenuRemoved}
         onModeChange={(next) => {
           if (next === sidebarMode) return;
           setSidebarMode(next);
           if (next === "admin") {
-            setAdminMenu("AXHub 시작하기");
-            router.push("/manage");
+            const fallback: AdminActiveMenu = axhubMenuRemoved
+              ? "대시보드"
+              : "AXHub 시작하기";
+            setAdminMenu(fallback);
           } else {
             router.push("/");
           }
@@ -282,7 +443,8 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
           <div className="flex h-full items-center gap-3">
             <button
               type="button"
-              aria-label="검색"
+              onClick={() => setDarkMode(!darkMode)}
+              aria-label={darkMode ? "라이트모드로 전환" : "다크모드로 전환"}
               className="flex size-9 items-center justify-center rounded-full transition-colors hover:bg-[#f4f4f5]"
             >
               <Image
@@ -352,8 +514,45 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
 
         {/* Main scrollable */}
         <div className="relative flex min-w-0 flex-1 flex-col overflow-y-auto overflow-x-hidden bg-white">
+          {/* 콘텐츠 바디 — 페이지 전환 시 단일 페이드 슬라이드 */}
+          <div
+            key={sidebarMode === "admin" ? `admin-${adminMenu}` : `user-${viewVersion}`}
+            className="flex flex-1 flex-col"
+            style={{ animation: "pageFadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1)" }}
+          >
           {sidebarMode === "admin" ? (
             adminMenu === "AXHub 시작하기" ? (
+              basicSetupCompleted && inviteCompleted ? (
+            /* 가이드 완료 뷰 (Figma 5058:9675) */
+            <div
+              className="flex flex-1 flex-col items-center justify-center gap-[60px] border-r border-[#f6f6f6] bg-white px-14 pb-[120px] pt-10"
+              data-node-id="5058:9781"
+            >
+              <div className="flex flex-col items-center gap-2 whitespace-nowrap">
+                <p className="text-[40px] font-bold leading-[1.2] text-[#18181b]">
+                  함께하게 되어 영광입니다!
+                </p>
+                <p className="text-[40px] font-bold leading-[1.2] text-[#a1a1aa]">
+                  이제 동료들과 AXHub를 시작하세요
+                </p>
+              </div>
+              <div className="flex flex-col items-center gap-3">
+                <button
+                  type="button"
+                  onClick={onCompleteGuide}
+                  className="flex h-12 items-center justify-center rounded-full bg-[#2d64fa] px-6 py-3 transition-opacity hover:opacity-90"
+                  data-node-id="5077:10018"
+                >
+                  <span className="whitespace-nowrap text-base font-semibold leading-[1.5] tracking-[-0.16px] text-white">
+                    확인
+                  </span>
+                </button>
+                <p className="whitespace-nowrap text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">
+                  확인을 누르면 이 메뉴가 사라집니다
+                </p>
+              </div>
+            </div>
+              ) : (
             /* AXHub 시작하기 (Figma 4910:4893) */
             <div
               className="flex flex-1 flex-col items-center justify-center gap-[60px] border-r border-[#f6f6f6] bg-white px-14 pb-[120px] pt-10"
@@ -370,145 +569,300 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                   </p>
                 </div>
                 <p className="whitespace-nowrap text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">
-                  두 단계만 하면 돼요
+                  가이드를 따라오면 금방 끝나요
                 </p>
               </div>
 
               {/* 단계 카드 */}
               <div className="flex flex-col items-start gap-5">
-                <div className="flex w-[556px] items-center gap-3 rounded-xl bg-[#f6f7f9] p-6 transition-transform duration-200 ease-out hover:scale-[1.02]">
-                  <div className="flex flex-1 flex-col items-start gap-2 whitespace-nowrap">
-                    <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">
-                      기본 설정
-                    </p>
-                    <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b]/70">
-                      팀 아이콘과 소개, 자동 가입을 설정합니다
-                    </p>
+                {/* 카드 1 + 우측 플로팅 툴팁 — 툴팁은 카드 hover scale에 영향받지 않도록 분리 */}
+                <div className="relative">
+                  <div className="flex w-[556px] items-center gap-3 rounded-xl bg-surface p-6 transition-transform duration-200 ease-out hover:scale-[1.02]">
+                    <div className="flex flex-1 flex-col items-start gap-2 whitespace-nowrap">
+                      <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">
+                        기본 설정
+                      </p>
+                      <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b]/70">
+                        팀 아이콘과 소개, 자동 가입을 설정합니다
+                      </p>
+                    </div>
+                    {basicSetupCompleted ? (
+                      <div
+                        className="flex h-8 shrink-0 items-center justify-center rounded-full bg-[#e4e4e7] px-4 py-3"
+                        data-node-id="5058:9669"
+                      >
+                        <span className="whitespace-nowrap text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+                          완료
+                        </span>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setAdminMenu("환경설정")}
+                        className="flex h-8 items-center justify-center rounded-full bg-[#2d64fa] px-4 py-3 text-sm font-medium leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+                      >
+                        이동
+                      </button>
+                    )}
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => setAdminMenu("대시보드")}
-                    className="flex h-8 items-center justify-center rounded-full bg-[#2d64fa] px-4 py-3 text-sm font-medium leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+
+                  {/* 우측 가이드 툴팁 (Figma 5062:9832) — 1단계 진행 전에만 표시 */}
+                  {!basicSetupCompleted && !basicSetupTooltipDismissed && (
+                  <div
+                    className="absolute left-full top-1/2 ml-4 flex -translate-y-1/2 items-center gap-1"
+                    data-node-id="5062:9832"
                   >
-                    이동
-                  </button>
+                    {/* 좌측 화살표 + 잔상 진동 애니메이션 */}
+                    <div className="relative h-4 w-4" data-node-id="5062:9836">
+                      {/* 잔상 2 (가장 흐림, 가장 늦게 따라옴) */}
+                      <span
+                        aria-hidden
+                        className="absolute left-0 top-0 size-4"
+                        style={{
+                          animation:
+                            "tooltipArrowBounceLeft 1.2s ease-in-out 0.24s infinite",
+                        }}
+                      >
+                        <Image
+                          src="/icons/version-b/tooltip-arrow.svg"
+                          alt=""
+                          width={16}
+                          height={16}
+                          className="-rotate-90 opacity-20"
+                        />
+                      </span>
+                      {/* 잔상 1 (중간 농도) */}
+                      <span
+                        aria-hidden
+                        className="absolute left-0 top-0 size-4"
+                        style={{
+                          animation:
+                            "tooltipArrowBounceLeft 1.2s ease-in-out 0.12s infinite",
+                        }}
+                      >
+                        <Image
+                          src="/icons/version-b/tooltip-arrow.svg"
+                          alt=""
+                          width={16}
+                          height={16}
+                          className="-rotate-90 opacity-40"
+                        />
+                      </span>
+                      {/* 메인 화살표 */}
+                      <span
+                        aria-hidden
+                        className="absolute left-0 top-0 size-4"
+                        style={{
+                          animation:
+                            "tooltipArrowBounceLeft 1.2s ease-in-out infinite",
+                        }}
+                      >
+                        <Image
+                          src="/icons/version-b/tooltip-arrow.svg"
+                          alt=""
+                          width={16}
+                          height={16}
+                          className="-rotate-90"
+                        />
+                      </span>
+                    </div>
+                    {/* 본체 (Figma 5062:9833 — 좌측 텍스트 + 우측 X 닫기) */}
+                    <div
+                      className="flex w-fit items-start gap-3 whitespace-nowrap rounded-lg bg-[#2d64fa] p-5"
+                      style={{ filter: "drop-shadow(0px 0px 20px rgba(0,0,0,0.1))" }}
+                      data-node-id="5062:9833"
+                    >
+                      <div className="flex flex-col items-start gap-1" data-node-id="5069:9963">
+                        <p
+                          className="text-base font-bold leading-[1.5] tracking-[-0.16px] text-white"
+                          data-node-id="5062:9834"
+                        >
+                          먼저, 기본 설정을 확인해 주세요
+                        </p>
+                        <p
+                          className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-white/70"
+                          data-node-id="5062:9835"
+                        >
+                          이동을 눌러주세요
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setBasicSetupTooltipDismissed(true)}
+                        aria-label="가이드 닫기"
+                        className="block size-6 shrink-0 transition-opacity hover:opacity-100"
+                        data-node-id="5069:9964"
+                      >
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="block"
+                          aria-hidden
+                        >
+                          <path
+                            d="M17.8242 16.9752C17.8799 17.031 17.9241 17.0971 17.9543 17.17C17.9845 17.2428 18 17.3209 18 17.3997C18 17.4785 17.9845 17.5566 17.9543 17.6294C17.9241 17.7023 17.8799 17.7684 17.8242 17.8242C17.7684 17.8799 17.7023 17.9241 17.6294 17.9543C17.5566 17.9845 17.4785 18 17.3997 18C17.3209 18 17.2428 17.9845 17.17 17.9543C17.0971 17.9241 17.031 17.8799 16.9752 17.8242L12 12.8482L7.02478 17.8242C6.9122 17.9368 6.75951 18 6.6003 18C6.44109 18 6.2884 17.9368 6.17582 17.8242C6.06325 17.7116 6 17.5589 6 17.3997C6 17.2405 6.06325 17.0878 6.17582 16.9752L11.1518 12L6.17582 7.02478C6.06325 6.9122 6 6.75951 6 6.6003C6 6.44109 6.06325 6.2884 6.17582 6.17582C6.2884 6.06325 6.44109 6 6.6003 6C6.75951 6 6.9122 6.06325 7.02478 6.17582L12 11.1518L16.9752 6.17582C17.0878 6.06325 17.2405 6 17.3997 6C17.5589 6 17.7116 6.06325 17.8242 6.17582C17.9368 6.2884 18 6.44109 18 6.6003C18 6.75951 17.9368 6.9122 17.8242 7.02478L12.8482 12L17.8242 16.9752Z"
+                            fill="white"
+                            fillOpacity="0.7"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  )}
                 </div>
-                <div className="flex w-[556px] items-center gap-3 rounded-xl bg-[#f6f7f9] p-6 transition-transform duration-200 ease-out hover:scale-[1.02]">
-                  <div className="flex flex-1 flex-col items-start gap-2 whitespace-nowrap">
-                    <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">
-                      동료 초대
-                    </p>
-                    <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b]/70">
-                      회사 동료들을 초대하고, 권한을 설정합니다
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setAdminMenu("멤버 • 그룹")}
-                    className="flex h-8 items-center justify-center rounded-full bg-[#2d64fa] px-4 py-3 text-sm font-medium leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+                {/* 카드 2 + 우측 플로팅 툴팁 (1단계 완료 후 표시) */}
+                <div className="relative">
+                  <div
+                    className={`flex w-[556px] items-center gap-3 rounded-xl bg-surface p-6 transition-transform duration-200 ease-out ${
+                      basicSetupCompleted ? "hover:scale-[1.02]" : "opacity-50"
+                    }`}
+                    aria-disabled={!basicSetupCompleted}
                   >
-                    이동
-                  </button>
+                    <div className="flex flex-1 flex-col items-start gap-2 whitespace-nowrap">
+                      <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">
+                        동료 초대
+                      </p>
+                      <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b]/70">
+                        회사 동료들을 초대하고, 권한을 설정합니다
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!basicSetupCompleted) return;
+                        setAdminMenu("멤버 • 그룹");
+                      }}
+                      disabled={!basicSetupCompleted}
+                      className={`relative flex h-8 items-center justify-center overflow-hidden rounded-full bg-[#2d64fa] px-4 py-3 text-sm font-medium leading-[1.5] tracking-[-0.14px] text-white transition-opacity ${
+                        basicSetupCompleted ? "hover:opacity-90" : "cursor-default"
+                      }`}
+                    >
+                      <span className="relative z-10">이동</span>
+                      {!basicSetupCompleted && (
+                        <span
+                          aria-hidden
+                          className="pointer-events-none absolute inset-0 rounded-full bg-white/70"
+                        />
+                      )}
+                    </button>
+                  </div>
+
+                  {/* 우측 가이드 툴팁 (Figma 5069:9987) — 1단계 완료 후 표시 */}
+                  {basicSetupCompleted && !inviteTooltipDismissed && (
+                    <div
+                      className="absolute left-full top-1/2 ml-4 flex -translate-y-1/2 items-center gap-1"
+                      data-node-id="5069:9987"
+                    >
+                      {/* 좌측 화살표 + 잔상 진동 애니메이션 */}
+                      <div className="pointer-events-none relative h-4 w-4" data-node-id="5069:9988">
+                        <span
+                          aria-hidden
+                          className="absolute left-0 top-0 size-4"
+                          style={{
+                            animation:
+                              "tooltipArrowBounceLeft 1.2s ease-in-out 0.24s infinite",
+                          }}
+                        >
+                          <Image
+                            src="/icons/version-b/tooltip-arrow.svg"
+                            alt=""
+                            width={16}
+                            height={16}
+                            className="-rotate-90 opacity-20"
+                          />
+                        </span>
+                        <span
+                          aria-hidden
+                          className="absolute left-0 top-0 size-4"
+                          style={{
+                            animation:
+                              "tooltipArrowBounceLeft 1.2s ease-in-out 0.12s infinite",
+                          }}
+                        >
+                          <Image
+                            src="/icons/version-b/tooltip-arrow.svg"
+                            alt=""
+                            width={16}
+                            height={16}
+                            className="-rotate-90 opacity-40"
+                          />
+                        </span>
+                        <span
+                          aria-hidden
+                          className="absolute left-0 top-0 size-4"
+                          style={{
+                            animation:
+                              "tooltipArrowBounceLeft 1.2s ease-in-out infinite",
+                          }}
+                        >
+                          <Image
+                            src="/icons/version-b/tooltip-arrow.svg"
+                            alt=""
+                            width={16}
+                            height={16}
+                            className="-rotate-90"
+                          />
+                        </span>
+                      </div>
+                      {/* 본체 */}
+                      <div
+                        className="flex w-fit items-start gap-3 whitespace-nowrap rounded-lg bg-[#2d64fa] p-5"
+                        style={{ filter: "drop-shadow(0px 0px 20px rgba(0,0,0,0.1))" }}
+                        data-node-id="5069:9991"
+                      >
+                        <div className="flex flex-col items-start gap-1" data-node-id="5069:9992">
+                          <p
+                            className="text-base font-bold leading-[1.5] tracking-[-0.16px] text-white"
+                            data-node-id="5069:9993"
+                          >
+                            이제, 동료를 초대해 주세요
+                          </p>
+                          <p
+                            className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-white/70"
+                            data-node-id="5069:9994"
+                          >
+                            이동을 눌러주세요
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setInviteTooltipDismissed(true)}
+                          aria-label="가이드 닫기"
+                          className="block size-6 shrink-0 transition-opacity hover:opacity-100"
+                          data-node-id="5069:9995"
+                        >
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="block"
+                            aria-hidden
+                          >
+                            <path
+                              d="M17.8242 16.9752C17.8799 17.031 17.9241 17.0971 17.9543 17.17C17.9845 17.2428 18 17.3209 18 17.3997C18 17.4785 17.9845 17.5566 17.9543 17.6294C17.9241 17.7023 17.8799 17.7684 17.8242 17.8242C17.7684 17.8799 17.7023 17.9241 17.6294 17.9543C17.5566 17.9845 17.4785 18 17.3997 18C17.3209 18 17.2428 17.9845 17.17 17.9543C17.0971 17.9241 17.031 17.8799 16.9752 17.8242L12 12.8482L7.02478 17.8242C6.9122 17.9368 6.75951 18 6.6003 18C6.44109 18 6.2884 17.9368 6.17582 17.8242C6.06325 17.7116 6 17.5589 6 17.3997C6 17.2405 6.06325 17.0878 6.17582 16.9752L11.1518 12L6.17582 7.02478C6.06325 6.9122 6 6.75951 6 6.6003C6 6.44109 6.06325 6.2884 6.17582 6.17582C6.2884 6.06325 6.44109 6 6.6003 6C6.75951 6 6.9122 6.06325 7.02478 6.17582L12 11.1518L16.9752 6.17582C17.0878 6.06325 17.2405 6 17.3997 6C17.5589 6 17.7116 6.06325 17.8242 6.17582C17.9368 6.2884 18 6.44109 18 6.6003C18 6.75951 17.9368 6.9122 17.8242 7.02478L12.8482 12L17.8242 16.9752Z"
+                              fill="white"
+                              fillOpacity="0.7"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
+              )
             ) : adminMenu === "대시보드" ? (
-            /* T1. 테넌트 설정 (Figma 4910:4830) */
-            <div
-              className="relative flex flex-1 flex-col items-center justify-center gap-[60px] overflow-hidden px-14 pb-[120px] pt-10"
-              data-node-id="4910:4893"
-            >
-              {/* 배경 그라데이션 이미지 */}
-              <div className="pointer-events-none absolute bottom-0 left-1/2 h-[320px] w-[997px] max-w-none -translate-x-1/2 opacity-80">
-                <Image
-                  src="/icons/version-b/admin-bg.png"
-                  alt=""
-                  fill
-                  sizes="997px"
-                  className="object-cover object-top"
-                  priority
-                />
-              </div>
-
-              {/* 히어로 */}
-              <div className="relative z-10 flex w-[556px] flex-col items-center gap-3" data-node-id="4940:6106">
-                <div className="flex items-start justify-center gap-2 whitespace-nowrap">
-                  <p className="text-[40px] font-bold leading-[1.2] text-[#18181b]">팀 허브를 열고</p>
-                  <p className="text-[40px] font-bold leading-[1.2] text-[#a1a1aa]">동료들을 초대하세요</p>
-                </div>
-                <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">
-                  나중에 설정해도 괜찮아요
-                </p>
-              </div>
-
-              {/* 폼: 이미지 업로드 + 입력 필드 */}
-              <div className="relative z-10 flex w-[556px] items-center gap-10" data-node-id="4940:6107">
-                {/* 이미지 업로드 */}
-                <div className="flex min-w-[116px] flex-col items-start justify-center gap-2" data-node-id="4940:6064">
-                  <div className="relative size-[116px] overflow-hidden rounded-2xl bg-[#f6f6f6]">
-                    <Image
-                      src="/icons/version-b/team-building-large.svg"
-                      alt=""
-                      width={80}
-                      height={80}
-                      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    className="flex h-8 items-center justify-center whitespace-nowrap rounded-full border border-[#e4e4e7] bg-white px-5 py-3 text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#f6f7f9]"
-                  >
-                    이미지 업로드
-                  </button>
-                </div>
-
-                {/* 입력 필드들 */}
-                <div className="flex flex-col gap-5" data-node-id="4940:6136">
-                  <div className="flex w-[400px] flex-col justify-center gap-2" data-node-id="4940:6108">
-                    <label htmlFor="team-name" className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#3f3f46]">
-                      팀 이름
-                    </label>
-                    <input
-                      id="team-name"
-                      type="text"
-                      value={teamName}
-                      onChange={(e) => setTeamName(e.target.value)}
-                      className="min-h-12 w-full rounded-3xl border border-[#e4e4e7] bg-white px-5 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#2D64FA] focus:outline-none"
-                    />
-                  </div>
-                  <div className="flex w-[400px] flex-col justify-center gap-2" data-node-id="4940:6085">
-                    <label htmlFor="team-desc" className="text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#3f3f46]">
-                      팀 설명
-                    </label>
-                    <textarea
-                      id="team-desc"
-                      value={teamDescription}
-                      onChange={(e) => setTeamDescription(e.target.value)}
-                      placeholder="팀에 대해 짧게 소개해 주세요"
-                      rows={2}
-                      className="min-h-12 w-full resize-none rounded-3xl border border-[#e4e4e7] bg-white px-5 py-3 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#2D64FA] focus:outline-none"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* CTA */}
-              <div className="relative z-10 flex w-[556px] items-center justify-center" data-node-id="4940:6154">
-                <button
-                  type="button"
-                  onClick={() => setAdminMenu("멤버 • 그룹")}
-                  className="flex h-12 items-center justify-center gap-2 rounded-full bg-[#18181b] px-8 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-white transition-opacity hover:opacity-90"
-                  data-node-id="4940:6155"
-                >
-                  동료 초대하기
-                  <Image
-                    src="/icons/version-b/btn-arrow-right.svg"
-                    alt=""
-                    width={16}
-                    height={16}
-                  />
-                </button>
-              </div>
+            /* 대시보드 — 준비중 (추후 작업 예정) */
+            <div className="flex flex-1 items-center justify-center px-10 py-10">
+              <p className="text-2xl font-semibold leading-[1.2] text-[#71717a]">
+                대시보드 화면은 준비 중이에요
+              </p>
             </div>
             ) : adminMenu === "멤버 • 그룹" ? (
             /* T2. 유저 관리 (Figma 4940:6166) */
@@ -529,7 +883,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                 <button
                   type="button"
                   onClick={openInviteModal}
-                  className="flex h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-[#18181b] px-8 py-3 transition-opacity hover:opacity-90"
+                  className="flex h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-[#2D64FA] px-8 py-3 transition-opacity hover:opacity-90"
                   data-node-id="4940:6973"
                 >
                   <Image
@@ -552,7 +906,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                     <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">
                       멤버
                     </span>
-                    <span className="flex items-center rounded-full bg-[rgba(91,61,122,0.1)] px-2 py-0.5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#2D64FA]">
+                    <span className="flex items-center rounded-full bg-[rgba(45,100,250,0.1)] px-2 py-0.5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#2D64FA]">
                       {members.length}
                     </span>
                   </div>
@@ -567,7 +921,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                 </div>
 
                 {/* 테이블 */}
-                <div className="flex w-full flex-col items-center rounded-lg bg-[#f6f6f6] p-1" data-node-id="4940:6993">
+                <div className="flex w-full flex-col items-center rounded-xl bg-[#f6f6f6] p-1" data-node-id="4940:6993">
                   {/* 헤더 */}
                   <div className="flex w-full items-center gap-4 px-4 py-2.5" data-node-id="4940:6994">
                     <div className="flex flex-1 items-center">
@@ -677,7 +1031,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                     <div className="size-7" />
                   </div>
                   {/* 바디 */}
-                  <div className="flex w-full flex-col items-start justify-center overflow-hidden rounded-lg bg-white" data-node-id="4940:7005">
+                  <div className="flex w-full flex-col items-start justify-center overflow-hidden rounded-xl bg-white" data-node-id="4940:7005">
                     {filteredMembers.map((m) => (
                       <div
                         key={m.id}
@@ -691,7 +1045,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                           }
                         }}
                         className={`relative flex h-14 w-full cursor-pointer items-center gap-4 px-4 py-3 transition-colors ${
-                          detailMemberId === m.id ? "bg-[#f6f7f9]" : "hover:bg-[#fafafa]"
+                          detailMemberId === m.id ? "bg-surface" : "hover:bg-[#fafafa]"
                         }`}
                       >
                         <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-[#e4e4e7] opacity-50" />
@@ -786,11 +1140,208 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
               </div>
             </div>
             ) : (
-            /* 환경설정 (준비 중) */
-            <div className="flex flex-1 items-center justify-center px-10 py-10">
-              <p className="text-2xl font-semibold leading-[1.2] text-[#71717a]">
-                환경설정 화면은 준비 중이에요
-              </p>
+            /* T3. 환경설정 (Figma 4940:6166) */
+            <div
+              className="flex flex-1 flex-col items-start gap-[60px] overflow-y-auto px-10 pb-[120px] pt-10"
+              data-node-id="4940:6224"
+            >
+              {/* 헤더 행 */}
+              <div className="flex w-full items-end gap-[60px]" data-node-id="5057:9182">
+                <div className="flex flex-1 flex-col items-start gap-3" data-node-id="4940:6966">
+                  <p
+                    className="text-[32px] font-bold leading-[1.2] text-[#18181b]"
+                    data-node-id="4940:7052"
+                  >
+                    환경설정
+                  </p>
+                  <p
+                    className="text-lg font-normal leading-[1.4] tracking-[-0.18px] text-[#71717a]"
+                    data-node-id="4940:6495"
+                  >
+                    기본 정보와 자동 가입을 설정합니다
+                  </p>
+                </div>
+                <div className="flex shrink-0 items-start gap-2" data-node-id="5057:9176">
+                  <button
+                    type="button"
+                    onClick={cancelSettings}
+                    disabled={!isSettingsDirty}
+                    className={`flex h-9 items-center justify-center rounded-full bg-[#f6f6f6] px-5 py-3 transition-all ${
+                      isSettingsDirty
+                        ? "opacity-100 hover:bg-[#ececec]"
+                        : "cursor-default opacity-45"
+                    }`}
+                    data-node-id="5057:9177"
+                  >
+                    <span className="whitespace-nowrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b]">
+                      취소
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={saveSettings}
+                    disabled={!isSettingsDirty}
+                    className={`relative flex h-9 items-center justify-center overflow-hidden rounded-full bg-[#2d64fa] px-5 py-3 transition-opacity ${
+                      isSettingsDirty ? "hover:opacity-90" : "cursor-default"
+                    }`}
+                    data-node-id="5057:9179"
+                  >
+                    <span className="relative z-10 whitespace-nowrap text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white">
+                      저장
+                    </span>
+                    {!isSettingsDirty && (
+                      <span
+                        aria-hidden
+                        className="pointer-events-none absolute inset-0 rounded-full bg-white/70"
+                      />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* 폼 영역 */}
+              <div className="flex w-full flex-col items-start gap-3" data-node-id="5057:9105">
+                {/* 아이콘 */}
+                <div className="flex items-center gap-5" data-node-id="5057:9080">
+                  <p className="w-[120px] shrink-0 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b]">
+                    아이콘
+                  </p>
+                  <div className="flex items-center gap-3" data-node-id="5058:9439">
+                    <div
+                      className="relative size-[72px] shrink-0 overflow-hidden rounded-xl bg-surface"
+                      data-node-id="5057:9101"
+                    >
+                      <Image
+                        src="/icons/version-b/team-building-large.svg"
+                        alt=""
+                        width={44}
+                        height={44}
+                        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      className="flex h-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#e4e4e7] bg-white px-4 py-3 transition-colors hover:bg-surface"
+                      data-node-id="4940:6133"
+                    >
+                      <span className="whitespace-nowrap text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#71717a]">
+                        이미지 업로드
+                      </span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* 기업 이름 */}
+                <div className="flex h-12 items-center gap-5" data-node-id="5058:9418">
+                  <p className="w-[120px] shrink-0 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b]">
+                    기업 이름
+                  </p>
+                  <div className="flex h-12 w-[650px] items-center gap-3 rounded-xl bg-surface px-4">
+                    <input
+                      type="text"
+                      value={teamName}
+                      onChange={(e) => setTeamName(e.target.value)}
+                      className="min-w-0 flex-1 bg-transparent text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* 기업 설명 */}
+                <div className="flex items-start gap-5" data-node-id="4940:6085">
+                  <p className="flex h-12 w-[120px] shrink-0 items-center text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b]">
+                    기업 설명
+                  </p>
+                  <div className="flex h-[72px] w-[650px] items-start gap-3 rounded-xl bg-surface px-4 py-3">
+                    <textarea
+                      value={teamDescription}
+                      onChange={(e) => {
+                        const next = e.target.value;
+                        if (next.split("\n").length <= 2) setTeamDescription(next);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && teamDescription.split("\n").length >= 2) {
+                          e.preventDefault();
+                        }
+                      }}
+                      placeholder="기업에 대해 짧게 소개해 주세요"
+                      rows={2}
+                      className="h-full min-w-0 flex-1 resize-none bg-transparent text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* 슬러그 (읽기 전용) */}
+                <div className="flex h-12 items-center gap-5" data-node-id="5057:9058">
+                  <p className="w-[120px] shrink-0 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b]">
+                    슬러그
+                  </p>
+                  <div className="flex h-12 w-[650px] items-center">
+                    <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b]">
+                      {slug}
+                    </p>
+                  </div>
+                </div>
+
+                {/* 자동 가입 */}
+                <div className="flex w-full flex-col items-start" data-node-id="5057:9414">
+                  <div className="flex h-12 items-center gap-5" data-node-id="5057:9275">
+                    <p className="w-[120px] shrink-0 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b]">
+                      자동 가입
+                    </p>
+                    <div className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setAutoJoin(!autoJoin)}
+                        aria-pressed={autoJoin}
+                        aria-label="자동 가입 토글"
+                        className={`relative h-8 w-[52px] shrink-0 rounded-full transition-colors duration-200 ${
+                          autoJoin ? "bg-[#2d64fa]" : "bg-[#d4d4d8]"
+                        }`}
+                        data-node-id="5057:9317"
+                      >
+                        <span
+                          aria-hidden
+                          className={`absolute left-1 top-1 size-6 rounded-full bg-white transition-transform duration-200 ease-out ${
+                            autoJoin ? "translate-x-5" : "translate-x-0"
+                          }`}
+                        />
+                      </button>
+                      <p className="whitespace-nowrap text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+                        등록된 이메일을 사용하는 사람은 관리자 초대없이 자동으로 가입됩니다
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    aria-hidden={!autoJoin}
+                    className={`grid w-full overflow-hidden transition-[grid-template-rows,opacity] duration-300 ease-out ${
+                      autoJoin ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                    }`}
+                  >
+                    <div className="min-h-0">
+                      <div
+                        className="mt-1 flex h-12 w-[790px] items-center gap-5"
+                        data-node-id="5057:9296"
+                      >
+                        <div className="h-6 w-[120px] shrink-0" aria-hidden />
+                        <p className="shrink-0 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">
+                          이메일 도메인
+                        </p>
+                        <div className="flex h-12 min-w-0 flex-1 items-center gap-3 rounded-xl bg-surface px-4">
+                          <input
+                            type="text"
+                            value={emailDomain}
+                            onChange={(e) => setEmailDomain(e.target.value)}
+                            placeholder="axhub.com"
+                            disabled={!autoJoin}
+                            tabIndex={autoJoin ? 0 : -1}
+                            className="min-w-0 flex-1 bg-transparent text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:outline-none disabled:cursor-default"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             )
           ) : viewVersion === "first-time" ? (
@@ -827,7 +1378,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                   </button>
                   <button
                     type="button"
-                    className="flex h-12 items-center justify-center rounded-full border border-[#e4e4e7] bg-white px-6 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors hover:bg-[#f6f7f9]"
+                    className="flex h-12 items-center justify-center rounded-full border border-[#e4e4e7] bg-white px-6 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors hover:bg-surface"
                   >
                     동료가 만든 앱 쓰기
                   </button>
@@ -852,13 +1403,13 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                 <div className="flex shrink-0 gap-2">
                   <button
                     type="button"
-                    className="flex h-12 items-center justify-center rounded-full bg-[#18181b] px-6 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-white transition-opacity hover:opacity-90"
+                    className="flex h-12 items-center justify-center rounded-full bg-[#EAF0FE] px-6 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#2D64FA] transition-colors hover:bg-[#dde6fc]"
                   >
                     개발 가이드
                   </button>
                   <button
                     type="button"
-                    className="flex h-12 items-center justify-center rounded-full border border-[#e4e4e7] bg-white px-6 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors hover:bg-[#f6f7f9]"
+                    className="flex h-12 items-center justify-center rounded-full border border-[#e4e4e7] bg-white px-6 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors hover:bg-surface"
                   >
                     의견 보내기
                   </button>
@@ -875,7 +1426,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
               </div>
 
               {/* 빈 상태 카드 */}
-              <div className="flex h-[150px] w-full items-center justify-center rounded-xl bg-[#f6f7f9] p-3">
+              <div className="flex h-[150px] w-full items-center justify-center rounded-xl bg-surface p-3">
                 <div className="flex flex-col items-center justify-center gap-2">
                   <Image
                     src="/icons/version-b/empty-stack.svg"
@@ -901,14 +1452,14 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                 <button
                   type="button"
                   onClick={() => setMakeAppModalOpen(true)}
-                  className="flex h-9 shrink-0 items-center justify-center rounded-full bg-[#18181b] px-5 py-3 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+                  className="flex h-9 shrink-0 items-center justify-center rounded-full bg-[#2d64fa] px-5 py-3 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
                 >
                   앱 만들기
                 </button>
               </div>
 
               {/* 빈 상태 카드 */}
-              <div className="flex h-[150px] w-full items-center justify-center rounded-xl bg-[#f6f7f9] p-3">
+              <div className="flex h-[150px] w-full items-center justify-center rounded-xl bg-surface p-3">
                 <div className="flex flex-col items-center justify-center gap-2">
                   <Image
                     src="/icons/version-b/empty-stack.svg"
@@ -1056,7 +1607,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
               onClick={closeInviteModal}
             >
               <div
-                className="flex max-h-[80vh] w-[566px] flex-col items-end gap-6 overflow-hidden rounded-2xl bg-white p-6"
+                className="flex max-h-[80vh] w-[566px] flex-col items-end gap-8 overflow-hidden rounded-2xl bg-white p-6"
                 style={{
                   boxShadow:
                     "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)",
@@ -1069,10 +1620,12 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                 data-node-id="4988:7276"
               >
                 {/* 제목 */}
-                <p className="w-full shrink-0 text-xl font-semibold leading-[1.3] tracking-[-0.2px] text-[#18181b]">
+                <p className="w-full shrink-0 text-xl font-bold leading-[1.3] tracking-[-0.2px] text-[#18181b]">
                   멤버 초대하기
                 </p>
 
+                {/* 입력 그룹 + 도메인 helper 묶음 (Figma 5081:10034) */}
+                <div className="flex w-full min-h-0 flex-1 flex-col gap-5">
                 {/* 입력 행 (스크롤) + + 버튼 (항상 노출) */}
                 <div className="flex w-full min-h-0 flex-1 flex-col items-center gap-4">
                   <div className="sidebar-scroll flex w-full min-h-0 flex-1 flex-col gap-4 overflow-y-auto">
@@ -1184,7 +1737,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
 
                 {/* 도메인 helper */}
                 <div
-                  className="flex w-full shrink-0 flex-col items-start gap-2 overflow-hidden rounded-xl bg-[#f4f4f5] p-5"
+                  className="flex w-full shrink-0 flex-col items-start gap-2 overflow-hidden rounded-xl bg-surface p-5"
                   data-node-id="4988:8184"
                 >
                   <div className="flex w-full items-start gap-2">
@@ -1194,9 +1747,9 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                     </p>
                     <button
                       type="button"
-                      className="flex h-8 shrink-0 items-center justify-center rounded-full bg-[#18181b] px-5 py-3 transition-opacity hover:opacity-90"
+                      className="flex h-8 shrink-0 items-center justify-center rounded-full bg-[#eaf0fe] px-5 py-3 transition-colors hover:bg-[#dde6fc]"
                     >
-                      <span className="whitespace-nowrap text-sm font-medium leading-[1.5] tracking-[-0.14px] text-white">
+                      <span className="whitespace-nowrap text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-[#2d64fa]">
                         파일 올리기
                       </span>
                     </button>
@@ -1207,6 +1760,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                     <span className="font-semibold">사용자 다운로드</span>
                     <span>로 받은 파일을 올려주세요</span>
                   </p>
+                </div>
                 </div>
 
                 {/* 액션 버튼 */}
@@ -1249,7 +1803,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                   : "더 이상 접근할 수 없어요";
                 return (
                   <div
-                    className="flex w-[420px] flex-col items-center justify-center gap-10 rounded-2xl bg-white px-6 py-10"
+                    className="flex w-[420px] flex-col items-center justify-center gap-8 rounded-2xl bg-white p-6"
                     style={{
                       boxShadow:
                         "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)",
@@ -1259,21 +1813,19 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                         : "modalScaleIn 0.3s ease-out",
                     }}
                     onClick={(e) => e.stopPropagation()}
-                    data-node-id={isReactivate ? "5024:8271" : "5005:8241"}
+                    data-node-id={isReactivate ? "5024:8271" : "5082:15388"}
                   >
-                    <div className="flex w-full flex-col items-center gap-2">
-                      <p className="w-full text-center text-[22px] font-semibold leading-[1.3] tracking-[-0.22px] text-[#18181b]">
-                        {detailMember.fullName} 님의
-                        <br />
-                        계정을 {actionLabel} 할까요?
+                    {/* 텍스트 그룹 (Figma 5082:15389 — 제목 + 설명) */}
+                    <div className="flex w-full flex-col items-start gap-3">
+                      <p className="w-full text-xl font-bold leading-[1.3] tracking-[-0.2px] text-[#18181b]">
+                        {detailMember.fullName} 님을 {actionLabel} 할까요?
                       </p>
-                      <p className="w-full text-center text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">
-                        조코딩AX파트너스 팀 허브에
-                        <br />
-                        {subtitle}
-                      </p>
+                      <div className="w-full text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#71717a]">
+                        <p>계정을 {actionLabel}하면</p>
+                        <p>조코딩AX파트너스 팀 허브에 {subtitle}</p>
+                      </div>
                     </div>
-                    <div className="flex w-full items-center justify-center gap-2">
+                    <div className="flex w-full items-center justify-end gap-2">
                       <button
                         type="button"
                         onClick={closeDeactivateModal}
@@ -1284,9 +1836,9 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                       <button
                         type="button"
                         onClick={confirmStatusToggle}
-                        className="flex h-9 items-center justify-center rounded-full bg-[#18181b] px-5 py-3 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+                        className="flex h-9 items-center justify-center rounded-full bg-[#2d64fa] px-5 py-3 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
                       >
-                        네, {actionLabel} 할게요
+                        {actionLabel}
                       </button>
                     </div>
                   </div>
@@ -1353,10 +1905,10 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                       </p>
                     </div>
                     <div className="flex w-full flex-col gap-2 px-10">
-                      <button type="button" onClick={() => { setSelectedOS("mac"); setGuideDirection("forward"); setGuideModalStep("mac"); }} className="flex w-full items-center justify-center rounded-xl border border-[#e4e4e7] bg-white p-4 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f6f7f9]">
+                      <button type="button" onClick={() => { setSelectedOS("mac"); setGuideDirection("forward"); setGuideModalStep("mac"); }} className="flex w-full items-center justify-center rounded-xl border border-[#e4e4e7] bg-white p-4 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-surface">
                         Mac OS
                       </button>
-                      <button type="button" onClick={() => { setSelectedOS("windows"); setGuideDirection("forward"); setGuideModalStep("windows"); }} className="flex w-full items-center justify-center rounded-xl border border-[#e4e4e7] bg-white p-4 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f6f7f9]">
+                      <button type="button" onClick={() => { setSelectedOS("windows"); setGuideDirection("forward"); setGuideModalStep("windows"); }} className="flex w-full items-center justify-center rounded-xl border border-[#e4e4e7] bg-white p-4 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-surface">
                         Windows OS
                       </button>
                     </div>
@@ -1560,6 +2112,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
               </div>
             </div>
           )}
+          </div>
 
         </div>
 
@@ -1708,7 +2261,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                 type="button"
                 onClick={saveMemberDetail}
                 disabled={!canSaveDetail}
-                className="relative flex h-12 w-full items-center justify-center overflow-hidden rounded-full bg-[#18181b] px-6 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-white transition-opacity hover:opacity-90"
+                className="relative flex h-12 w-full items-center justify-center overflow-hidden rounded-full bg-[#2d64fa] px-6 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-white transition-opacity hover:opacity-90"
               >
                 저장
                 {!canSaveDetail && (
@@ -1718,10 +2271,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
               <button
                 type="button"
                 onClick={onDeactivateClick}
-                className="flex h-12 w-full items-center justify-center rounded-full bg-[#f6f6f6] px-6 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] transition-colors hover:bg-[#ececec]"
-                style={{
-                  color: detailMember.status === "비활성" ? "#1571F3" : "#ef1026",
-                }}
+                className="flex h-12 w-full items-center justify-center rounded-full bg-[#f6f6f6] px-6 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#ececec]"
               >
                 {detailMember.status === "비활성"
                   ? "계정 활성화"
@@ -1731,6 +2281,242 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
           </div>
         )}
       </div>
+
+      {/* 환경설정 페이지 가이드 툴팁 (Figma 5069:9977) — 사이드바 'AXHub 시작하기' 버튼 우측 16px */}
+      {sidebarMode === "admin" && adminMenu === "환경설정" && !settingsTooltipDismissed && (
+        <div
+          className="fixed left-[208px] top-[86.5px] z-40 flex -translate-y-1/2 items-center gap-1"
+          data-node-id="5069:9977"
+        >
+          {/* 좌측 화살표 + 잔상 진동 애니메이션 */}
+          <div className="pointer-events-none relative h-4 w-4" data-node-id="5069:9978">
+            <span
+              aria-hidden
+              className="absolute left-0 top-0 size-4"
+              style={{
+                animation:
+                  "tooltipArrowBounceLeft 1.2s ease-in-out 0.24s infinite",
+              }}
+            >
+              <Image
+                src="/icons/version-b/tooltip-arrow.svg"
+                alt=""
+                width={16}
+                height={16}
+                className="-rotate-90 opacity-20"
+              />
+            </span>
+            <span
+              aria-hidden
+              className="absolute left-0 top-0 size-4"
+              style={{
+                animation:
+                  "tooltipArrowBounceLeft 1.2s ease-in-out 0.12s infinite",
+              }}
+            >
+              <Image
+                src="/icons/version-b/tooltip-arrow.svg"
+                alt=""
+                width={16}
+                height={16}
+                className="-rotate-90 opacity-40"
+              />
+            </span>
+            <span
+              aria-hidden
+              className="absolute left-0 top-0 size-4"
+              style={{
+                animation: "tooltipArrowBounceLeft 1.2s ease-in-out infinite",
+              }}
+            >
+              <Image
+                src="/icons/version-b/tooltip-arrow.svg"
+                alt=""
+                width={16}
+                height={16}
+                className="-rotate-90"
+              />
+            </span>
+          </div>
+          {/* 본체 (Figma 5069:9981 — 좌측 텍스트 + 우측 X 닫기) */}
+          <div
+            className="flex w-fit items-start gap-3 whitespace-nowrap rounded-lg bg-[#2d64fa] p-5"
+            style={{ filter: "drop-shadow(0px 0px 20px rgba(0,0,0,0.1))" }}
+            data-node-id="5069:9981"
+          >
+            <div className="flex flex-col items-start gap-1" data-node-id="5069:9982">
+              <p
+                className="text-base font-bold leading-[1.5] tracking-[-0.16px] text-white"
+                data-node-id="5069:9983"
+              >
+                모두 확인하셨나요?
+              </p>
+              <p
+                className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-white/70"
+                data-node-id="5069:9984"
+              >
+                두 번째 단계를 진행해 주세요
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setSettingsTooltipDismissed(true)}
+              aria-label="가이드 닫기"
+              className="block size-6 shrink-0 transition-opacity hover:opacity-100"
+              data-node-id="5069:9985"
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="block"
+                aria-hidden
+              >
+                <path
+                  d="M17.8242 16.9752C17.8799 17.031 17.9241 17.0971 17.9543 17.17C17.9845 17.2428 18 17.3209 18 17.3997C18 17.4785 17.9845 17.5566 17.9543 17.6294C17.9241 17.7023 17.8799 17.7684 17.8242 17.8242C17.7684 17.8799 17.7023 17.9241 17.6294 17.9543C17.5566 17.9845 17.4785 18 17.3997 18C17.3209 18 17.2428 17.9845 17.17 17.9543C17.0971 17.9241 17.031 17.8799 16.9752 17.8242L12 12.8482L7.02478 17.8242C6.9122 17.9368 6.75951 18 6.6003 18C6.44109 18 6.2884 17.9368 6.17582 17.8242C6.06325 17.7116 6 17.5589 6 17.3997C6 17.2405 6.06325 17.0878 6.17582 16.9752L11.1518 12L6.17582 7.02478C6.06325 6.9122 6 6.75951 6 6.6003C6 6.44109 6.06325 6.2884 6.17582 6.17582C6.2884 6.06325 6.44109 6 6.6003 6C6.75951 6 6.9122 6.06325 7.02478 6.17582L12 11.1518L16.9752 6.17582C17.0878 6.06325 17.2405 6 17.3997 6C17.5589 6 17.7116 6.06325 17.8242 6.17582C17.9368 6.2884 18 6.44109 18 6.6003C18 6.75951 17.9368 6.9122 17.8242 7.02478L12.8482 12L17.8242 16.9752Z"
+                  fill="white"
+                  fillOpacity="0.7"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* 멤버•그룹 페이지 가이드 완료 툴팁 (Figma 5069:9997) — 사이드바 'AXHub 시작하기' 우측 16px */}
+      {sidebarMode === "admin" && adminMenu === "멤버 • 그룹" && inviteCompleted && !inviteCompletedTooltipDismissed && (
+        <div
+          className="fixed left-[208px] top-[86.5px] z-40 flex -translate-y-1/2 items-center gap-1"
+          data-node-id="5069:9997"
+        >
+          {/* 좌측 화살표 + 잔상 진동 애니메이션 */}
+          <div className="pointer-events-none relative h-4 w-4" data-node-id="5069:9998">
+            <span
+              aria-hidden
+              className="absolute left-0 top-0 size-4"
+              style={{
+                animation:
+                  "tooltipArrowBounceLeft 1.2s ease-in-out 0.24s infinite",
+              }}
+            >
+              <Image
+                src="/icons/version-b/tooltip-arrow.svg"
+                alt=""
+                width={16}
+                height={16}
+                className="-rotate-90 opacity-20"
+              />
+            </span>
+            <span
+              aria-hidden
+              className="absolute left-0 top-0 size-4"
+              style={{
+                animation:
+                  "tooltipArrowBounceLeft 1.2s ease-in-out 0.12s infinite",
+              }}
+            >
+              <Image
+                src="/icons/version-b/tooltip-arrow.svg"
+                alt=""
+                width={16}
+                height={16}
+                className="-rotate-90 opacity-40"
+              />
+            </span>
+            <span
+              aria-hidden
+              className="absolute left-0 top-0 size-4"
+              style={{
+                animation: "tooltipArrowBounceLeft 1.2s ease-in-out infinite",
+              }}
+            >
+              <Image
+                src="/icons/version-b/tooltip-arrow.svg"
+                alt=""
+                width={16}
+                height={16}
+                className="-rotate-90"
+              />
+            </span>
+          </div>
+          {/* 본체 */}
+          <div
+            className="flex w-fit items-start gap-3 whitespace-nowrap rounded-lg bg-[#2d64fa] p-5"
+            style={{ filter: "drop-shadow(0px 0px 20px rgba(0,0,0,0.1))" }}
+            data-node-id="5069:10001"
+          >
+            <div className="flex flex-col items-start gap-1" data-node-id="5069:10002">
+              <p
+                className="text-base font-bold leading-[1.5] tracking-[-0.16px] text-white"
+                data-node-id="5069:10003"
+              >
+                준비가 모두 끝났습니다!
+              </p>
+              <p
+                className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-white/70"
+                data-node-id="5069:10004"
+              >
+                가이드를 마칩니다
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setInviteCompletedTooltipDismissed(true)}
+              aria-label="가이드 닫기"
+              className="block size-6 shrink-0 transition-opacity hover:opacity-100"
+              data-node-id="5069:10005"
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="block"
+                aria-hidden
+              >
+                <path
+                  d="M17.8242 16.9752C17.8799 17.031 17.9241 17.0971 17.9543 17.17C17.9845 17.2428 18 17.3209 18 17.3997C18 17.4785 17.9845 17.5566 17.9543 17.6294C17.9241 17.7023 17.8799 17.7684 17.8242 17.8242C17.7684 17.8799 17.7023 17.9241 17.6294 17.9543C17.5566 17.9845 17.4785 18 17.3997 18C17.3209 18 17.2428 17.9845 17.17 17.9543C17.0971 17.9241 17.031 17.8799 16.9752 17.8242L12 12.8482L7.02478 17.8242C6.9122 17.9368 6.75951 18 6.6003 18C6.44109 18 6.2884 17.9368 6.17582 17.8242C6.06325 17.7116 6 17.5589 6 17.3997C6 17.2405 6.06325 17.0878 6.17582 16.9752L11.1518 12L6.17582 7.02478C6.06325 6.9122 6 6.75951 6 6.6003C6 6.44109 6.06325 6.2884 6.17582 6.17582C6.2884 6.06325 6.44109 6 6.6003 6C6.75951 6 6.9122 6.06325 7.02478 6.17582L12 11.1518L16.9752 6.17582C17.0878 6.06325 17.2405 6 17.3997 6C17.5589 6 17.7116 6.06325 17.8242 6.17582C17.9368 6.2884 18 6.44109 18 6.6003C18 6.75951 17.9368 6.9122 17.8242 7.02478L12.8482 12L17.8242 16.9752Z"
+                  fill="white"
+                  fillOpacity="0.7"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* 환경설정 저장 토스트 (Figma 5069:9910) */}
+      {saveToast && (
+        <div
+          className="fixed right-6 top-6 z-[60] flex w-[340px] items-center gap-3 rounded-2xl bg-white px-4"
+          style={{
+            boxShadow:
+              "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)",
+            backdropFilter: "blur(20px)",
+            animation: saveToast.closing
+              ? "toastSlideOut 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards"
+              : "toastSlideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
+          }}
+          data-node-id="5069:9910"
+        >
+          <div className="flex shrink-0 items-center py-3.5">
+            <Image
+              src="/icons/version-b/check-circle-primary.svg"
+              alt=""
+              width={22}
+              height={22}
+            />
+          </div>
+          <div className="flex min-h-14 flex-1 flex-col justify-center py-[11.5px]">
+            <p className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46]">
+              변경사항을 저장했습니다
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -201,7 +201,7 @@ export default function AppDetailDiscoveryView({
             )}
             <button
               type="button"
-              className="app-detail-primary-cta flex h-12 w-full items-center justify-center overflow-hidden rounded-full bg-[#18181b] px-8 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-white transition-opacity hover:opacity-90"
+              className="app-detail-primary-cta flex h-12 w-full items-center justify-center overflow-hidden rounded-full bg-[#2d64fa] px-8 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-white transition-opacity hover:opacity-90"
             >
               {appStatus === "using" || appStatus === "admin" ? "앱 열기" : "받기"}
             </button>
@@ -214,7 +214,7 @@ export default function AppDetailDiscoveryView({
                   className={`discovery-rec-btn flex h-12 min-w-0 flex-1 items-center justify-center gap-1 overflow-hidden whitespace-nowrap rounded-[40px] border px-8 text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors ${
                     isRecommended
                       ? "discovery-rec-btn-active border-transparent bg-[rgba(251,176,59,0.2)] hover:bg-[rgba(251,176,59,0.28)]"
-                      : "border-[#e4e4e7] bg-white hover:bg-[#f6f7f9]"
+                      : "border-[#e4e4e7] bg-white hover:bg-surface"
                   }`}
                 >
                   <span key={thumbAnimKey} className="thumb-bounce inline-flex">
@@ -298,7 +298,7 @@ export default function AppDetailDiscoveryView({
                     {upstreamApps.map((app) => (
                       <div
                         key={app.name}
-                        className="flex w-full items-center gap-3 rounded-2xl bg-[#f6f7f9] p-3"
+                        className="flex w-full items-center gap-3 rounded-2xl bg-surface p-3"
                       >
                         <div
                           className="size-8 shrink-0 rounded-lg"
@@ -325,7 +325,7 @@ export default function AppDetailDiscoveryView({
                       <span className="font-normal"> 데이터를 쓰고 있어요</span>
                     </p>
                   </div>
-                  <div className="flex h-[134px] w-full items-center justify-center rounded-2xl bg-[#f6f7f9] p-3">
+                  <div className="flex h-[134px] w-full items-center justify-center rounded-2xl bg-surface p-3">
                     <div className="flex flex-col items-center justify-center gap-2">
                       <Image
                         src="/icons/version-b/empty-stack.svg"
@@ -387,7 +387,7 @@ export default function AppDetailDiscoveryView({
                     type="button"
                     aria-label="댓글 등록"
                     disabled={reviewInput.length === 0}
-                    className="review-send-btn group relative size-8 shrink-0 overflow-hidden rounded-full bg-[#18181b] transition-opacity hover:opacity-90 disabled:hover:opacity-100"
+                    className="review-send-btn group relative size-8 shrink-0 overflow-hidden rounded-full bg-[#2d64fa] transition-opacity hover:opacity-90 disabled:hover:opacity-100"
                   >
                     <SendIcon />
                     <span

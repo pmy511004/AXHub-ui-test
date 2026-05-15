@@ -188,7 +188,7 @@ export default function AppDetailView({ appName, category, onBack, fromMenu, isA
                 </button>
               </div>
             )}
-            <div className="flex h-[177px] flex-col gap-6 rounded-2xl bg-[#f6f7f9] p-6">
+            <div className="flex h-[177px] flex-col gap-6 rounded-2xl bg-surface p-6">
               <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-1">
                   <span className="flex-1 text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">{guideTitle}</span>

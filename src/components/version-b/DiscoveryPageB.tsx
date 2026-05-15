@@ -79,7 +79,6 @@ const newApps = [
 export default function DiscoveryPageB() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [activeTeam, setActiveTeam] = useState<"JO" | "DE">("JO");
   const [profileOpen, setProfileOpen] = useState(false);
   const [darkMode, setDarkMode] = useDarkMode();
   const [selectedApp, setSelectedApp] = useState<{ name: string; category: string; isAdmin?: boolean; status?: string } | null>(null);
@@ -169,69 +168,65 @@ export default function DiscoveryPageB() {
     <div
       className={`flex h-screen w-full items-start overflow-hidden${darkMode ? " dark-mode" : ""}`}
       style={{
-        backgroundColor: darkMode ? "#0C0A12" : "#130321",
-        "--page-primary": darkMode ? "#6E4A94" : "#2D64FA",
+        backgroundColor: darkMode ? "#0E1014" : "#F6F7F9",
+        "--page-primary": darkMode ? "#4B7BFF" : "#2D64FA",
       } as React.CSSProperties}
       data-node-id="2504:1034"
     >
-      {/* L. Global Nav (팀 프로필 셀렉터) */}
-      <div className="flex h-full w-[68px] shrink-0 flex-col items-center justify-between">
-        <div className="flex w-full flex-col items-center gap-4 px-3 py-4">
-          {(["JO", "DE"] as const).map((team) => {
-            const isActive = activeTeam === team;
-            return (
-              <button
-                key={team}
-                type="button"
-                onClick={() => setActiveTeam(team)}
-                className={`relative flex size-11 items-center justify-center overflow-hidden rounded-xl bg-[#2D64FA] p-1 transition-shadow ${isActive ? "shadow-[0px_0px_0px_1px_white]" : ""}`}
-                aria-label={`팀 ${team}`}
-              >
-                <p className="flex-1 text-center text-base font-bold leading-[1.5] tracking-[-0.16px] text-white">{team}</p>
-                {!isActive && <span className="pointer-events-none absolute inset-0 rounded-xl bg-[rgba(24,24,27,0.48)]" />}
-              </button>
-            );
-          })}
-          <button type="button" aria-label="팀 추가" className="flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M12 5v14M5 12h14" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
-          </button>
-        </div>
-        <div className="flex w-full flex-col items-center gap-2 px-3 py-4">
-          <button type="button" onClick={() => setDarkMode(!darkMode)} className="flex size-11 items-center justify-center rounded-xl transition-colors hover:bg-white/10" aria-label={darkMode ? "라이트모드로 전환" : "다크모드로 전환"}>
-            <Image src={darkMode ? "/icons/version-b/nav-sun.svg" : "/icons/version-b/nav-moon.svg"} alt="" width={24} height={24} />
-          </button>
-          <NotificationButton />
-          <div className="relative">
-            <button type="button" onClick={() => setProfileOpen(!profileOpen)} className="relative size-10 overflow-hidden rounded-full transition-opacity hover:opacity-80" aria-label="프로필">
-              <Image src="/icons/version-b/profile-new.png" alt="" fill sizes="40px" className="rounded-full object-cover" />
-            </button>
-            {profileOpen && (
-              <>
-                <div className="fixed inset-0 z-40" onClick={() => setProfileOpen(false)} />
-                <div className="absolute bottom-0 left-[calc(100%+8px)] z-50 w-[220px] rounded-2xl bg-white p-3 shadow-lg" style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)" }}>
-                  <div className="flex flex-col gap-3">
-                    <div className="flex flex-col gap-1 rounded-2xl px-3 py-2">
-                      <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">박민영</p>
-                      <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">minion@jocodingax.ai</p>
-                    </div>
-                    <div className="h-px w-full bg-[#e4e4e7]" />
-                    <div className="flex flex-col">
-                      <button type="button" className="w-full rounded-lg px-3 py-2 text-left text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f4f4f5]">내 정보</button>
-                      <button type="button" className="w-full rounded-lg px-3 py-2 text-left text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f4f4f5]">로그아웃</button>
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
+      {/* L. Sidebar */}
+      <PageSidebar activeMenu="디스커버리" />
 
-      {/* M + R. Sidebar + Main area */}
-      <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden">
-        <PageSidebar activeMenu="디스커버리" />
+      {/* R. Header + Main (홈 스타일 셸) */}
+      <div className="relative flex h-full min-w-0 flex-1 flex-col overflow-hidden bg-white">
+        {/* Header (60px) — 앱 상세에서는 별도 헤더(브레드크럼)를 렌더링하므로 메인 화면에서만 표시 */}
+        {!selectedApp && (
+          <div className="flex h-[60px] shrink-0 items-center justify-between border-b border-[rgba(82,82,91,0.08)] bg-white px-5">
+            <div className="flex items-center">
+              <span className="px-1 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">
+                디스커버리
+              </span>
+            </div>
+            <div className="flex h-full items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setDarkMode(!darkMode)}
+                aria-label={darkMode ? "라이트모드로 전환" : "다크모드로 전환"}
+                className="flex size-9 items-center justify-center rounded-full transition-colors hover:bg-[#f4f4f5]"
+              >
+                <Image src="/icons/version-b/header-search.svg" alt="" width={32} height={32} />
+              </button>
+              <NotificationButton variant="header" />
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setProfileOpen(!profileOpen)}
+                  className="flex size-9 items-center justify-center rounded-full bg-[#2D64FA] p-2 transition-opacity hover:opacity-80"
+                  aria-label="프로필"
+                >
+                  <span className="whitespace-nowrap text-xs font-semibold leading-[1.3] tracking-[-0.12px] text-white">민영</span>
+                </button>
+                {profileOpen && (
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setProfileOpen(false)} />
+                    <div className="absolute right-0 top-[calc(100%+8px)] z-50 w-[220px] rounded-2xl bg-white p-3" style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)" }}>
+                      <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-1 rounded-2xl px-3 py-2">
+                          <p className="text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#18181b]">박민영</p>
+                          <p className="text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">minion@jocodingax.ai</p>
+                        </div>
+                        <div className="h-px w-full bg-[#e4e4e7]" />
+                        <div className="flex flex-col">
+                          <button type="button" className="w-full rounded-lg px-3 py-2 text-left text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f4f4f5]">내 정보</button>
+                          <button type="button" className="w-full rounded-lg px-3 py-2 text-left text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f4f4f5]">로그아웃</button>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
         {selectedApp ? (
           <div className="relative flex h-full min-w-0 flex-1 flex-col">
             {/* 헤더 (브레드크럼) */}
@@ -245,7 +240,7 @@ export default function DiscoveryPageB() {
               {selectedApp.status === "not-using" && (
                 <button
                   type="button"
-                  className={`app-detail-primary-cta flex h-8 items-center justify-center overflow-hidden rounded-full bg-[#18181b] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-all duration-200 hover:opacity-90 ${
+                  className={`app-detail-primary-cta flex h-8 items-center justify-center overflow-hidden rounded-full bg-[#2d64fa] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-all duration-200 hover:opacity-90 ${
                     stickyHeaderButtonVisible
                       ? "translate-y-0 opacity-100"
                       : "pointer-events-none -translate-y-1 opacity-0"
@@ -278,7 +273,7 @@ export default function DiscoveryPageB() {
                   )}
                   <button
                     type="button"
-                    className="app-detail-primary-cta flex h-8 items-center justify-center overflow-hidden rounded-full bg-[#18181b] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+                    className="app-detail-primary-cta flex h-8 items-center justify-center overflow-hidden rounded-full bg-[#2d64fa] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
                   >
                     앱 열기
                   </button>
@@ -289,7 +284,7 @@ export default function DiscoveryPageB() {
                     className={`discovery-rec-btn flex h-8 w-20 items-center justify-center gap-1 overflow-hidden whitespace-nowrap rounded-full border text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors ${
                       appRecommended
                         ? "discovery-rec-btn-active border-transparent bg-[rgba(251,176,59,0.2)] hover:bg-[rgba(251,176,59,0.28)]"
-                        : "border-[#e4e4e7] bg-white hover:bg-[#f6f7f9]"
+                        : "border-[#e4e4e7] bg-white hover:bg-surface"
                     }`}
                   >
                     <span key={stickyThumbAnimKey} className="thumb-bounce inline-flex">
@@ -409,7 +404,7 @@ function RequestModal({ app, mode, onCancel, onConfirm }: RequestModalProps) {
         </div>
 
         {/* 앱 정보 카드 */}
-        <div className="flex w-full flex-col items-start justify-center gap-5 rounded-[20px] bg-[#f6f7f9] p-5">
+        <div className="flex w-full flex-col items-start justify-center gap-5 rounded-[20px] bg-surface p-5">
           <div className="flex w-full items-center gap-5">
             <div
               className="size-16 shrink-0 rounded-xl"
@@ -659,11 +654,6 @@ function DiscoveryContent({ viewMode, setViewMode, onAppClick, onInstantRequest,
 
   return (
     <div className="relative flex h-full min-w-0 flex-1 flex-col">
-      {/* 헤더 */}
-      <div className="flex h-[60px] w-full shrink-0 items-center overflow-hidden border-b border-[rgba(82,82,91,0.08)] bg-white px-5">
-        <Breadcrumb crumbs={[{ label: "디스커버리" }]} />
-      </div>
-
       {/* 본문 (스크롤 컨테이너) */}
       <div
         ref={scrollRef}
@@ -671,7 +661,10 @@ function DiscoveryContent({ viewMode, setViewMode, onAppClick, onInstantRequest,
         className="no-scrollbar flex w-full flex-1 min-h-0 flex-col overflow-x-hidden overflow-y-auto bg-white"
       >
         {/* 콘텐츠 max-width 래퍼 (1441px+ 양옆 여백) */}
-        <div className="mx-auto flex w-full flex-col gap-[60px] px-14 pt-10 pb-[120px] min-[1441px]:max-w-[1360px]">
+        <div
+          className="mx-auto flex w-full flex-col gap-[60px] px-14 pt-10 pb-[120px] min-[1441px]:max-w-[1360px]"
+          style={{ animation: "pageFadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1)" }}
+        >
         {/* 1. 타이틀 + 설명 + 탭 */}
         <div className="flex w-full shrink-0 flex-col gap-10">
           <div className="flex flex-col">
@@ -720,7 +713,7 @@ function DiscoveryContent({ viewMode, setViewMode, onAppClick, onInstantRequest,
         </div>
 
         {viewMode === "스토어" && (
-        <div key="store" className="flex w-full shrink-0 flex-col gap-[60px]" style={{ animation: "fadeSlideIn 0.35s ease-out" }}>
+        <div key="store" className="flex w-full shrink-0 flex-col gap-[60px]">
         {/* 2. 배너 */}
         <DiscoveryBanner onAppClick={onAppClick} />
 
@@ -776,13 +769,13 @@ function DiscoveryContent({ viewMode, setViewMode, onAppClick, onInstantRequest,
         )}
 
         {viewMode === "그리드" && (
-          <div key="grid" className="w-full shrink-0" style={{ animation: "fadeSlideIn 0.35s ease-out" }}>
+          <div key="grid" className="w-full shrink-0">
             <GridView onAppClick={onAppClick} onInstantRequest={onInstantRequest} onApprovalRequest={onApprovalRequest} />
           </div>
         )}
 
         {viewMode === "리스트" && (
-          <div key="list" className="w-full shrink-0" style={{ animation: "fadeSlideIn 0.35s ease-out" }}>
+          <div key="list" className="w-full shrink-0">
             <ListView onAppClick={onAppClick} onInstantRequest={onInstantRequest} onApprovalRequest={onApprovalRequest} />
           </div>
         )}
@@ -795,7 +788,7 @@ function DiscoveryContent({ viewMode, setViewMode, onAppClick, onInstantRequest,
         onClick={scrollToTop}
         aria-label="맨 위로"
         data-node-id="4453:2448"
-        className={`scroll-top-btn absolute bottom-6 left-1/2 z-20 flex size-9 items-center justify-center rounded-full bg-[#18181b] p-2 text-white shadow-lg transition-all duration-200 hover:bg-[#27272a] ${
+        className={`scroll-top-btn absolute bottom-6 left-1/2 z-20 flex size-9 items-center justify-center rounded-full bg-[#2d64fa] p-2 text-white shadow-lg transition-all duration-200 hover:opacity-90 ${
           showScrollTop
             ? "pointer-events-auto -translate-x-1/2 translate-y-0 opacity-100"
             : "pointer-events-none -translate-x-1/2 translate-y-2 opacity-0"
@@ -1122,7 +1115,7 @@ function GridView({ onAppClick, onInstantRequest, onApprovalRequest }: GridViewP
                 handleNavigate();
               }
             }}
-            className="flex cursor-pointer flex-col items-start justify-center gap-5 rounded-2xl bg-[#f6f7f9] p-5 text-left transition-transform duration-200 ease-out hover:scale-[1.03]"
+            className="flex cursor-pointer flex-col items-start justify-center gap-5 rounded-2xl bg-surface p-5 text-left transition-transform duration-200 ease-out hover:scale-[1.03]"
           >
             <div className="flex w-full items-end gap-5">
               <div className="size-[80px] shrink-0 rounded-[12px] bg-[#e4e4e7]" />
@@ -1290,7 +1283,7 @@ function ListRow({ app, onClick, onInstantRequest, onApprovalRequest }: ListRowP
           onClick();
         }
       }}
-      className="flex h-24 w-full cursor-pointer items-center gap-5 rounded-2xl bg-[#f6f7f9] p-5 text-left transition-all duration-200 ease-out hover:scale-[1.01] hover:bg-[#f4f4f5]"
+      className="flex h-24 w-full cursor-pointer items-center gap-5 rounded-2xl bg-surface p-5 text-left transition-all duration-200 ease-out hover:scale-[1.01] hover:bg-[#f4f4f5]"
     >
       <div className="size-12 shrink-0 rounded-xl bg-[#e4e4e7]" />
       <div className="flex min-w-0 flex-1 flex-col gap-2">
@@ -1421,7 +1414,7 @@ function PopularCard({ rank, app, onClick, onRequest }: PopularCardProps) {
           onClick();
         }
       }}
-      className="flex cursor-pointer flex-col items-start justify-center gap-5 rounded-2xl bg-[#f6f7f9] p-5 text-left transition-transform duration-200 ease-out hover:scale-[1.03]"
+      className="flex cursor-pointer flex-col items-start justify-center gap-5 rounded-2xl bg-surface p-5 text-left transition-transform duration-200 ease-out hover:scale-[1.03]"
     >
       <div className="flex w-full flex-col gap-2">
         <p className="text-[28px] font-bold leading-[1.2] text-[#2D64FA]">{String(rank).padStart(2, "0")}</p>
@@ -1460,7 +1453,7 @@ function PopularCard({ rank, app, onClick, onRequest }: PopularCardProps) {
 function EmptyPopularCard({ rank }: { rank: number }) {
   return (
     <div
-      className="flex h-full flex-col items-start rounded-2xl bg-[#f6f7f9] p-5"
+      className="flex h-full flex-col items-start rounded-2xl bg-surface p-5"
       data-node-id="4400:1980"
     >
       <p className="text-[28px] font-bold leading-[1.2] text-[#a1a1aa]">{String(rank).padStart(2, "0")}</p>
@@ -1503,7 +1496,7 @@ function NewCard({ app, index, onClick, onRequest }: NewCardProps) {
           onClick();
         }
       }}
-      className="flex cursor-pointer flex-col items-start justify-center gap-5 rounded-2xl bg-[#f6f7f9] p-5 text-left transition-transform duration-200 ease-out hover:scale-[1.03]"
+      className="flex cursor-pointer flex-col items-start justify-center gap-5 rounded-2xl bg-surface p-5 text-left transition-transform duration-200 ease-out hover:scale-[1.03]"
     >
       <div className="flex w-full items-center gap-5">
         <div className="size-[90px] shrink-0 rounded-xl bg-[#e4e4e7]" />

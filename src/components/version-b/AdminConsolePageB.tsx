@@ -107,7 +107,7 @@ export default function AdminConsolePageB() {
       className={`flex h-screen w-full items-start overflow-hidden${darkMode ? " dark-mode" : ""}`}
       style={{
         backgroundColor: darkMode ? "#0C0A12" : "#130321",
-        "--page-primary": darkMode ? "#6E4A94" : "#2D64FA",
+        "--page-primary": darkMode ? "#4B7BFF" : "#2D64FA",
       } as React.CSSProperties}
     >
       {/* L. Global Nav */}
@@ -241,7 +241,7 @@ export default function AdminConsolePageB() {
                   </button>
                   <button
                     type="button"
-                    className="flex h-12 w-full items-center justify-center overflow-hidden rounded-full border border-[#e4e4e7] bg-white px-8 text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors hover:bg-[#f6f7f9]"
+                    className="flex h-12 w-full items-center justify-center overflow-hidden rounded-full border border-[#e4e4e7] bg-white px-8 text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors hover:bg-surface"
                   >
                     보관
                   </button>
@@ -307,7 +307,7 @@ export default function AdminConsolePageB() {
                     <div className="flex shrink-0 items-start gap-2">
                       <button
                         type="button"
-                        className="flex h-9 items-center justify-center overflow-hidden rounded-full border border-[#e4e4e7] bg-white px-5 text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#f6f7f9]"
+                        className="flex h-9 items-center justify-center overflow-hidden rounded-full border border-[#e4e4e7] bg-white px-5 text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-surface"
                       >
                         MD 불러오기
                       </button>
@@ -487,7 +487,7 @@ function UserModal({
                     <button
                       type="button"
                       onClick={() => onCancelInvite(i)}
-                      className="flex h-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#e4e4e7] bg-white px-5 text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#f6f7f9]"
+                      className="flex h-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#e4e4e7] bg-white px-5 text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-surface"
                     >
                       취소
                     </button>

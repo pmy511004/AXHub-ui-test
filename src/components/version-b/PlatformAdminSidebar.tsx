@@ -22,7 +22,7 @@ const ITEMS: ReadonlyArray<{
 export default function PlatformAdminSidebar({ active }: Props) {
   return (
     <aside
-      className="sticky top-[60px] flex h-[calc(100vh-60px)] w-[200px] shrink-0 flex-col gap-2 overflow-y-auto bg-[#f6f7f9] p-5"
+      className="sticky top-[60px] flex h-[calc(100vh-60px)] w-[200px] shrink-0 flex-col gap-2 overflow-y-auto bg-surface p-5"
       data-node-id="4830:4433"
     >
       {ITEMS.map((item) => {

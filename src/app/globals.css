@@ -3,6 +3,62 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* ─── Primary ─── */
+  --p-primary: #2D64FA;
+  --p-primary-hover: #5985FB;
+  --p-primary-soft: #EAF0FE;
+  --p-primary-soft-hover: #D6E2FD;
+  --p-primary-fg: #FFFFFF;
+
+  /* ─── Foreground (text) ─── */
+  --p-fg-default: #16171B;
+  --p-fg-secondary: #3C3F47;
+  --p-fg-muted: #6D717E;
+  --p-fg-subtle: #9CA0AB;
+  --p-fg-disabled: #D1D3D8;
+  --p-fg-on-primary: #FFFFFF;
+
+  /* ─── Border ─── */
+  --p-border-default: #E4E5E8;
+  --p-border-strong: #D1D3D8;
+  --p-border-divider: rgba(82, 82, 91, 0.08);
+
+  /* ─── Background (surface) ─── */
+  --p-bg-surface: #F6F7F9;
+  --p-bg-content: #FFFFFF;
+  --p-bg-muted: #EFF1F4;
+  --p-bg-emphasis: #E4E5E8;
+  --p-bg-inverse: #16171B;
+}
+
+.dark-mode {
+  /* Primary */
+  --p-primary: #4B7BFF;
+  --p-primary-hover: #2D64FA;
+  --p-primary-soft: rgba(75, 123, 255, 0.16);
+  --p-primary-soft-hover: rgba(75, 123, 255, 0.24);
+  --p-primary-fg: #FFFFFF;
+
+  /* Foreground */
+  --p-fg-default: #FAFAFA;
+  --p-fg-secondary: #D1D3D8;
+  --p-fg-muted: #9CA0AB;
+  --p-fg-subtle: #6D717E;
+  --p-fg-disabled: #4F535D;
+  --p-fg-on-primary: #FFFFFF;
+
+  /* Border */
+  --p-border-default: rgba(255, 255, 255, 0.10);
+  --p-border-strong: rgba(255, 255, 255, 0.16);
+  --p-border-divider: rgba(255, 255, 255, 0.08);
+
+  /* Background */
+  --p-bg-surface: #0E1014;
+  --p-bg-content: #16181D;
+  --p-bg-muted: #1D2026;
+  --p-bg-emphasis: #25282F;
+  --p-bg-inverse: #FAFAFA;
 }
 
 @theme inline {
@@ -10,6 +66,7 @@
   --color-foreground: var(--foreground);
   --color-primary-50: #f4ecfa;
   --color-primary-500: #6d319d;
+  --color-surface: #f6f7f9;
   --color-gray-50: #f6f7f9;
   --color-gray-100: #f6f6f6;
   --color-gray-200: #e4e4e7;
@@ -17,6 +74,30 @@
   --color-gray-500: #71717a;
   --color-gray-900: #18181b;
   --font-pretendard: "Pretendard Variable", sans-serif;
+
+  /* ─── 디자인 시스템 토큰 (light/dark 자동 전환) ─── */
+  --color-primary: var(--p-primary);
+  --color-primary-hover: var(--p-primary-hover);
+  --color-primary-soft: var(--p-primary-soft);
+  --color-primary-soft-hover: var(--p-primary-soft-hover);
+  --color-primary-fg: var(--p-primary-fg);
+
+  --color-fg-default: var(--p-fg-default);
+  --color-fg-secondary: var(--p-fg-secondary);
+  --color-fg-muted: var(--p-fg-muted);
+  --color-fg-subtle: var(--p-fg-subtle);
+  --color-fg-disabled: var(--p-fg-disabled);
+  --color-fg-on-primary: var(--p-fg-on-primary);
+
+  --color-border-default: var(--p-border-default);
+  --color-border-strong: var(--p-border-strong);
+  --color-border-divider: var(--p-border-divider);
+
+  --color-bg-surface: var(--p-bg-surface);
+  --color-bg-content: var(--p-bg-content);
+  --color-bg-muted: var(--p-bg-muted);
+  --color-bg-emphasis: var(--p-bg-emphasis);
+  --color-bg-inverse: var(--p-bg-inverse);
 }
 
 @layer base {
@@ -242,6 +323,16 @@
     }
     50% {
       transform: translateY(6px);
+    }
+  }
+
+  @keyframes tooltipArrowBounceLeft {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(-6px);
     }
   }
 
@@ -482,7 +573,7 @@
        text 2°     #d4d4d8
        text 3°     #a1a1aa
        text 4°     #71717a
-       page-primary (dark) #6E4A94                                      */
+       page-primary (dark) #4B7BFF                                      */
 
   .dark-mode {
     color-scheme: dark;
@@ -490,25 +581,26 @@
 
   /* ── 표면(surface) ── */
   .dark-mode .bg-white {
-    background-color: #16151a;
+    background-color: #16181D;
   }
 
   .dark-mode .bg-\[\#f6f6f6\] {
-    background-color: #1c1b21;
+    background-color: #1D2026;
   }
 
   .dark-mode .bg-\[\#f4f4f5\],
   .dark-mode .bg-\[\#f6f7f9\],
   .dark-mode .bg-\[\#fafafa\],
+  .dark-mode .bg-surface,
   .dark-mode .bg-gray-50,
   .dark-mode .bg-gray-100 {
-    background-color: #1c1b21;
+    background-color: #1D2026;
   }
 
   /* 모달 / 팝오버 (elevated surface) — 다크모드에서 흰색 10% 보더로 윤곽 강조 */
   .dark-mode [class*="rounded-2xl"].bg-white,
   .dark-mode [class*="rounded-xl"].bg-white {
-    background-color: #16151a;
+    background-color: #16181D;
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
@@ -589,9 +681,10 @@
   /* ── 호버 표면 ── */
   .dark-mode .hover\:bg-\[\#f4f4f5\]:hover,
   .dark-mode .hover\:bg-\[\#f6f7f9\]:hover,
+  .dark-mode .hover\:bg-surface:hover,
   .dark-mode .hover\:bg-\[\#ececec\]:hover,
   .dark-mode .hover\:bg-gray-50:hover {
-    background-color: #2a2932;
+    background-color: #25282F;
   }
 
   /* PageSidebar 메뉴 호버 — 검정 톤 호버를 흰색 톤으로 */
@@ -608,12 +701,12 @@
 
   /* ── 메뉴 활성 인디케이터 바 (light 미설정시 fallback도 다크 톤으로) ── */
   .dark-mode .menu-active::before {
-    background-color: var(--page-primary, #6E4A94);
+    background-color: var(--page-primary, #4B7BFF);
   }
 
   /* ── 스크롤 그라데이션 (white→transparent → 다크 표면→transparent) ── */
   .dark-mode .from-white {
-    --tw-gradient-from: #16151a var(--tw-gradient-from-position);
+    --tw-gradient-from: #16181D var(--tw-gradient-from-position);
   }
 
   /* ── 사이드바 스크롤바 — 어두운 표면에 맞게 밝은 컨트롤러 ── */
@@ -637,15 +730,15 @@
     color: #18181b;
   }
 
-  /* ── 텍스트 primary — 다크모드에서만 더 밝은 톤 (#9866CC)으로 ── */
-  /* bg/border/indicator의 --page-primary(#6E4A94)는 그대로 유지하고, 텍스트만 분리 */
+  /* ── 텍스트 primary — 다크모드에서만 더 밝은 톤 (#4B7BFF)으로 ── */
+  /* bg/border/indicator의 --page-primary(#4B7BFF)는 그대로 유지하고, 텍스트만 분리 */
   .dark-mode .text-\[\#2D64FA\] {
-    color: #9866CC;
+    color: #4B7BFF;
   }
 
-  /* PageSidebar 활성 메뉴 강조색 — 다크모드에서 #9866CC */
+  /* PageSidebar 활성 메뉴 강조색 — 다크모드에서 #4B7BFF */
   .dark-mode .menu-active-accent {
-    color: #9866CC;
+    color: #4B7BFF;
   }
 
   /* ── 디스커버리 배너 ellipse 그라데이션 — 라이트/다크 stop 색 ── */
@@ -656,7 +749,7 @@
     stop-color: #F6F6F6;
   }
   .dark-mode .banner-ellipse-center {
-    stop-color: #9866CC;
+    stop-color: #4B7BFF;
   }
   .dark-mode .banner-ellipse-outer {
     stop-color: #1C1B21;
@@ -680,7 +773,7 @@
 
   /* ── 검색바 — raised(#1c1b21)보다 한 단계 밝은 #272530 ── */
   .dark-mode [data-node-id="4181:1572"] {
-    background-color: #272530;
+    background-color: #1D2026;
   }
 
   /* ── 비활성 버튼 오버레이 — 다크모드에서 흰색/70% → opacity/gray/500 ── */
@@ -703,7 +796,7 @@
   /* ── 디스커버리 앱 상세 리뷰 입력창 — 다크모드 전용 ── */
   /* 입력 컨테이너: 보더 제거, fill #272530 */
   .dark-mode .review-input-container {
-    background-color: #272530 !important;
+    background-color: #1D2026 !important;
     border-color: transparent !important;
   }
   .dark-mode .review-input-container:focus-within {
@@ -760,7 +853,7 @@
 
   /* ── 필터(정렬) 버튼 — 검색바와 같은 #272530, 아이콘은 white/70% ── */
   .dark-mode .filter-btn {
-    background-color: #272530 !important;
+    background-color: #1D2026 !important;
   }
   .dark-mode .filter-btn:hover {
     background-color: #2F2D3A !important;
@@ -836,7 +929,7 @@
 
   /* TOC 슬라이딩 인디케이터 — 다크모드 page-primary */
   .dark-mode .app-detail-toc-indicator {
-    background-color: #9866cc !important;
+    background-color: #4b7bff !important;
   }
 
   /* 댓글 카드 하단 stroke (opacity/white/100) */
