@@ -107,11 +107,11 @@ export default function AdminConsolePageB() {
       className={`flex h-screen w-full items-start overflow-hidden${darkMode ? " dark-mode" : ""}`}
       style={{
         backgroundColor: darkMode ? "#0C0A12" : "#130321",
-        "--page-primary": darkMode ? "#6E4A94" : "#5B3D7A",
+        "--page-primary": darkMode ? "#6E4A94" : "#2D64FA",
       } as React.CSSProperties}
     >
       {/* L. Global Nav */}
-      <div className="flex h-full w-[76px] shrink-0 flex-col items-center justify-between">
+      <div className="flex h-full w-[68px] shrink-0 flex-col items-center justify-between">
         <div className="flex w-full flex-col items-center gap-4 px-3 py-4">
           {(["JO", "DE"] as const).map((team) => {
             const isActive = activeTeam === team;
@@ -120,7 +120,7 @@ export default function AdminConsolePageB() {
                 key={team}
                 type="button"
                 onClick={() => setActiveTeam(team)}
-                className={`relative flex size-11 items-center justify-center overflow-hidden rounded-xl bg-[#5B3D7A] p-1 transition-shadow ${isActive ? "shadow-[0px_0px_0px_1px_white]" : ""}`}
+                className={`relative flex size-11 items-center justify-center overflow-hidden rounded-xl bg-[#2D64FA] p-1 transition-shadow ${isActive ? "shadow-[0px_0px_0px_1px_white]" : ""}`}
                 aria-label={`팀 ${team}`}
               >
                 <p className="flex-1 text-center text-base font-bold leading-[1.5] tracking-[-0.16px] text-white">{team}</p>
@@ -181,18 +181,18 @@ export default function AdminConsolePageB() {
       </div>
 
       {/* M + R: PageSidebar + Main */}
-      <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden pr-2 py-2">
+      <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden">
         <PageSidebar activeMenu="디스커버리" />
 
         <div className="relative flex h-full min-w-0 flex-1 flex-col">
           {/* 헤더 (브레드크럼) */}
-          <div className="flex h-[60px] w-full shrink-0 items-center overflow-hidden rounded-tr-2xl border-b border-[rgba(82,82,91,0.08)] bg-white px-5">
+          <div className="flex h-[60px] w-full shrink-0 items-center overflow-hidden border-b border-[rgba(82,82,91,0.08)] bg-white px-5">
             <Breadcrumb crumbs={crumbs} onCrumbClick={(href) => router.push(href)} />
           </div>
 
           {/* 본문 */}
           <div
-            className="flex h-full flex-1 min-h-0 flex-col overflow-y-auto rounded-br-2xl border-r border-[#f6f6f6] bg-white"
+            className="flex h-full flex-1 min-h-0 flex-col overflow-y-auto bg-white"
             style={{ animation: "fadeSlideIn 0.35s ease-out" }}
           >
             <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-[60px] px-14 pb-[120px] pt-10">
@@ -203,7 +203,7 @@ export default function AdminConsolePageB() {
                   <div
                     className="size-[120px] shrink-0 rounded-[20px]"
                     style={{
-                      backgroundImage: "linear-gradient(135deg, #9B7AB8 0%, #5B3D7A 100%)",
+                      backgroundImage: "linear-gradient(135deg, #9B7AB8 0%, #2D64FA 100%)",
                     }}
                   />
                   <div className="flex min-w-0 flex-1 flex-col items-start gap-3">
@@ -221,7 +221,7 @@ export default function AdminConsolePageB() {
                       팀원별·프로젝트별 Claude Code 사용량을 집계하고, 토큰·요청 수·비용을 한눈에 비교합니다.
                     </p>
                     <div className="flex items-center gap-2 pt-4 text-sm leading-[1.5] tracking-[-0.14px]">
-                      <span className="font-semibold text-[#5B3D7A]">{category}</span>
+                      <span className="font-semibold text-[#2D64FA]">{category}</span>
                       <span className="font-normal text-[#a1a1aa]">•</span>
                       <span className="font-normal text-[#a1a1aa]">안승원</span>
                       <span className="font-normal text-[#a1a1aa]">•</span>
@@ -241,7 +241,7 @@ export default function AdminConsolePageB() {
                   </button>
                   <button
                     type="button"
-                    className="flex h-12 w-full items-center justify-center overflow-hidden rounded-full border border-[#e4e4e7] bg-white px-8 text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors hover:bg-[#f9f9f9]"
+                    className="flex h-12 w-full items-center justify-center overflow-hidden rounded-full border border-[#e4e4e7] bg-white px-8 text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors hover:bg-[#f6f7f9]"
                   >
                     보관
                   </button>
@@ -307,14 +307,14 @@ export default function AdminConsolePageB() {
                     <div className="flex shrink-0 items-start gap-2">
                       <button
                         type="button"
-                        className="flex h-9 items-center justify-center overflow-hidden rounded-full border border-[#e4e4e7] bg-white px-5 text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#f9f9f9]"
+                        className="flex h-9 items-center justify-center overflow-hidden rounded-full border border-[#e4e4e7] bg-white px-5 text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#f6f7f9]"
                       >
                         MD 불러오기
                       </button>
                       <button
                         type="button"
                         disabled={introText.trim().length === 0}
-                        className="relative flex h-9 items-center justify-center overflow-hidden rounded-full bg-[#5B3D7A] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:hover:opacity-100"
+                        className="relative flex h-9 items-center justify-center overflow-hidden rounded-full bg-[#2D64FA] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:hover:opacity-100"
                       >
                         저장
                         {introText.trim().length === 0 && (
@@ -462,7 +462,7 @@ function UserModal({
             type="button"
             onClick={handleInvite}
             disabled={!canInvite}
-            className="relative flex h-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#5B3D7A] px-6 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:hover:opacity-100"
+            className="relative flex h-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#2D64FA] px-6 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:hover:opacity-100"
           >
             초대
             {!canInvite && (
@@ -487,7 +487,7 @@ function UserModal({
                     <button
                       type="button"
                       onClick={() => onCancelInvite(i)}
-                      className="flex h-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#e4e4e7] bg-white px-5 text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#f9f9f9]"
+                      className="flex h-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#e4e4e7] bg-white px-5 text-sm font-medium leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#f6f7f9]"
                     >
                       취소
                     </button>
@@ -655,7 +655,7 @@ function Switch({
       disabled={disabled}
       onClick={() => onChange(!checked)}
       className={`relative h-8 w-[52px] shrink-0 rounded-full transition-colors ${
-        checked ? "bg-[#5B3D7A]" : "bg-[#d4d4d8]"
+        checked ? "bg-[#2D64FA]" : "bg-[#d4d4d8]"
       } ${disabled ? "cursor-not-allowed" : ""}`}
     >
       <span
@@ -744,7 +744,7 @@ function VisibilityModal({
             type="button"
             disabled={!isDirty}
             onClick={() => onSave(localPublic, localPublic ? localAuto : false)}
-            className="relative flex h-9 items-center justify-center overflow-hidden rounded-full bg-[#5B3D7A] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:hover:opacity-100"
+            className="relative flex h-9 items-center justify-center overflow-hidden rounded-full bg-[#2D64FA] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:hover:opacity-100"
           >
             저장
             {!isDirty && (
@@ -844,7 +844,7 @@ function TopTabs({ active, onSelect }: { active: SubMenuKey; onSelect: (key: Sub
             <span
               className={`absolute inset-0 flex items-center justify-center whitespace-nowrap text-base leading-[1.5] tracking-[-0.16px] transition-colors ${
                 isActive
-                  ? "font-semibold text-[#5B3D7A]"
+                  ? "font-semibold text-[#2D64FA]"
                   : "font-normal text-[rgba(24,24,27,0.9)] hover:text-[#18181b]"
               }`}
             >
@@ -856,7 +856,7 @@ function TopTabs({ active, onSelect }: { active: SubMenuKey; onSelect: (key: Sub
       {/* 슬라이딩 인디케이터 */}
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute bottom-0 h-[2px] rounded-full bg-[#5B3D7A] transition-[left,width] duration-300 ease-out"
+        className="pointer-events-none absolute bottom-0 h-[2px] rounded-full bg-[#2D64FA] transition-[left,width] duration-300 ease-out"
         style={{ left: indicator.left, width: indicator.width }}
       />
     </nav>
@@ -938,7 +938,7 @@ function StatReviewCell({ label, value }: { label: string; value: string }) {
       </div>
       <button
         type="button"
-        className="flex h-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#5B3D7A] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+        className="flex h-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#2D64FA] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
       >
         심사 요청
       </button>

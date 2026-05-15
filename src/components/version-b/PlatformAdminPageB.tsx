@@ -144,7 +144,7 @@ export default function PlatformAdminPageB() {
                     </p>
                   </div>
                   <div className="flex w-[200px] items-center">
-                    <span className="rounded-lg bg-[#f6f6f6] px-2 py-1 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#5B3D7A]">
+                    <span className="rounded-lg bg-[#f6f6f6] px-2 py-1 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#2D64FA]">
                       {tenant.slug}
                     </span>
                   </div>
@@ -225,7 +225,7 @@ export default function PlatformAdminPageB() {
                 value={tenantEmail}
                 onChange={(e) => setTenantEmail(e.target.value)}
                 placeholder="이메일 입력"
-                className="min-h-12 w-full rounded-full border border-[#e4e4e7] bg-white px-5 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#5B3D7A] focus:outline-none"
+                className="min-h-12 w-full rounded-full border border-[#e4e4e7] bg-white px-5 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#2D64FA] focus:outline-none"
               />
             </div>
 
@@ -239,7 +239,7 @@ export default function PlatformAdminPageB() {
                 value={tenantName}
                 onChange={(e) => setTenantName(e.target.value)}
                 placeholder="이름 입력"
-                className="min-h-12 w-full rounded-full border border-[#e4e4e7] bg-white px-5 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#5B3D7A] focus:outline-none"
+                className="min-h-12 w-full rounded-full border border-[#e4e4e7] bg-white px-5 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#2D64FA] focus:outline-none"
               />
             </div>
 
@@ -253,7 +253,7 @@ export default function PlatformAdminPageB() {
                 value={tenantSlug}
                 onChange={(e) => setTenantSlug(e.target.value)}
                 placeholder="slug 입력"
-                className="min-h-12 w-full rounded-full border border-[#e4e4e7] bg-white px-5 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#5B3D7A] focus:outline-none"
+                className="min-h-12 w-full rounded-full border border-[#e4e4e7] bg-white px-5 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#2D64FA] focus:outline-none"
               />
             </div>
 
@@ -271,7 +271,7 @@ export default function PlatformAdminPageB() {
                 onClick={() => {
                   if (isTenantValid) closeTenantModal();
                 }}
-                className="relative flex h-9 items-center justify-center overflow-hidden rounded-full bg-[#5B3D7A] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+                className="relative flex h-9 items-center justify-center overflow-hidden rounded-full bg-[#2D64FA] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
               >
                 만들기
                 {!isTenantValid && (

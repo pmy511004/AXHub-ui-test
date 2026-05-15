@@ -55,12 +55,12 @@ export default function MakePageB() {
       className={`flex h-screen w-full items-start overflow-hidden${darkMode ? " dark-mode" : ""}`}
       style={{
         backgroundColor: darkMode ? "#0C0A12" : "#130321",
-        "--page-primary": darkMode ? "#6E4A94" : "#5B3D7A",
+        "--page-primary": darkMode ? "#6E4A94" : "#2D64FA",
       } as React.CSSProperties}
       data-node-id="2471:1262"
     >
       {/* L. Global Nav (팀 프로필 셀렉터) */}
-      <div className="flex h-full w-[76px] shrink-0 flex-col items-center justify-between">
+      <div className="flex h-full w-[68px] shrink-0 flex-col items-center justify-between">
         <div className="flex w-full flex-col items-center gap-4 px-3 py-4">
           {(["JO", "DE"] as const).map((team) => {
             const isActive = activeTeam === team;
@@ -69,7 +69,7 @@ export default function MakePageB() {
                 key={team}
                 type="button"
                 onClick={() => setActiveTeam(team)}
-                className={`relative flex size-11 items-center justify-center overflow-hidden rounded-xl bg-[#5B3D7A] p-1 transition-shadow ${isActive ? "shadow-[0px_0px_0px_1px_white]" : ""}`}
+                className={`relative flex size-11 items-center justify-center overflow-hidden rounded-xl bg-[#2D64FA] p-1 transition-shadow ${isActive ? "shadow-[0px_0px_0px_1px_white]" : ""}`}
                 aria-label={`팀 ${team}`}
               >
                 <p className="flex-1 text-center text-base font-bold leading-[1.5] tracking-[-0.16px] text-white">{team}</p>
@@ -115,13 +115,13 @@ export default function MakePageB() {
       </div>
 
       {/* M + R. Sidebar + Main area (통합) */}
-      <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden pr-2 py-2">
+      <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden">
         <PageSidebar activeMenu="앱 만들기" />
         {/* Right: Main content */}
-        <div className="no-scrollbar relative flex h-full min-w-0 flex-1 flex-col overflow-y-auto rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white px-14 py-10 pb-[240px]">
+        <div className="no-scrollbar relative flex h-full min-w-0 flex-1 flex-col overflow-y-auto bg-white px-14 py-10 pb-[240px]">
           {/* 예시 보기 모달 */}
           {exampleOpen && (
-            <div className="absolute inset-0 z-50 flex items-center justify-center rounded-br-2xl rounded-tr-2xl bg-white/50 transition-opacity duration-250" style={{ opacity: exampleClosing ? 0 : 1 }} onClick={closeExample}>
+            <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/50 transition-opacity duration-250" style={{ opacity: exampleClosing ? 0 : 1 }} onClick={closeExample}>
               <div className="flex w-[510px] flex-col gap-5 rounded-2xl bg-white px-5 py-8" style={{ boxShadow: "0 0 24px rgba(0,0,0,0.08)", animation: exampleClosing ? "modalScaleOut 0.25s ease-in forwards" : "modalScaleIn 0.3s ease-out" }} onClick={(e) => e.stopPropagation()}>
                 <h3 className="text-xl font-semibold text-black">이렇게 작성해보세요</h3>
                 <div className="flex flex-col gap-2">
@@ -137,7 +137,7 @@ export default function MakePageB() {
                   </p>
                 </div>
                 <div className="flex justify-end">
-                  <button type="button" onClick={closeExample} className="rounded-lg bg-[#5B3D7A] px-8 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90">
+                  <button type="button" onClick={closeExample} className="rounded-lg bg-[#2D64FA] px-8 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90">
                     확인
                   </button>
                 </div>
@@ -178,16 +178,16 @@ export default function MakePageB() {
             /* 앱 만들기 폼 */
             <div className="flex items-start gap-4">
               {/* Step sidebar */}
-              <div className="sticky top-6 flex w-[237px] shrink-0 flex-col rounded-xl bg-[#f9f9f9] p-2">
+              <div className="sticky top-6 flex w-[237px] shrink-0 flex-col rounded-xl bg-[#f6f7f9] p-2">
                 <button type="button" onClick={() => setCreateStep(1)} className="flex items-center gap-2 rounded-lg p-3 transition-colors hover:bg-[#f0f0f0]">
-                  <span className={`flex size-5 items-center justify-center rounded-full text-sm font-semibold ${createStep === 1 ? "bg-[rgba(231,101,190,0.2)] text-[#5B3D7A]" : "bg-[#e4e4e7] text-[#a1a1aa]"}`}>1</span>
-                  <span className={`flex-1 text-left text-base font-semibold ${createStep === 1 ? "text-[#5B3D7A]" : "text-[#71717a]"}`}>기본 정보</span>
-                  <span className={`rounded-full px-3 py-1 text-sm font-semibold ${step1Valid ? "bg-[#5B3D7A] text-white" : "bg-[#e4e4e7] text-[#a1a1aa]"}`}>{step1Valid ? "완료" : "미완료"}</span>
+                  <span className={`flex size-5 items-center justify-center rounded-full text-sm font-semibold ${createStep === 1 ? "bg-[rgba(231,101,190,0.2)] text-[#2D64FA]" : "bg-[#e4e4e7] text-[#a1a1aa]"}`}>1</span>
+                  <span className={`flex-1 text-left text-base font-semibold ${createStep === 1 ? "text-[#2D64FA]" : "text-[#71717a]"}`}>기본 정보</span>
+                  <span className={`rounded-full px-3 py-1 text-sm font-semibold ${step1Valid ? "bg-[#2D64FA] text-white" : "bg-[#e4e4e7] text-[#a1a1aa]"}`}>{step1Valid ? "완료" : "미완료"}</span>
                 </button>
                 <button type="button" onClick={() => setCreateStep(2)} className="flex items-center gap-2 rounded-lg p-3 transition-colors hover:bg-[#f0f0f0]">
-                  <span className={`flex size-5 items-center justify-center rounded-full text-sm font-semibold ${createStep === 2 ? "bg-[rgba(231,101,190,0.2)] text-[#5B3D7A]" : "bg-[#e4e4e7] text-[#a1a1aa]"}`}>2</span>
-                  <span className={`flex-1 text-left text-base font-semibold ${createStep === 2 ? "text-[#5B3D7A]" : "text-[#71717a]"}`}>배포 설정</span>
-                  <span className={`rounded-full px-3 py-1 text-sm font-semibold ${step2Valid ? "bg-[#5B3D7A] text-white" : "bg-[#e4e4e7] text-[#a1a1aa]"}`}>{step2Valid ? "완료" : "미완료"}</span>
+                  <span className={`flex size-5 items-center justify-center rounded-full text-sm font-semibold ${createStep === 2 ? "bg-[rgba(231,101,190,0.2)] text-[#2D64FA]" : "bg-[#e4e4e7] text-[#a1a1aa]"}`}>2</span>
+                  <span className={`flex-1 text-left text-base font-semibold ${createStep === 2 ? "text-[#2D64FA]" : "text-[#71717a]"}`}>배포 설정</span>
+                  <span className={`rounded-full px-3 py-1 text-sm font-semibold ${step2Valid ? "bg-[#2D64FA] text-white" : "bg-[#e4e4e7] text-[#a1a1aa]"}`}>{step2Valid ? "완료" : "미완료"}</span>
                 </button>
               </div>
 
@@ -223,7 +223,7 @@ export default function MakePageB() {
                       <div className="flex gap-5 pb-5">
                         <div className="flex flex-1 flex-col gap-3">
                           <p className="text-base font-semibold text-black">앱 이름<span className="text-[#ef1026]">*</span></p>
-                          <input type="text" value={appName} onChange={(e) => setAppName(e.target.value)} placeholder="이름 입력" className="min-h-[48px] rounded-xl border border-[#e4e4e7] bg-white px-4 text-base text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#5B3D7A] focus:outline-none" />
+                          <input type="text" value={appName} onChange={(e) => setAppName(e.target.value)} placeholder="이름 입력" className="min-h-[48px] rounded-xl border border-[#e4e4e7] bg-white px-4 text-base text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#2D64FA] focus:outline-none" />
                         </div>
                         <div className="flex flex-1 flex-col gap-3">
                           <p className="text-base font-semibold text-black">카테고리<span className="text-[#ef1026]">*</span></p>
@@ -243,7 +243,7 @@ export default function MakePageB() {
                                     key={cat}
                                     type="button"
                                     onClick={() => { setSelectedCategory(cat); setCategoryOpen(false); }}
-                                    className={`px-4 py-2.5 text-left text-base transition-colors hover:bg-[#f6f6f6] ${selectedCategory === cat ? "font-semibold text-[#5B3D7A]" : "font-normal text-[#18181b]"}`}
+                                    className={`px-4 py-2.5 text-left text-base transition-colors hover:bg-[#f6f6f6] ${selectedCategory === cat ? "font-semibold text-[#2D64FA]" : "font-normal text-[#18181b]"}`}
                                   >
                                     {cat}
                                   </button>
@@ -258,16 +258,16 @@ export default function MakePageB() {
                           <p className="flex-1 text-base font-semibold text-black">상세 설명</p>
                           <button type="button" onClick={() => setExampleOpen(true)} className="rounded-lg bg-[#f6f6f6] px-3 py-2 text-xs font-semibold text-[#3f3f46] transition-colors hover:bg-[#ececec]">예시 보기</button>
                         </div>
-                        <textarea placeholder="어떤 업무를 자동화할 수 있는 지 동료들에게 설명해주세요" className="min-h-[96px] resize-none rounded-xl border border-[#e4e4e7] bg-white p-4 text-base text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#5B3D7A] focus:outline-none" />
+                        <textarea placeholder="어떤 업무를 자동화할 수 있는 지 동료들에게 설명해주세요" className="min-h-[96px] resize-none rounded-xl border border-[#e4e4e7] bg-white p-4 text-base text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#2D64FA] focus:outline-none" />
                       </div>
                       <div className="flex flex-col gap-3 pb-5">
                         <p className="text-base font-semibold text-black">앱 사용방법<span className="text-[#ef1026]">*</span></p>
                         <div className="flex gap-3">
-                          <button type="button" onClick={() => setUseMethod(useMethod === "direct" ? null : "direct")} className={`flex shrink-0 flex-col items-start gap-2 rounded-xl border p-4 text-left transition-colors ${useMethod === "direct" ? "border-[#5B3D7A] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
+                          <button type="button" onClick={() => setUseMethod(useMethod === "direct" ? null : "direct")} className={`flex shrink-0 flex-col items-start gap-2 rounded-xl border p-4 text-left transition-colors ${useMethod === "direct" ? "border-[#2D64FA] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
                             <span className="text-base font-semibold text-[#3f3f46]">바로 사용</span>
                             <span className="text-sm font-normal leading-[1.3] text-[#71717a]">모든 동료가 승인없이 바로 사용할 수 있어요</span>
                           </button>
-                          <button type="button" onClick={() => setUseMethod(useMethod === "approval" ? null : "approval")} className={`flex shrink-0 flex-col items-start gap-2 rounded-xl border p-4 text-left transition-colors ${useMethod === "approval" ? "border-[#5B3D7A] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
+                          <button type="button" onClick={() => setUseMethod(useMethod === "approval" ? null : "approval")} className={`flex shrink-0 flex-col items-start gap-2 rounded-xl border p-4 text-left transition-colors ${useMethod === "approval" ? "border-[#2D64FA] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
                             <span className="text-base font-semibold text-[#3f3f46]">승인 후 사용</span>
                             <span className="text-sm font-normal leading-[1.3] text-[#71717a]">관리자 승인을 받은 동료만 사용할 수 있어요</span>
                           </button>
@@ -277,7 +277,7 @@ export default function MakePageB() {
                     <button
                       type="button"
                       onClick={() => step1Valid && setCreateStep(2)}
-                      className={`relative flex items-center justify-center overflow-hidden rounded-full bg-[#5B3D7A] px-5 py-3 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white ${step1Valid ? "transition-opacity hover:opacity-90" : "cursor-not-allowed"}`}
+                      className={`relative flex items-center justify-center overflow-hidden rounded-full bg-[#2D64FA] px-5 py-3 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white ${step1Valid ? "transition-opacity hover:opacity-90" : "cursor-not-allowed"}`}
                     >
                       다음
                       {!step1Valid && <span className="pointer-events-none absolute inset-0 rounded-full bg-white/70" />}
@@ -292,11 +292,11 @@ export default function MakePageB() {
                       <div className="flex flex-col gap-3 pb-5">
                         <p className="text-base font-semibold text-black">배포 방식<span className="text-[#ef1026]">*</span></p>
                         <div className="flex gap-3">
-                          <button type="button" onClick={() => setDeployMethod(deployMethod === "docker" ? null : "docker")} className={`flex flex-col items-start gap-2 rounded-xl border p-4 text-left transition-colors ${deployMethod === "docker" ? "border-[#5B3D7A] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
+                          <button type="button" onClick={() => setDeployMethod(deployMethod === "docker" ? null : "docker")} className={`flex flex-col items-start gap-2 rounded-xl border p-4 text-left transition-colors ${deployMethod === "docker" ? "border-[#2D64FA] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
                             <span className="text-base font-semibold text-[#3f3f46]">Docker</span>
                             <span className="text-sm font-normal text-[#71717a]">Dockerfile 기반 빌드 후 K8s 배포</span>
                           </button>
-                          <button type="button" onClick={() => setDeployMethod(deployMethod === "compose" ? null : "compose")} className={`flex flex-col items-start gap-2 rounded-xl border p-4 text-left transition-colors ${deployMethod === "compose" ? "border-[#5B3D7A] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
+                          <button type="button" onClick={() => setDeployMethod(deployMethod === "compose" ? null : "compose")} className={`flex flex-col items-start gap-2 rounded-xl border p-4 text-left transition-colors ${deployMethod === "compose" ? "border-[#2D64FA] bg-[#fdf2f8]" : "border-[#e4e4e7] bg-white hover:border-[#d4d4d8]"}`}>
                             <span className="text-base font-semibold text-[#3f3f46]">Docker Compose</span>
                             <span className="text-sm font-normal text-[#71717a]">docker-compose.yml 기반 배포</span>
                           </button>
@@ -339,7 +339,7 @@ export default function MakePageB() {
                                 >
                                   {!isLast && <span className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-[#e4e4e7] opacity-50" />}
                                   <div className="flex shrink-0 items-center justify-center p-0.5">
-                                    <div className={`flex size-5 items-center justify-center rounded-full border-[1.5px] ${isSelected ? "border-[#5B3D7A] bg-[#5B3D7A]" : "border-[#d4d4d8] bg-transparent"}`}>
+                                    <div className={`flex size-5 items-center justify-center rounded-full border-[1.5px] ${isSelected ? "border-[#2D64FA] bg-[#2D64FA]" : "border-[#d4d4d8] bg-transparent"}`}>
                                       {isSelected && <span className="size-2 rounded-full bg-white" />}
                                     </div>
                                   </div>
@@ -363,7 +363,7 @@ export default function MakePageB() {
                           <p className="text-sm font-normal text-[#71717a]">url 가장 앞에 쓰일 고유 ID를 만들어주세요</p>
                         </div>
                         <div className="flex gap-3">
-                          <input type="text" value={accessId} onChange={(e) => setAccessId(e.target.value)} placeholder="3~63자의 영문 소문자, 숫자,-만 가능해요" className="min-h-[48px] flex-[6] rounded-xl border border-[#e4e4e7] bg-white px-4 text-base text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#5B3D7A] focus:outline-none" />
+                          <input type="text" value={accessId} onChange={(e) => setAccessId(e.target.value)} placeholder="3~63자의 영문 소문자, 숫자,-만 가능해요" className="min-h-[48px] flex-[6] rounded-xl border border-[#e4e4e7] bg-white px-4 text-base text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#2D64FA] focus:outline-none" />
                           <div className="relative flex-[4]">
                             <button
                               type="button"
@@ -380,7 +380,7 @@ export default function MakePageB() {
                                     key={domain}
                                     type="button"
                                     onClick={() => { setSelectedDomain(domain); setDomainOpen(false); }}
-                                    className={`px-4 py-2.5 text-left text-base transition-colors hover:bg-[#f6f6f6] ${selectedDomain === domain ? "font-semibold text-[#5B3D7A]" : "font-normal text-[#18181b]"}`}
+                                    className={`px-4 py-2.5 text-left text-base transition-colors hover:bg-[#f6f6f6] ${selectedDomain === domain ? "font-semibold text-[#2D64FA]" : "font-normal text-[#18181b]"}`}
                                   >
                                     {domain}
                                   </button>
@@ -399,7 +399,7 @@ export default function MakePageB() {
 
                     <button
                       type="button"
-                      className={`relative flex items-center justify-center overflow-hidden rounded-full bg-[#5B3D7A] px-5 py-3 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white ${step1Valid && step2Valid ? "transition-opacity hover:opacity-90" : "cursor-not-allowed"}`}
+                      className={`relative flex items-center justify-center overflow-hidden rounded-full bg-[#2D64FA] px-5 py-3 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white ${step1Valid && step2Valid ? "transition-opacity hover:opacity-90" : "cursor-not-allowed"}`}
                     >
                       생성
                       {!(step1Valid && step2Valid) && <span className="pointer-events-none absolute inset-0 rounded-full bg-white/70" />}
@@ -412,7 +412,7 @@ export default function MakePageB() {
           <div className="flex flex-col gap-[80px]">
             {/* 새 헤더 (피그마) */}
             <div className="flex flex-col gap-10">
-              <p className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#5B3D7A]">내 프로젝트</p>
+              <p className="text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#2D64FA]">내 프로젝트</p>
               <div>
                 <p className="text-[40px] font-bold leading-[1.2] text-[#a1a1aa]">아이디어를</p>
                 <p className="text-[40px] font-bold leading-[1.2] text-[#18181b]">앱으로 만들기.</p>
@@ -429,7 +429,7 @@ export default function MakePageB() {
                 <button
                   type="button"
                   onClick={() => router.push("/make?view=create")}
-                  className="flex h-12 shrink-0 items-center gap-2 rounded-full bg-[#5B3D7A] px-6 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-white transition-opacity hover:opacity-90"
+                  className="flex h-12 shrink-0 items-center gap-2 rounded-full bg-[#2D64FA] px-6 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-white transition-opacity hover:opacity-90"
                 >
                   <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                     <path d="M9 3.75V14.25M3.75 9H14.25" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -451,7 +451,7 @@ export default function MakePageB() {
                   onClick={() => setActiveTab(tab)}
                   className={`flex items-center justify-center px-5 py-2 text-sm tracking-[-0.14px] transition-colors ${
                     activeTab === tab
-                      ? "border-b-[2.5px] border-[#5B3D7A] font-semibold text-black"
+                      ? "border-b-[2.5px] border-[#2D64FA] font-semibold text-black"
                       : "font-normal text-[#a1a1aa] hover:text-[#71717a]"
                   }`}
                 >
@@ -471,7 +471,7 @@ export default function MakePageB() {
                       key={option}
                       type="button"
                       onClick={() => { setSortBy(option); setSortOpen(false); }}
-                      className={`px-4 py-2.5 text-left text-sm transition-colors hover:bg-[#f6f6f6] ${sortBy === option ? "font-semibold text-[#5B3D7A]" : "font-normal text-[#18181b]"}`}
+                      className={`px-4 py-2.5 text-left text-sm transition-colors hover:bg-[#f6f6f6] ${sortBy === option ? "font-semibold text-[#2D64FA]" : "font-normal text-[#18181b]"}`}
                     >
                       {option}
                     </button>
@@ -524,7 +524,7 @@ export default function MakePageB() {
                       onClick={() => router.push(`/make?view=detail&app=${encodeURIComponent(app.name)}&category=${encodeURIComponent(app.category)}`)}
                       className={`flex cursor-pointer flex-col gap-5 rounded-2xl p-5 transition-transform duration-200 ease-out hover:scale-[1.03] ${
                         isArchivedCard
-                          ? "bg-[#f9f9f9]"
+                          ? "bg-[#f6f7f9]"
                           : "border border-[#e4e4e7] bg-white"
                       }`}
                     >
@@ -535,13 +535,13 @@ export default function MakePageB() {
                           <div className="flex min-w-0 flex-1 flex-col items-end justify-between self-stretch">
                             <div className={chipBase}>
                               <Image src="/icons/version-b/chip-loader.svg" alt="" width={16} height={16} />
-                              <span className={`${chipText} text-[#5B3D7A]`}>배포전</span>
+                              <span className={`${chipText} text-[#2D64FA]`}>배포전</span>
                             </div>
                             <div className="flex w-full items-center gap-2">
                               <div className="relative h-3 flex-1">
                                 <div className="absolute left-0 right-0 top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-[#e4e4e7]" />
                                 <div
-                                  className="absolute left-0 top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-[#5B3D7A]"
+                                  className="absolute left-0 top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-[#2D64FA]"
                                   style={{ width: `${(app.progress / app.total) * 100}%` }}
                                 />
                               </div>
@@ -592,7 +592,7 @@ export default function MakePageB() {
             <button
               type="button"
               onClick={() => setIsEmpty(!isEmpty)}
-              className="fixed bottom-6 right-6 z-50 rounded-lg bg-[#5B3D7A] px-4 py-2 text-sm font-semibold text-white shadow-lg transition-opacity hover:opacity-90"
+              className="fixed bottom-6 right-6 z-50 rounded-lg bg-[#2D64FA] px-4 py-2 text-sm font-semibold text-white shadow-lg transition-opacity hover:opacity-90"
             >
               {isEmpty ? "데이터 있을 때" : "데이터 없을 때"}
             </button>

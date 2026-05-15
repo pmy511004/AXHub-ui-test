@@ -134,7 +134,7 @@ export default function TenantDetailPageB({ tenant }: { tenant: Tenant }) {
         >
           <span
             className={`text-sm font-medium leading-[1.5] tracking-[-0.14px] transition-colors ${
-              active ? "text-[#5B3D7A]" : "text-[#a1a1aa]"
+              active ? "text-[#2D64FA]" : "text-[#a1a1aa]"
             }`}
           >
             {active ? value : label}
@@ -166,7 +166,7 @@ export default function TenantDetailPageB({ tenant }: { tenant: Tenant }) {
                 }}
                 className={`rounded-md px-3 py-1.5 text-left text-sm leading-[1.5] tracking-[-0.14px] transition-colors hover:bg-[#f4f4f5] ${
                   opt === value
-                    ? "font-semibold text-[#5B3D7A]"
+                    ? "font-semibold text-[#2D64FA]"
                     : "font-normal text-[#18181b]"
                 }`}
               >
@@ -257,7 +257,7 @@ export default function TenantDetailPageB({ tenant }: { tenant: Tenant }) {
             <p className="text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#a1a1aa]">
               슬러그
             </p>
-            <span className="self-start rounded-lg bg-[#f6f6f6] px-2 py-1 text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#5B3D7A]">
+            <span className="self-start rounded-lg bg-[#f6f6f6] px-2 py-1 text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-[#2D64FA]">
               {tenant.slug}
             </span>
           </div>
@@ -303,7 +303,7 @@ export default function TenantDetailPageB({ tenant }: { tenant: Tenant }) {
                   <span
                     className={`rounded-full px-2 py-0.5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] transition-colors ${
                       isActive
-                        ? "bg-[rgba(91,61,122,0.1)] text-[#5B3D7A]"
+                        ? "bg-[rgba(91,61,122,0.1)] text-[#2D64FA]"
                         : "bg-[#f6f6f6] text-[#71717a]"
                     }`}
                   >
@@ -314,7 +314,7 @@ export default function TenantDetailPageB({ tenant }: { tenant: Tenant }) {
             })}
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute bottom-0 h-0.5 bg-[#5B3D7A] transition-[left,width] duration-300 ease-out"
+              className="pointer-events-none absolute bottom-0 h-0.5 bg-[#2D64FA] transition-[left,width] duration-300 ease-out"
               style={{ left: indicator.left, width: indicator.width }}
             />
           </nav>

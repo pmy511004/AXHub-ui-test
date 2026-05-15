@@ -10,7 +10,7 @@
   --color-foreground: var(--foreground);
   --color-primary-50: #f4ecfa;
   --color-primary-500: #6d319d;
-  --color-gray-50: #f9f9f9;
+  --color-gray-50: #f6f7f9;
   --color-gray-100: #f6f6f6;
   --color-gray-200: #e4e4e7;
   --color-gray-300: #d4d4d8;
@@ -488,7 +488,7 @@
   }
 
   .dark-mode .bg-\[\#f4f4f5\],
-  .dark-mode .bg-\[\#f9f9f9\],
+  .dark-mode .bg-\[\#f6f7f9\],
   .dark-mode .bg-\[\#fafafa\],
   .dark-mode .bg-gray-50,
   .dark-mode .bg-gray-100 {
@@ -578,7 +578,7 @@
 
   /* ── 호버 표면 ── */
   .dark-mode .hover\:bg-\[\#f4f4f5\]:hover,
-  .dark-mode .hover\:bg-\[\#f9f9f9\]:hover,
+  .dark-mode .hover\:bg-\[\#f6f7f9\]:hover,
   .dark-mode .hover\:bg-\[\#ececec\]:hover,
   .dark-mode .hover\:bg-gray-50:hover {
     background-color: #2a2932;
@@ -629,7 +629,7 @@
 
   /* ── 텍스트 primary — 다크모드에서만 더 밝은 톤 (#9866CC)으로 ── */
   /* bg/border/indicator의 --page-primary(#6E4A94)는 그대로 유지하고, 텍스트만 분리 */
-  .dark-mode .text-\[\#5B3D7A\] {
+  .dark-mode .text-\[\#2D64FA\] {
     color: #9866CC;
   }
 
@@ -640,7 +640,7 @@
 
   /* ── 디스커버리 배너 ellipse 그라데이션 — 라이트/다크 stop 색 ── */
   .banner-ellipse-center {
-    stop-color: #5B3D7A;
+    stop-color: #2D64FA;
   }
   .banner-ellipse-outer {
     stop-color: #F6F6F6;

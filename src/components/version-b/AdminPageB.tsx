@@ -17,12 +17,12 @@ export default function AdminPageB() {
       className={`flex h-screen w-full items-start overflow-hidden${darkMode ? " dark-mode" : ""}`}
       style={{
         backgroundColor: darkMode ? "#0C0A12" : "#130321",
-        "--page-primary": darkMode ? "#6E4A94" : "#5B3D7A",
+        "--page-primary": darkMode ? "#6E4A94" : "#2D64FA",
       } as React.CSSProperties}
       data-node-id="2530:1480"
     >
       {/* L. Global Nav (팀 프로필 셀렉터) */}
-      <div className="flex h-full w-[76px] shrink-0 flex-col items-center justify-between">
+      <div className="flex h-full w-[68px] shrink-0 flex-col items-center justify-between">
         <div className="flex w-full flex-col items-center gap-4 px-3 py-4">
           {(["JO", "DE"] as const).map((team) => {
             const isActive = activeTeam === team;
@@ -31,7 +31,7 @@ export default function AdminPageB() {
                 key={team}
                 type="button"
                 onClick={() => setActiveTeam(team)}
-                className={`relative flex size-11 items-center justify-center overflow-hidden rounded-xl bg-[#5B3D7A] p-1 transition-shadow ${isActive ? "shadow-[0px_0px_0px_1px_white]" : ""}`}
+                className={`relative flex size-11 items-center justify-center overflow-hidden rounded-xl bg-[#2D64FA] p-1 transition-shadow ${isActive ? "shadow-[0px_0px_0px_1px_white]" : ""}`}
                 aria-label={`팀 ${team}`}
               >
                 <p className="flex-1 text-center text-base font-bold leading-[1.5] tracking-[-0.16px] text-white">{team}</p>
@@ -77,10 +77,10 @@ export default function AdminPageB() {
       </div>
 
       {/* M + R. Sidebar + Main area (통합) */}
-      <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden pr-2 py-2">
+      <div className="flex h-full flex-1 min-w-0 items-start overflow-hidden">
         <PageSidebar activeMenu="배포 신청" />
         {/* Right: Main content */}
-        <div className="flex h-full min-w-0 flex-1 flex-col overflow-y-auto rounded-br-2xl rounded-tr-2xl border-r border-gray-100 bg-white px-14 py-6 pb-[224px]">
+        <div className="flex h-full min-w-0 flex-1 flex-col overflow-y-auto bg-white px-14 py-6 pb-[224px]">
           <div className="mx-auto flex w-full flex-col gap-6 min-[1281px]:max-w-[1280px]" style={{ animation: "fadeSlideIn 0.4s ease-out" }}>
           {/* Header */}
           <div className="flex shrink-0 items-center justify-between">

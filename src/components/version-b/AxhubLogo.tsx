@@ -44,7 +44,7 @@ export default function AxhubLogo({ size = 64, showWordmark = true, className }:
           <radialGradient id={idSphere} cx="32%" cy="26%" r="85%">
             <stop offset="0%" stopColor="#E8D4F5" />
             <stop offset="38%" stopColor="#A87BD1" />
-            <stop offset="78%" stopColor="#5B3D7A" />
+            <stop offset="78%" stopColor="#2D64FA" />
             <stop offset="100%" stopColor="#2E1C44" />
           </radialGradient>
 

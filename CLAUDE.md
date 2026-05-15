@@ -72,7 +72,7 @@ The full design system (color tokens, typography scale, animation curves, dark-m
 
 | Page | Light | Dark |
 |------|-------|------|
-| 홈 (`/`) | `#5B3D7A` | `#6E4A94` |
+| 홈 (`/`) | `#2D64FA` | `#6E4A94` |
 | 만들기 (`/make`) | `#B86397` | (dark variant via CSS) |
 | 둘러보기 (`/discovery`) | `#B88539` | (dark variant via CSS) |
 | 관리하기 (`/admin`) | `#4A78B8` | (dark variant via CSS) |

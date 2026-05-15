@@ -160,7 +160,7 @@ export default function AppDetailDiscoveryView({
           <div className="flex min-w-0 flex-1 items-start gap-7">
             <div
               className="size-[120px] shrink-0 rounded-[20px]"
-              style={{ backgroundImage: "linear-gradient(135deg, #9B7AB8 0%, #5B3D7A 100%)" }}
+              style={{ backgroundImage: "linear-gradient(135deg, #9B7AB8 0%, #2D64FA 100%)" }}
             />
             <div className="flex min-w-0 flex-1 flex-col items-start gap-3">
               <div className="flex w-full items-center gap-2">
@@ -179,7 +179,7 @@ export default function AppDetailDiscoveryView({
                 팀원별·프로젝트별 Claude Code 사용량을 집계하고, 토큰·요청 수·비용을 한눈에 비교합니다.
               </p>
               <div className="flex items-center gap-2 pt-4 text-sm leading-[1.5] tracking-[-0.14px]">
-                <span className="font-semibold text-[#5B3D7A]">{category}</span>
+                <span className="font-semibold text-[#2D64FA]">{category}</span>
                 <span className="font-normal text-[#a1a1aa]">•</span>
                 <span className="font-normal text-[#a1a1aa]">안승원</span>
                 <span className="font-normal text-[#a1a1aa]">•</span>
@@ -214,7 +214,7 @@ export default function AppDetailDiscoveryView({
                   className={`discovery-rec-btn flex h-12 min-w-0 flex-1 items-center justify-center gap-1 overflow-hidden whitespace-nowrap rounded-[40px] border px-8 text-base font-medium leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors ${
                     isRecommended
                       ? "discovery-rec-btn-active border-transparent bg-[rgba(251,176,59,0.2)] hover:bg-[rgba(251,176,59,0.28)]"
-                      : "border-[#e4e4e7] bg-white hover:bg-[#f9f9f9]"
+                      : "border-[#e4e4e7] bg-white hover:bg-[#f6f7f9]"
                   }`}
                 >
                   <span key={thumbAnimKey} className="thumb-bounce inline-flex">
@@ -298,7 +298,7 @@ export default function AppDetailDiscoveryView({
                     {upstreamApps.map((app) => (
                       <div
                         key={app.name}
-                        className="flex w-full items-center gap-3 rounded-2xl bg-[#f9f9f9] p-3"
+                        className="flex w-full items-center gap-3 rounded-2xl bg-[#f6f7f9] p-3"
                       >
                         <div
                           className="size-8 shrink-0 rounded-lg"
@@ -325,7 +325,7 @@ export default function AppDetailDiscoveryView({
                       <span className="font-normal"> 데이터를 쓰고 있어요</span>
                     </p>
                   </div>
-                  <div className="flex h-[134px] w-full items-center justify-center rounded-2xl bg-[#f9f9f9] p-3">
+                  <div className="flex h-[134px] w-full items-center justify-center rounded-2xl bg-[#f6f7f9] p-3">
                     <div className="flex flex-col items-center justify-center gap-2">
                       <Image
                         src="/icons/version-b/empty-stack.svg"
@@ -423,7 +423,7 @@ export default function AppDetailDiscoveryView({
           <nav className="sticky top-0 flex w-[220px] shrink-0 flex-col self-start py-5">
             {/* ON THIS PAGE 헤더 */}
             <div className="flex items-center px-5 py-2">
-              <p className="text-sm font-bold leading-[1.5] tracking-[-0.14px] text-[#5B3D7A]">
+              <p className="text-sm font-bold leading-[1.5] tracking-[-0.14px] text-[#2D64FA]">
                 ON THIS PAGE
               </p>
             </div>
@@ -435,7 +435,7 @@ export default function AppDetailDiscoveryView({
               />
               <span
                 aria-hidden="true"
-                className="app-detail-toc-indicator pointer-events-none absolute left-0 top-0 h-[21px] w-1 rounded-full bg-[#5B3D7A] transition-transform duration-300 ease-out"
+                className="app-detail-toc-indicator pointer-events-none absolute left-0 top-0 h-[21px] w-1 rounded-full bg-[#2D64FA] transition-transform duration-300 ease-out"
                 style={{ transform: `translateY(${indicatorTop}px)` }}
               />
               {TOC.map((item) => {
@@ -489,7 +489,7 @@ function StatDivider() {
 function SectionHeader({ tag, title, subtitle }: { tag: string; title: string; subtitle?: string }) {
   return (
     <div className="flex w-full flex-col gap-1">
-      <p className="text-sm font-bold leading-[1.5] tracking-[-0.14px] text-[#5B3D7A]">{tag}</p>
+      <p className="text-sm font-bold leading-[1.5] tracking-[-0.14px] text-[#2D64FA]">{tag}</p>
       <p className="text-[22px] font-bold leading-[1.3] tracking-[-0.22px] text-[#3f3f46]">{title}</p>
       {subtitle && (
         <p className="pt-2 text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#a1a1aa]">{subtitle}</p>
@@ -535,7 +535,7 @@ function SendIcon() {
     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true" className="absolute inset-0">
       <path
         d="M22.9606 10.6592C22.9606 10.6592 22.9606 10.6659 22.9606 10.6692L19.0631 23.5249C19.0041 23.7337 18.8827 23.9194 18.7151 24.0572C18.5475 24.195 18.3418 24.2783 18.1255 24.2958C18.0947 24.2985 18.0639 24.2998 18.0331 24.2998C17.8305 24.3004 17.6319 24.2431 17.4608 24.1345C17.2897 24.0259 17.1532 23.8706 17.0674 23.687L14.6298 18.6838C14.6054 18.6336 14.5973 18.5771 14.6065 18.5221C14.6158 18.4671 14.6419 18.4164 14.6814 18.377L18.5602 14.4977C18.6564 14.3964 18.7093 14.2615 18.7075 14.1218C18.7057 13.982 18.6494 13.8485 18.5506 13.7497C18.4518 13.6509 18.3183 13.5946 18.1786 13.5928C18.0389 13.5911 17.904 13.6439 17.8028 13.7402L13.9219 17.6195C13.8825 17.6589 13.8318 17.6851 13.7768 17.6943C13.7219 17.7036 13.6654 17.6955 13.6152 17.6711L8.60802 15.2338C8.41221 15.1398 8.24958 14.9886 8.14166 14.8001C8.03374 14.6116 7.98564 14.3948 8.00372 14.1783C8.0218 13.9619 8.10522 13.756 8.24292 13.5881C8.38062 13.4201 8.56609 13.298 8.77477 13.2378L21.6286 9.33975H21.6387C21.8217 9.28832 22.0151 9.28652 22.199 9.33452C22.383 9.38253 22.5508 9.47861 22.6854 9.61291C22.82 9.74721 22.9164 9.9149 22.9647 10.0988C23.0131 10.2826 23.0117 10.4761 22.9606 10.6592Z"
-        fill="#F9F9F9"
+        fill="#F6F7F9"
       />
     </svg>
   );

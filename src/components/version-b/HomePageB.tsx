@@ -18,7 +18,7 @@ type Member = {
   avatarColor: string;
 };
 
-const AVATAR_COLORS = ["#5b3d7a", "#0f5fcc", "#f6c205", "#e765be", "#4a78b8"];
+const AVATAR_COLORS = ["#2d64fa", "#0f5fcc", "#f6c205", "#e765be", "#4a78b8"];
 const STATUS_STYLES: Record<MemberStatus, { bg: string; text: string }> = {
   활성: { bg: "#e7f1fe", text: "#1571f3" },
   초대중: { bg: "#f6f6f6", text: "#71717a" },
@@ -61,7 +61,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
       role: "관리자",
       status: "활성",
       lastAccess: "2026-05-13",
-      avatarColor: "#5b3d7a",
+      avatarColor: "#2d64fa",
     },
   ]);
   const [roleFilter, setRoleFilter] = useState<MemberRole | null>(null);
@@ -244,7 +244,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
       className={`flex h-screen w-full items-start overflow-hidden${darkMode ? " dark-mode" : ""}`}
       style={{
         backgroundColor: darkMode ? "#0C0A12" : "#130321",
-        "--page-primary": darkMode ? "#6E4A94" : "#5B3D7A",
+        "--page-primary": darkMode ? "#6E4A94" : "#2D64FA",
       } as React.CSSProperties}
     >
       {/* L. Sidebar */}
@@ -297,7 +297,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
               <button
                 type="button"
                 onClick={() => setProfileOpen(!profileOpen)}
-                className="flex size-9 items-center justify-center rounded-full bg-[#5B3D7A] p-2 transition-opacity hover:opacity-80"
+                className="flex size-9 items-center justify-center rounded-full bg-[#2D64FA] p-2 transition-opacity hover:opacity-80"
                 aria-label="프로필"
                 data-node-id="4940:6970"
               >
@@ -397,7 +397,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                   </div>
                   <button
                     type="button"
-                    className="flex h-8 items-center justify-center whitespace-nowrap rounded-full border border-[#e4e4e7] bg-white px-5 py-3 text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#f9f9f9]"
+                    className="flex h-8 items-center justify-center whitespace-nowrap rounded-full border border-[#e4e4e7] bg-white px-5 py-3 text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#f6f7f9]"
                   >
                     이미지 업로드
                   </button>
@@ -414,7 +414,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                       type="text"
                       value={teamName}
                       onChange={(e) => setTeamName(e.target.value)}
-                      className="min-h-12 w-full rounded-3xl border border-[#e4e4e7] bg-white px-5 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#5B3D7A] focus:outline-none"
+                      className="min-h-12 w-full rounded-3xl border border-[#e4e4e7] bg-white px-5 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#2D64FA] focus:outline-none"
                     />
                   </div>
                   <div className="flex w-[400px] flex-col justify-center gap-2" data-node-id="4940:6085">
@@ -427,7 +427,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                       onChange={(e) => setTeamDescription(e.target.value)}
                       placeholder="팀에 대해 짧게 소개해 주세요"
                       rows={2}
-                      className="min-h-12 w-full resize-none rounded-3xl border border-[#e4e4e7] bg-white px-5 py-3 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#5B3D7A] focus:outline-none"
+                      className="min-h-12 w-full resize-none rounded-3xl border border-[#e4e4e7] bg-white px-5 py-3 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#2D64FA] focus:outline-none"
                     />
                   </div>
                 </div>
@@ -489,11 +489,11 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
               <div className="flex w-full flex-col gap-5" data-node-id="4940:7188">
                 {/* 서브 탭 */}
                 <div className="flex w-full items-start gap-2" data-node-id="4940:7169">
-                  <div className="flex items-center gap-2 border-b-2 border-[#5B3D7A] px-3 py-2">
+                  <div className="flex items-center gap-2 border-b-2 border-[#2D64FA] px-3 py-2">
                     <span className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b]">
                       멤버
                     </span>
-                    <span className="flex items-center rounded-full bg-[rgba(91,61,122,0.1)] px-2 py-0.5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#5B3D7A]">
+                    <span className="flex items-center rounded-full bg-[rgba(91,61,122,0.1)] px-2 py-0.5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#2D64FA]">
                       {members.length}
                     </span>
                   </div>
@@ -552,7 +552,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                                 }}
                                 className={`flex w-full items-center rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-[#f4f4f5] ${
                                   roleFilter === option
-                                    ? "font-semibold text-[#5B3D7A]"
+                                    ? "font-semibold text-[#2D64FA]"
                                     : "font-normal text-[#18181b]"
                                 }`}
                               >
@@ -601,7 +601,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                                 }}
                                 className={`flex w-full items-center rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-[#f4f4f5] ${
                                   statusFilter === option
-                                    ? "font-semibold text-[#5B3D7A]"
+                                    ? "font-semibold text-[#2D64FA]"
                                     : "font-normal text-[#18181b]"
                                 }`}
                               >
@@ -632,7 +632,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                           }
                         }}
                         className={`relative flex h-14 w-full cursor-pointer items-center gap-4 px-4 py-3 transition-colors ${
-                          detailMemberId === m.id ? "bg-[#f9f9f9]" : "hover:bg-[#fafafa]"
+                          detailMemberId === m.id ? "bg-[#f6f7f9]" : "hover:bg-[#fafafa]"
                         }`}
                       >
                         <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-[#e4e4e7] opacity-50" />
@@ -762,13 +762,13 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
-                    className="flex h-12 items-center justify-center rounded-full bg-[#5B3D7A] px-6 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-white transition-opacity hover:opacity-90"
+                    className="flex h-12 items-center justify-center rounded-full bg-[#2D64FA] px-6 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-white transition-opacity hover:opacity-90"
                   >
                     내가 앱 만들기
                   </button>
                   <button
                     type="button"
-                    className="flex h-12 items-center justify-center rounded-full border border-[#e4e4e7] bg-white px-6 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors hover:bg-[#f9f9f9]"
+                    className="flex h-12 items-center justify-center rounded-full border border-[#e4e4e7] bg-white px-6 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors hover:bg-[#f6f7f9]"
                   >
                     동료가 만든 앱 쓰기
                   </button>
@@ -799,7 +799,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                   </button>
                   <button
                     type="button"
-                    className="flex h-12 items-center justify-center rounded-full border border-[#e4e4e7] bg-white px-6 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors hover:bg-[#f9f9f9]"
+                    className="flex h-12 items-center justify-center rounded-full border border-[#e4e4e7] bg-white px-6 py-3 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#18181b] transition-colors hover:bg-[#f6f7f9]"
                   >
                     의견 보내기
                   </button>
@@ -816,7 +816,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
               </div>
 
               {/* 빈 상태 카드 */}
-              <div className="flex h-[150px] w-full items-center justify-center rounded-xl bg-[#f9f9f9] p-3">
+              <div className="flex h-[150px] w-full items-center justify-center rounded-xl bg-[#f6f7f9] p-3">
                 <div className="flex flex-col items-center justify-center gap-2">
                   <Image
                     src="/icons/version-b/empty-stack.svg"
@@ -849,7 +849,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
               </div>
 
               {/* 빈 상태 카드 */}
-              <div className="flex h-[150px] w-full items-center justify-center rounded-xl bg-[#f9f9f9] p-3">
+              <div className="flex h-[150px] w-full items-center justify-center rounded-xl bg-[#f6f7f9] p-3">
                 <div className="flex flex-col items-center justify-center gap-2">
                   <Image
                     src="/icons/version-b/empty-stack.svg"
@@ -872,14 +872,14 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
             <button
               type="button"
               onClick={() => setViewVersion("first-time")}
-              className={`flex h-9 items-center justify-center rounded-full px-4 text-sm font-semibold leading-[1.5] tracking-[-0.14px] transition-colors ${viewVersion === "first-time" ? "bg-[#5B3D7A] text-white" : "text-[#71717a] hover:text-[#18181b]"}`}
+              className={`flex h-9 items-center justify-center rounded-full px-4 text-sm font-semibold leading-[1.5] tracking-[-0.14px] transition-colors ${viewVersion === "first-time" ? "bg-[#2D64FA] text-white" : "text-[#71717a] hover:text-[#18181b]"}`}
             >
               최초접속
             </button>
             <button
               type="button"
               onClick={() => setViewVersion("in-use")}
-              className={`flex h-9 items-center justify-center rounded-full px-4 text-sm font-semibold leading-[1.5] tracking-[-0.14px] transition-colors ${viewVersion === "in-use" ? "bg-[#5B3D7A] text-white" : "text-[#71717a] hover:text-[#18181b]"}`}
+              className={`flex h-9 items-center justify-center rounded-full px-4 text-sm font-semibold leading-[1.5] tracking-[-0.14px] transition-colors ${viewVersion === "in-use" ? "bg-[#2D64FA] text-white" : "text-[#71717a] hover:text-[#18181b]"}`}
             >
               사용 중
             </button>
@@ -916,7 +916,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                     value={makeAppName}
                     onChange={(e) => setMakeAppName(e.target.value)}
                     placeholder="이름 입력"
-                    className="min-h-12 w-full rounded-full border border-[#e4e4e7] bg-white px-4 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#5B3D7A] focus:outline-none"
+                    className="min-h-12 w-full rounded-full border border-[#e4e4e7] bg-white px-4 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#2D64FA] focus:outline-none"
                   />
                 </div>
 
@@ -926,7 +926,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                   <button
                     type="button"
                     onClick={() => setCategoryDropdownOpen((v) => !v)}
-                    className="flex min-h-12 w-full items-center justify-between rounded-full border border-[#e4e4e7] bg-white pl-4 pr-4 text-left transition-colors hover:border-[#d4d4d8] focus:border-[#5B3D7A] focus:outline-none"
+                    className="flex min-h-12 w-full items-center justify-between rounded-full border border-[#e4e4e7] bg-white pl-4 pr-4 text-left transition-colors hover:border-[#d4d4d8] focus:border-[#2D64FA] focus:outline-none"
                   >
                     <span
                       className={`text-base font-normal leading-[1.5] tracking-[-0.16px] ${
@@ -956,7 +956,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                             setCategoryDropdownOpen(false);
                           }}
                           className={`flex w-full items-center rounded-lg px-3 py-2 text-left text-base font-normal leading-[1.5] tracking-[-0.16px] transition-colors hover:bg-[#f4f4f5] ${
-                            makeAppCategory === option ? "text-[#5B3D7A]" : "text-[#18181b]"
+                            makeAppCategory === option ? "text-[#2D64FA]" : "text-[#18181b]"
                           }`}
                         >
                           {option}
@@ -979,7 +979,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                     type="button"
                     disabled={!isMakeAppValid}
                     onClick={() => { if (isMakeAppValid) closeMakeAppModal(); }}
-                    className="relative flex h-9 items-center justify-center overflow-hidden rounded-full bg-[#5B3D7A] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+                    className="relative flex h-9 items-center justify-center overflow-hidden rounded-full bg-[#2D64FA] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
                   >
                     만들기
                     {!isMakeAppValid && <span className="pointer-events-none absolute inset-0 rounded-full bg-white/70" />}
@@ -1040,7 +1040,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                             )
                           }
                           placeholder="이메일 입력"
-                          className="min-h-12 w-full rounded-3xl border border-[#e4e4e7] bg-white px-5 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#5B3D7A] focus:outline-none"
+                          className="min-h-12 w-full rounded-3xl border border-[#e4e4e7] bg-white px-5 text-base font-normal leading-[1.5] tracking-[-0.16px] text-[#18181b] placeholder:text-[#a1a1aa] focus:border-[#2D64FA] focus:outline-none"
                         />
                       </div>
                       <div className="relative flex w-[116px] flex-col items-start gap-2">
@@ -1092,7 +1092,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                                   setOpenInviteRoleIdx(null);
                                 }}
                                 className={`flex w-full items-center rounded-lg px-3 py-2 text-left text-base font-normal leading-[1.5] tracking-[-0.16px] transition-colors hover:bg-[#f4f4f5] ${
-                                  row.role === option ? "text-[#5B3D7A]" : "text-[#18181b]"
+                                  row.role === option ? "text-[#2D64FA]" : "text-[#18181b]"
                                 }`}
                               >
                                 {option}
@@ -1163,7 +1163,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                     type="button"
                     disabled={!canSendInvite}
                     onClick={submitInvite}
-                    className="relative flex h-9 items-center justify-center overflow-hidden rounded-full bg-[#5B3D7A] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
+                    className="relative flex h-9 items-center justify-center overflow-hidden rounded-full bg-[#2D64FA] px-5 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90"
                   >
                     초대하기
                     {!canSendInvite && (
@@ -1294,10 +1294,10 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                       </p>
                     </div>
                     <div className="flex w-full flex-col gap-2 px-10">
-                      <button type="button" onClick={() => { setSelectedOS("mac"); setGuideDirection("forward"); setGuideModalStep("mac"); }} className="flex w-full items-center justify-center rounded-xl border border-[#e4e4e7] bg-white p-4 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f9f9f9]">
+                      <button type="button" onClick={() => { setSelectedOS("mac"); setGuideDirection("forward"); setGuideModalStep("mac"); }} className="flex w-full items-center justify-center rounded-xl border border-[#e4e4e7] bg-white p-4 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f6f7f9]">
                         Mac OS
                       </button>
-                      <button type="button" onClick={() => { setSelectedOS("windows"); setGuideDirection("forward"); setGuideModalStep("windows"); }} className="flex w-full items-center justify-center rounded-xl border border-[#e4e4e7] bg-white p-4 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f9f9f9]">
+                      <button type="button" onClick={() => { setSelectedOS("windows"); setGuideDirection("forward"); setGuideModalStep("windows"); }} className="flex w-full items-center justify-center rounded-xl border border-[#e4e4e7] bg-white p-4 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#3f3f46] transition-colors hover:bg-[#f6f7f9]">
                         Windows OS
                       </button>
                     </div>
@@ -1309,7 +1309,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                       <div className="absolute left-[13px] top-[14px] bottom-[14px] w-px bg-[#d4d4d8]" />
                       {/* Step 1: 터미널 열기 */}
                       <div className="relative flex gap-3 pb-8">
-                        <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#e7d8f3] text-base font-bold text-[#5B3D7A]">1</span>
+                        <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#e7d8f3] text-base font-bold text-[#2D64FA]">1</span>
                         <div className="flex flex-col gap-3">
                           <h3 className="flex h-7 items-center text-lg font-bold leading-[1.4] tracking-[-0.18px] text-black">터미널 열기</h3>
                           <div className="flex flex-col gap-2">
@@ -1330,7 +1330,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                       </div>
                       {/* Step 2: 플러그인 설치 */}
                       <div className="relative flex gap-3 pb-8">
-                        <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#e7d8f3] text-base font-bold text-[#5B3D7A]">2</span>
+                        <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#e7d8f3] text-base font-bold text-[#2D64FA]">2</span>
                         <div className="flex flex-col gap-3">
                           <h3 className="flex h-7 items-center text-lg font-bold leading-[1.4] tracking-[-0.18px] text-black">클로드코드 플러그인 설치하기</h3>
                           <div className="flex items-center gap-1 text-sm leading-[1.5] tracking-[-0.14px] text-[#71717a]">
@@ -1359,7 +1359,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                       </div>
                       {/* Step 3: 클로드코드 열기 */}
                       <div className="relative flex gap-3 pb-8">
-                        <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#e7d8f3] text-base font-bold text-[#5B3D7A]">3</span>
+                        <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#e7d8f3] text-base font-bold text-[#2D64FA]">3</span>
                         <div className="flex flex-col gap-3">
                           <h3 className="flex h-7 items-center text-lg font-bold leading-[1.4] tracking-[-0.18px] text-black">클로드코드 열기</h3>
                           <div className="flex items-center gap-1 text-sm leading-[1.5] tracking-[-0.14px] text-[#71717a]">
@@ -1372,7 +1372,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                       </div>
                       {/* Step 4: 초기화 */}
                       <div className="relative flex gap-3">
-                        <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#e7d8f3] text-base font-bold text-[#5B3D7A]">4</span>
+                        <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#e7d8f3] text-base font-bold text-[#2D64FA]">4</span>
                         <div className="flex flex-col gap-3">
                           <h3 className="flex h-7 items-center text-lg font-bold leading-[1.4] tracking-[-0.18px] text-black">AXHub 사용을 위해 초기화하기</h3>
                           <div className="flex items-center gap-1 text-sm leading-[1.5] tracking-[-0.14px] text-[#71717a]">
@@ -1393,7 +1393,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                       <button type="button" onClick={() => { setGuideDirection("back"); setGuideModalStep("os-select"); }} className="flex h-9 items-center justify-center rounded-lg bg-[#f6f6f6] px-8 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#ececec]">
                         이전
                       </button>
-                      <button type="button" onClick={() => { setGuideDirection("forward"); setGuideModalStep("final"); }} className="flex h-9 items-center justify-center rounded-lg bg-[#5B3D7A] px-8 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+                      <button type="button" onClick={() => { setGuideDirection("forward"); setGuideModalStep("final"); }} className="flex h-9 items-center justify-center rounded-lg bg-[#2D64FA] px-8 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
                         다음
                       </button>
                     </div>
@@ -1405,7 +1405,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                       <div className="absolute left-[13px] top-[14px] bottom-[14px] w-px bg-[#d4d4d8]" />
                       {/* Step 1: 플러그인 설치 */}
                       <div className="relative flex gap-3 pb-8">
-                        <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#e7d8f3] text-base font-bold text-[#5B3D7A]">1</span>
+                        <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#e7d8f3] text-base font-bold text-[#2D64FA]">1</span>
                         <div className="flex flex-col gap-3">
                           <h3 className="flex h-7 items-center text-lg font-bold leading-[1.4] tracking-[-0.18px] text-black">클로드코드 플러그인 설치하기</h3>
                           <div className="flex items-center gap-1 text-sm leading-[1.5] tracking-[-0.14px] text-[#71717a]">
@@ -1434,7 +1434,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                       </div>
                       {/* Step 2: 클로드코드 열기 */}
                       <div className="relative flex gap-3 pb-8">
-                        <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#e7d8f3] text-base font-bold text-[#5B3D7A]">2</span>
+                        <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#e7d8f3] text-base font-bold text-[#2D64FA]">2</span>
                         <div className="flex flex-col gap-3">
                           <h3 className="flex h-7 items-center text-lg font-bold leading-[1.4] tracking-[-0.18px] text-black">클로드코드 열기</h3>
                           <div className="flex items-center gap-1 text-sm leading-[1.5] tracking-[-0.14px] text-[#71717a]">
@@ -1447,7 +1447,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                       </div>
                       {/* Step 3: 초기화 */}
                       <div className="relative flex gap-3">
-                        <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#e7d8f3] text-base font-bold text-[#5B3D7A]">3</span>
+                        <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#e7d8f3] text-base font-bold text-[#2D64FA]">3</span>
                         <div className="flex flex-col gap-3">
                           <h3 className="flex h-7 items-center text-lg font-bold leading-[1.4] tracking-[-0.18px] text-black">AXHub 사용을 위해 초기화하기</h3>
                           <div className="flex items-center gap-1 text-sm leading-[1.5] tracking-[-0.14px] text-[#71717a]">
@@ -1469,7 +1469,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                       <button type="button" onClick={() => { setGuideDirection("back"); setGuideModalStep("os-select"); }} className="flex h-9 items-center justify-center rounded-lg bg-[#f6f6f6] px-8 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#ececec]">
                         이전
                       </button>
-                      <button type="button" onClick={() => { setGuideDirection("forward"); setGuideModalStep("final"); }} className="flex h-9 items-center justify-center rounded-lg bg-[#5B3D7A] px-8 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+                      <button type="button" onClick={() => { setGuideDirection("forward"); setGuideModalStep("final"); }} className="flex h-9 items-center justify-center rounded-lg bg-[#2D64FA] px-8 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
                         다음
                       </button>
                     </div>
@@ -1492,7 +1492,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                       <button type="button" onClick={() => { setGuideDirection("back"); setGuideModalStep(selectedOS); }} className="flex h-9 items-center justify-center rounded-lg bg-[#f6f6f6] px-8 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-[#18181b] transition-colors hover:bg-[#ececec]">
                         이전
                       </button>
-                      <button type="button" onClick={closeGuideModal} className="flex h-9 items-center justify-center rounded-lg bg-[#5B3D7A] px-8 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
+                      <button type="button" onClick={closeGuideModal} className="flex h-9 items-center justify-center rounded-lg bg-[#2D64FA] px-8 text-sm font-semibold leading-[1.5] tracking-[-0.14px] text-white transition-opacity hover:opacity-90">
                         시작
                       </button>
                     </div>
@@ -1605,7 +1605,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                             }}
                             className={`flex w-full items-center rounded-lg px-3 py-2 text-left text-base transition-colors hover:bg-[#f4f4f5] ${
                               detailDraftRole === option
-                                ? "font-semibold text-[#5B3D7A]"
+                                ? "font-semibold text-[#2D64FA]"
                                 : "font-normal text-[#18181b]"
                             }`}
                           >
