@@ -32,7 +32,9 @@ type HomePageBProps = { initialSidebarMode?: "user" | "admin" };
 export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProps = {}) {
   const router = useRouter();
   const [appsExpanded, setAppsExpanded] = useState(false);
-  const [viewVersion, setViewVersion] = useState<"first-time" | "in-use">("first-time");
+  // 최초접속/사용중 토글은 임시 비활성화 (사용 중 페이지만 노출)
+  const SHOW_VIEW_VERSION_TOGGLE = false;
+  const [viewVersion, setViewVersion] = useState<"first-time" | "in-use">("in-use");
   const [guideModalOpen, setGuideModalOpen] = useState(false);
   const [guideModalStep, setGuideModalStep] = useState<"os-select" | "mac" | "windows" | "final">("os-select");
   const [guideModalClosing, setGuideModalClosing] = useState(false);
@@ -865,7 +867,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
           )}
 
           {/* 버전 토글 (우측 하단 플로팅, user 모드에서만) */}
-          {sidebarMode === "user" && (
+          {sidebarMode === "user" && SHOW_VIEW_VERSION_TOGGLE && (
           <div className="fixed bottom-6 right-6 z-50 flex items-center gap-1 rounded-full border border-[#e4e4e7] bg-white p-1" style={{ boxShadow: "0px 2px 8px rgba(0,0,0,0.06), 0px 14px 28px rgba(0,0,0,0.04)" }}>
             <button
               type="button"
