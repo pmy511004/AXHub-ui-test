@@ -156,7 +156,33 @@ export default function PageSidebar({
       </div>
 
       {/* 하단: 사용자 / 관리자 전환 */}
-      <div className="bg-[#f6f6f6] p-3">
+      <div className="relative bg-[#f6f6f6] p-3">
+        {/* 시작 가이드 툴팁 (사용자 모드에서만 표시, Figma 5037:8812) */}
+        {mode === "user" && (
+          <div
+            className="pointer-events-none absolute bottom-full left-[102px] z-40 flex w-[223px] flex-col gap-1"
+            data-node-id="5037:8812"
+          >
+            <div
+              className="flex flex-col gap-2 rounded-lg bg-[#27272a] p-5"
+              style={{ filter: "drop-shadow(0px 0px 20px rgba(0,0,0,0.1))" }}
+            >
+              <p className="whitespace-nowrap text-lg font-semibold leading-[1.4] tracking-[-0.18px] text-white">
+                안녕하세요 관리자님,
+                <br />
+                시작 가이드를 준비했어요!
+              </p>
+              <p className="whitespace-nowrap text-base font-normal leading-[1.5] tracking-[-0.16px] text-white/70">
+                관리자 페이지를 열어주세요
+              </p>
+            </div>
+            {/* 아래로 향한 화살표 */}
+            <div className="flex h-4 justify-center">
+              <div className="size-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-[#27272a]" />
+            </div>
+          </div>
+        )}
+
         <div className="relative flex w-full items-center gap-[2px] overflow-hidden rounded-full bg-[#e4e4e7] px-2 py-1">
           {(["user", "admin"] as const).map((key) => {
             const label = key === "user" ? "사용자" : "관리자";
