@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import PageSidebar, { type AdminActiveMenu } from "./PageSidebar";
@@ -105,6 +105,26 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
     detailMember !== null && detailDraftRole !== detailMember.role;
   const [deactivateModalOpen, setDeactivateModalOpen] = useState(false);
   const [deactivateModalClosing, setDeactivateModalClosing] = useState(false);
+  const [statusToast, setStatusToast] = useState<{
+    type: "activate" | "deactivate";
+    closing: boolean;
+  } | null>(null);
+  const statusToastTimer = useRef<number | null>(null);
+  const statusToastCloseTimer = useRef<number | null>(null);
+
+  const showStatusToast = (type: "activate" | "deactivate") => {
+    if (statusToastTimer.current) window.clearTimeout(statusToastTimer.current);
+    if (statusToastCloseTimer.current)
+      window.clearTimeout(statusToastCloseTimer.current);
+    setStatusToast({ type, closing: false });
+    statusToastTimer.current = window.setTimeout(() => {
+      setStatusToast((prev) => (prev ? { ...prev, closing: true } : prev));
+      statusToastCloseTimer.current = window.setTimeout(
+        () => setStatusToast(null),
+        250
+      );
+    }, 2800);
+  };
 
   const onDeactivateClick = () => {
     if (!detailMember) return;
@@ -128,6 +148,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
           return { ...m, status: "활성" as MemberStatus, lastAccess };
         })
       );
+      showStatusToast("activate");
     } else {
       setMembers((prev) =>
         prev.map((m) =>
@@ -136,6 +157,7 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
             : m
         )
       );
+      showStatusToast("deactivate");
     }
     closeDeactivateModal();
   };
@@ -1262,6 +1284,45 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                   </div>
                 );
               })()}
+            </div>
+          )}
+
+          {/* 계정 상태 변경 토스트 (Figma 5024:8283) */}
+          {statusToast && (
+            <div
+              className="fixed right-6 top-6 z-[60] flex w-[340px] items-center gap-3 rounded-2xl bg-white px-4"
+              style={{
+                boxShadow:
+                  "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)",
+                backdropFilter: "blur(20px)",
+                animation: statusToast.closing
+                  ? "toastFadeOut 0.25s ease-in forwards"
+                  : "toastSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+              }}
+              data-node-id="5024:8283"
+            >
+              <div className="flex shrink-0 items-center py-3.5">
+                <Image
+                  src={
+                    statusToast.type === "activate"
+                      ? "/icons/version-b/lock-open.svg"
+                      : "/icons/version-b/lock-closed.svg"
+                  }
+                  alt=""
+                  width={24}
+                  height={24}
+                />
+              </div>
+              <div className="flex min-h-14 flex-1 flex-col justify-center py-[11.5px]">
+                <p className="text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[rgba(24,24,27,0.9)]">
+                  {statusToast.type === "activate"
+                    ? "계정을 활성화 했습니다"
+                    : "계정을 비활성화 했습니다"}
+                </p>
+                <p className="whitespace-nowrap text-sm font-normal leading-[1.5] tracking-[-0.14px] text-[#71717a]">
+                  계정 상태를 확인해 보세요
+                </p>
+              </div>
             </div>
           )}
 
