@@ -1296,8 +1296,8 @@ export default function HomePageB({ initialSidebarMode = "user" }: HomePageBProp
                   "0px 2px 8px rgba(0,0,0,0.06), 0px -6px 12px rgba(0,0,0,0.03), 0px 14px 28px rgba(0,0,0,0.04)",
                 backdropFilter: "blur(20px)",
                 animation: statusToast.closing
-                  ? "toastFadeOut 0.25s ease-in forwards"
-                  : "toastSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                  ? "toastSlideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards"
+                  : "toastSlideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
               }}
               data-node-id="5024:8283"
             >
