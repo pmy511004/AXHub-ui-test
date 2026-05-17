@@ -63,20 +63,6 @@ export default function LoginPageB() {
       className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-surface px-6 py-[100px]"
       data-node-id="4777:1209"
     >
-      <div
-        className="pointer-events-none absolute left-1/2 top-1/2 h-[615px] w-[997px] max-w-none -translate-x-1/2 -translate-y-1/2"
-        aria-hidden="true"
-      >
-        <Image
-          src="/icons/version-b/home-bg-firsttime.png"
-          alt=""
-          fill
-          sizes="997px"
-          className="object-cover object-center"
-          priority
-        />
-      </div>
-
       <div className="relative z-10 flex flex-col items-center gap-[60px]">
         <div className="flex flex-col items-center gap-3">
           <span
@@ -93,7 +79,7 @@ export default function LoginPageB() {
         <button
           type="button"
           onClick={openSignupModal}
-          className="flex items-center justify-center gap-2 rounded-[99px] bg-[#18181b] pl-6 pr-7 py-4 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-white transition-all duration-200 ease-out hover:scale-105 hover:opacity-90"
+          className="flex items-center justify-center gap-2 rounded-[99px] bg-[#eaf0fe] px-6 py-4 text-base font-semibold leading-[1.5] tracking-[-0.16px] text-[#2d64fa] transition-all duration-200 ease-out hover:scale-105 hover:bg-[#dde6fc]"
           data-node-id="4777:1416"
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
